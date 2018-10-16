@@ -23,8 +23,9 @@ public class FadelandEditor extends Game
 		this.stage = new Stage(new ScreenViewport());
 
 		this.fileMenu = new FileMenu(GameAssets.getUISkin());
-		this.fileMenu.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		this.fileMenu.setPosition(Gdx.graphics.getWidth() / 2 - this.fileMenu.getWidth() / 2, Gdx.graphics.getHeight() / 2 - this.fileMenu.getHeight() / 2);
+		this.fileMenu.setSize(Gdx.graphics.getWidth(), 50);
+		this.fileMenu.setPosition(0, Gdx.graphics.getHeight() - this.fileMenu.getHeight());
+
 		this.fileMenu.setVisible(true);
 		this.stage.addActor(this.fileMenu);
 
@@ -48,7 +49,8 @@ public class FadelandEditor extends Game
 	public void resize(int width, int height)
 	{
 		this.stage.getViewport().update(width, height, true);
-		this.fileMenu.setSize(stage.getWidth(), stage.getHeight());
+		this.fileMenu.setSize(Gdx.graphics.getWidth(), 50);
+		this.fileMenu.setPosition(0, Gdx.graphics.getHeight() - this.fileMenu.getHeight());
 	}
 
 	@Override
