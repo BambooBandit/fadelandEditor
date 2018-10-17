@@ -23,6 +23,7 @@ public class ToolPane extends Group
 
     private Tool brush;
     private Tool eraser;
+    private Tool grab;
     private Tool selectedTool;
 
     public ToolPane(FadelandEditor editor, Skin skin)
@@ -30,9 +31,11 @@ public class ToolPane extends Group
         this.toolTable = new Table();
         this.brush = new Tool(Tools.BRUSH, this, skin);
         this.eraser = new Tool(Tools.ERASER, this, skin);
+        this.grab = new Tool(Tools.GRAB, this, skin);
         this.toolTable.left();
         this.toolTable.add(this.brush).padRight(1);
-        this.toolTable.add(this.eraser);
+        this.toolTable.add(this.eraser).padRight(1);
+        this.toolTable.add(this.grab);
 
         this.editor = editor;
         this.skin = skin;
@@ -54,6 +57,7 @@ public class ToolPane extends Group
         // Resize all buttons in the pane
         this.toolTable.getCell(this.brush).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.eraser).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.grab).size(toolHeight, toolHeight);
         this.toolTable.invalidateHierarchy();
 
         this.pane.invalidateHierarchy();
