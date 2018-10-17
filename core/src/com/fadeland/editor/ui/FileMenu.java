@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.map.TileMap;
 
+import static com.fadeland.editor.map.TileMap.untitledCount;
+
 public class FileMenu extends Group
 {
     private Table fileMenuTable;
@@ -48,10 +50,9 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                TileMap newMap = new TileMap();
+                TileMap newMap = new TileMap("untitled " + untitledCount ++);
                 editor.addToMaps(newMap);
-                editor.activeMap = newMap;
-                editor.setScreen(newMap);
+                mapTabPane.lookAtMap(newMap);
             }
         });
         this.openButton.addListener(new ClickListener()

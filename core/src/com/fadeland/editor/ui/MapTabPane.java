@@ -65,6 +65,15 @@ public class MapTabPane extends Group
         editor.maps.add(map);
 
         TextButton mapButton = new TextButton(map.getName(), skin, "checked");
+        mapButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                // Clicking this tab sets the active map and screen to that map
+                lookAtMap(map);
+            }
+        });
 
         // For closing out of the map in the pane
         TextButton closeButton = new TextButton("X", skin);
@@ -78,10 +87,9 @@ public class MapTabPane extends Group
             }
         });
         mapButton.addActor(closeButton);
+
         this.mapsToButtons.put(map, mapButton);
-
         this.buttonGroup.add(mapButton);
-
         this.buttonTable.add(mapButton).left();
 
         this.setSize(getWidth(), getHeight()); // Fit the buttons
@@ -91,25 +99,46 @@ public class MapTabPane extends Group
     {
         TextButton mapButton = this.mapsToButtons.get(map); // Button to remove
 
+        // Removed map that we are looking at, so look at another map
+        boolean changeFocus = false;
+        if(this.buttonGroup.getChecked() == mapButton)
+            changeFocus = true;
+
         this.buttonGroup.remove(mapButton);
         this.buttonTable.removeActor(mapButton);
 
         // Move the tabs to the left by rebuilding the pane
         this.buttonTable.clearChildren();
         ObjectMap.Entries<TileMap, TextButton> mapIterator = this.mapsToButtons.iterator();
-        TextButton button;
+        ObjectMap.Entry<TileMap, TextButton> button;
+        boolean first = true;
         while(mapIterator.hasNext)
         {
-            button = mapIterator.next().value;
+            button = mapIterator.next();
             // Don't remove from the map til after this to preserve the location of the tabs. Otherwise things get placed randomly
-            if(button == mapButton)
+            if(button.value == mapButton)
                 continue;
-            this.buttonTable.add(button);
+            if(changeFocus && first)
+            {
+                first = false;
+                changeFocus = false;
+                lookAtMap(button.key);
+            }
+            this.buttonTable.add(button.value);
         }
-
+        if(changeFocus) // Still true, meaning no more tabs are open, so just look at nothing.
+            lookAtMap(null);
         this.mapsToButtons.remove(map); // Explained above
 
-
         this.setSize(getWidth(), getHeight()); // Fit the buttons
+    }
+
+    /** Makes the editor look at this map. */
+    public void lookAtMap(TileMap map)
+    {
+        this.editor.activeMap = map;
+        this.editor.setScreen(map);
+        if(map != null)
+            this.buttonGroup.setChecked(map.getName());
     }
 }

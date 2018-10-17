@@ -8,6 +8,18 @@ import com.fadeland.editor.Utils;
 public class TileMap implements Screen
 {
     public static int untitledCount = 0;
+
+    public float r = Utils.randomFloat(0, 1);
+    public float g = Utils.randomFloat(0, 1);
+    public float b = Utils.randomFloat(0, 1);
+
+    public String name;
+
+    public TileMap(String name)
+    {
+        this.name = name;
+    }
+
     @Override
     public void show()
     {
@@ -17,7 +29,7 @@ public class TileMap implements Screen
     @Override
     public void render(float delta)
     {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClearColor(r, g, b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
@@ -53,6 +65,6 @@ public class TileMap implements Screen
 
     public String getName()
     {
-        return "untitled " + untitledCount ++;
+        return this.name;
     }
 }
