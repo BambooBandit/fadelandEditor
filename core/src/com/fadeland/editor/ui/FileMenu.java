@@ -94,7 +94,8 @@ public class FileMenu extends Group
     @Override
     public void setSize(float width, float height)
     {
-        float buttonWidth = width / 6f;
+        int buttonAmount = table.getCells().size;
+        float buttonWidth = width / buttonAmount;
         this.table.getCell(this.newButton).size(buttonWidth, height);
         this.table.getCell(this.openButton).size(buttonWidth, height);
         this.table.getCell(this.saveButton).size(buttonWidth, height);
@@ -104,7 +105,6 @@ public class FileMenu extends Group
 
         this.table.invalidateHierarchy();
 
-        System.out.println(this.table.getMinWidth() + ", " + Gdx.graphics.getWidth() + ", " + this.table.getMinHeight() + ", " + height);
         super.setSize(this.table.getMinWidth(), this.table.getMinHeight());
 
     }
