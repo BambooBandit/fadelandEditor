@@ -8,7 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.fadeland.editor.map.TileMap;
-import com.fadeland.editor.ui.FileMenu;
+import com.fadeland.editor.ui.FileMenu.FileMenu;
+import com.fadeland.editor.ui.TileMenu.TileMenu;
 
 public class FadelandEditor extends Game
 {
@@ -19,6 +20,7 @@ public class FadelandEditor extends Game
 	private SpriteBatch batch;
 	private Stage stage;
 	private FileMenu fileMenu;
+	private TileMenu tileMenu;
 
 	public TileMap activeMap; // Map currently being edited
 	public Array<TileMap> maps; // All maps open in the program.
@@ -33,12 +35,15 @@ public class FadelandEditor extends Game
 		this.batch = new SpriteBatch();
 		this.stage = new Stage(new ScreenViewport());
 
+		// FileMenu
 		this.fileMenu = new FileMenu(GameAssets.getUISkin(), this);
-		this.fileMenu.setSize(Gdx.graphics.getWidth(), buttonHeight, tabHeight, toolHeight);
-		this.fileMenu.setPosition(0, Gdx.graphics.getHeight() - this.fileMenu.getHeight()); // Move to the top
-
 		this.fileMenu.setVisible(true);
 		this.stage.addActor(this.fileMenu);
+
+		// TileMenu
+		this.tileMenu = new TileMenu(GameAssets.getUISkin(), this);
+		this.tileMenu.setVisible(true);
+		this.stage.addActor(this.tileMenu);
 
 		Gdx.input.setInputProcessor(this.stage);
 	}
@@ -68,6 +73,9 @@ public class FadelandEditor extends Game
 		this.stage.getViewport().update(width, height, true);
 		this.fileMenu.setSize(Gdx.graphics.getWidth(), buttonHeight, tabHeight, toolHeight);
 		this.fileMenu.setPosition(0, Gdx.graphics.getHeight() - this.fileMenu.getHeight());
+
+		this.tileMenu.setSize(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - this.fileMenu.getHeight());
+		this.tileMenu.setPosition(Gdx.graphics.getWidth() - this.tileMenu.getWidth(), 0);
 	}
 
 	@Override

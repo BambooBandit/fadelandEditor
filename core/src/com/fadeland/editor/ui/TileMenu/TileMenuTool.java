@@ -1,8 +1,7 @@
-package com.fadeland.editor.ui;
+package com.fadeland.editor.ui.TileMenu;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -12,17 +11,21 @@ import com.fadeland.editor.GameAssets;
 
 import static com.fadeland.editor.FadelandEditor.toolHeight;
 
-public class Tool extends Group
+public class TileMenuTool extends Group
 {
     private Image background;
     private Image image;
 
-    private ToolPane toolPane;
+    private TileMenuToolPane tileMenuToolPane;
 
-    private boolean selected;
+    public boolean isSelected;
 
-    public Tool(Tools tool, final ToolPane toolPane, Skin skin)
+    private TileMenuTools tool;
+
+    public TileMenuTool(TileMenuTools tool, final TileMenuToolPane tileMenuToolPane, Skin skin)
     {
+        this.tool = tool;
+        this.tileMenuToolPane = tileMenuToolPane;
         this.background = new Image(GameAssets.getUIAtlas().createPatch("textfield"));
         this.image = new Image(new Texture("ui/" + tool.name + ".png")); // TODO pack it in atlas
 
@@ -32,13 +35,13 @@ public class Tool extends Group
         addActor(background);
         addActor(image);
 
-        final Tool selectedTool = this;
+        final TileMenuTool selectedTool = this;
         addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                toolPane.selectTool(selectedTool);
+                tileMenuToolPane.selectTool(selectedTool);
             }
         });
     }
@@ -46,12 +49,18 @@ public class Tool extends Group
     public void select()
     {
         this.background.setColor(Color.GREEN);
-        this.selected = true;
+        this.isSelected = true;
+
+        if(this.tool == TileMenuTools.LINES)
+            tileMenuToolPane.menu.tileTable.setDebug(true);
     }
 
     public void unselect()
     {
         this.background.setColor(Color.WHITE);
-        this.selected = false;
+        this.isSelected = false;
+
+        if(this.tool == TileMenuTools.LINES)
+            tileMenuToolPane.menu.tileTable.setDebug(false);
     }
 }

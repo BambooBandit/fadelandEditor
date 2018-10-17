@@ -1,4 +1,4 @@
-package com.fadeland.editor.ui;
+package com.fadeland.editor.ui.FileMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;

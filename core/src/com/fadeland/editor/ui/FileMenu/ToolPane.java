@@ -1,14 +1,9 @@
-package com.fadeland.editor.ui;
+package com.fadeland.editor.ui.FileMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
-import com.fadeland.editor.map.TileMap;
 
 import static com.fadeland.editor.FadelandEditor.toolHeight;
 
