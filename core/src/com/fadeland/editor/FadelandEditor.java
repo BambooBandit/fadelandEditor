@@ -12,8 +12,9 @@ import com.fadeland.editor.ui.FileMenu;
 
 public class FadelandEditor extends Game
 {
-	private final int buttonHeight = 45;
-	private final int tabHeight = 35;
+	public static final int buttonHeight = 35;
+	public static final int tabHeight = 25;
+	public static final int toolHeight = 35;
 	private static GameAssets gameAssets;
 	private SpriteBatch batch;
 	private Stage stage;
@@ -33,7 +34,7 @@ public class FadelandEditor extends Game
 		this.stage = new Stage(new ScreenViewport());
 
 		this.fileMenu = new FileMenu(GameAssets.getUISkin(), this);
-		this.fileMenu.setSize(Gdx.graphics.getWidth(), buttonHeight, tabHeight);
+		this.fileMenu.setSize(Gdx.graphics.getWidth(), buttonHeight, tabHeight, toolHeight);
 		this.fileMenu.setPosition(0, Gdx.graphics.getHeight() - this.fileMenu.getHeight()); // Move to the top
 
 		this.fileMenu.setVisible(true);
@@ -65,7 +66,7 @@ public class FadelandEditor extends Game
 	public void resize(int width, int height)
 	{
 		this.stage.getViewport().update(width, height, true);
-		this.fileMenu.setSize(Gdx.graphics.getWidth(), buttonHeight, tabHeight);
+		this.fileMenu.setSize(Gdx.graphics.getWidth(), buttonHeight, tabHeight, toolHeight);
 		this.fileMenu.setPosition(0, Gdx.graphics.getHeight() - this.fileMenu.getHeight());
 	}
 

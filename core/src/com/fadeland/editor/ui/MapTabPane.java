@@ -9,6 +9,7 @@ import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.TileMap;
 
+/** Handles switching views of maps via tabs, adding and removing tabs.*/
 public class MapTabPane extends Group
 {
     private Stack pane;
@@ -33,8 +34,6 @@ public class MapTabPane extends Group
         this.pane.add(this.background);
         this.buttonTable.left();
         this.pane.add(this.buttonTable);
-
-        this.buttonTable.debug();
 
         this.addActor(this.pane);
     }
