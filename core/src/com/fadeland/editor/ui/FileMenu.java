@@ -1,15 +1,18 @@
 package com.fadeland.editor.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.fadeland.editor.FadelandEditor;
+import com.fadeland.editor.map.TileMap;
 
 public class FileMenu extends Group
 {
-    private Table table;
+    private Table fileMenuTable;
+    private Table buttonTable;
+    public MapTabPane mapTabPane;
 
     private TextButton newButton;
     private TextButton openButton;
@@ -18,8 +21,12 @@ public class FileMenu extends Group
     private TextButton undoButton;
     private TextButton redoButton;
 
-    public FileMenu(Skin skin)
+    private FadelandEditor editor;
+
+    public FileMenu(Skin skin, FadelandEditor fadelandEditor)
     {
+        this.editor = fadelandEditor;
+
         this.newButton = new TextButton("New", skin);
         this.openButton = new TextButton("Open", skin);
         this.saveButton = new TextButton("Save", skin);
@@ -41,6 +48,10 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                TileMap newMap = new TileMap();
+                editor.addToMaps(newMap);
+                editor.activeMap = newMap;
+                editor.setScreen(newMap);
             }
         });
         this.openButton.addListener(new ClickListener()
@@ -79,33 +90,40 @@ public class FileMenu extends Group
             }
         });
 
-        // Add header and buttons to the table
-        this.table = new Table();
-        this.table.add(this.newButton);
-        this.table.add(this.openButton);
-        this.table.add(this.saveButton);
-        this.table.add(this.saveAsButton);
-        this.table.add(this.undoButton);
-        this.table.add(this.redoButton);
+        // Add header and buttons to the buttonTable
+        this.buttonTable = new Table();
+        this.buttonTable.add(this.newButton);
+        this.buttonTable.add(this.openButton);
+        this.buttonTable.add(this.saveButton);
+        this.buttonTable.add(this.saveAsButton);
+        this.buttonTable.add(this.undoButton);
+        this.buttonTable.add(this.redoButton);
 
-        this.addActor(this.table);
+        this.mapTabPane = new MapTabPane(editor, skin);
+
+        this.fileMenuTable = new Table();
+        this.fileMenuTable.add(this.buttonTable).row();
+        this.fileMenuTable.add(this.mapTabPane);
+        this.addActor(this.fileMenuTable);
     }
 
-    @Override
-    public void setSize(float width, float height)
+    public void setSize(float width, float buttonHeight, float tabHeight)
     {
-        int buttonAmount = table.getCells().size;
+        int buttonAmount = buttonTable.getCells().size;
         float buttonWidth = width / buttonAmount;
-        this.table.getCell(this.newButton).size(buttonWidth, height);
-        this.table.getCell(this.openButton).size(buttonWidth, height);
-        this.table.getCell(this.saveButton).size(buttonWidth, height);
-        this.table.getCell(this.saveAsButton).size(buttonWidth, height);
-        this.table.getCell(this.undoButton).size(buttonWidth, height);
-        this.table.getCell(this.redoButton).size(buttonWidth, height);
+        this.buttonTable.getCell(this.newButton).size(buttonWidth, buttonHeight);
+        this.buttonTable.getCell(this.openButton).size(buttonWidth, buttonHeight);
+        this.buttonTable.getCell(this.saveButton).size(buttonWidth, buttonHeight);
+        this.buttonTable.getCell(this.saveAsButton).size(buttonWidth, buttonHeight);
+        this.buttonTable.getCell(this.undoButton).size(buttonWidth, buttonHeight);
+        this.buttonTable.getCell(this.redoButton).size(buttonWidth, buttonHeight);
+        this.buttonTable.invalidateHierarchy();
 
-        this.table.invalidateHierarchy();
+        this.mapTabPane.setSize(width, tabHeight);
 
-        super.setSize(this.table.getMinWidth(), this.table.getMinHeight());
+        this.fileMenuTable.invalidateHierarchy();
+
+        super.setSize(width, buttonHeight + this.mapTabPane.getHeight());
 
     }
 

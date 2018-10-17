@@ -5,26 +5,36 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.FileMenu;
 
 public class FadelandEditor extends Game
 {
+	private final int buttonHeight = 45;
+	private final int tabHeight = 35;
 	private static GameAssets gameAssets;
 	private SpriteBatch batch;
 	private Stage stage;
 	private FileMenu fileMenu;
 
+	public TileMap activeMap; // Map currently being edited
+	public Array<TileMap> maps; // All maps open in the program.
+
 	@Override
 	public void create ()
 	{
 		gameAssets = GameAssets.get();
+
+		this.maps = new Array<>();
+
 		this.batch = new SpriteBatch();
 		this.stage = new Stage(new ScreenViewport());
 
-		this.fileMenu = new FileMenu(GameAssets.getUISkin());
-		this.fileMenu.setSize(Gdx.graphics.getWidth(), 50);
-		this.fileMenu.setPosition(0, Gdx.graphics.getHeight() - this.fileMenu.getHeight());
+		this.fileMenu = new FileMenu(GameAssets.getUISkin(), this);
+		this.fileMenu.setSize(Gdx.graphics.getWidth(), buttonHeight, tabHeight);
+		this.fileMenu.setPosition(0, Gdx.graphics.getHeight() - this.fileMenu.getHeight()); // Move to the top
 
 		this.fileMenu.setVisible(true);
 		this.stage.addActor(this.fileMenu);
@@ -35,8 +45,14 @@ public class FadelandEditor extends Game
 	@Override
 	public void render ()
 	{
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		if(activeMap == null)
+		{
+			// The map clears the screen, but no map is active so manually clear the screen here
+			Gdx.gl.glClearColor(0, 0, 0, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		}
+		else // Render the active map
+			super.render();
 
 		this.batch.begin();
 		this.batch.end();
@@ -49,7 +65,7 @@ public class FadelandEditor extends Game
 	public void resize(int width, int height)
 	{
 		this.stage.getViewport().update(width, height, true);
-		this.fileMenu.setSize(Gdx.graphics.getWidth(), 50);
+		this.fileMenu.setSize(Gdx.graphics.getWidth(), buttonHeight, tabHeight);
 		this.fileMenu.setPosition(0, Gdx.graphics.getHeight() - this.fileMenu.getHeight());
 	}
 
@@ -57,5 +73,12 @@ public class FadelandEditor extends Game
 	public void dispose ()
 	{
 		this.batch.dispose();
+	}
+
+	/** Stores the map in the maps array to allow for switching between map tabs.
+	 * Creates the tab for the map.*/
+	public void addToMaps(TileMap map)
+	{
+		this.fileMenu.mapTabPane.addMap(map);
 	}
 }
