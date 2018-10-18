@@ -14,14 +14,15 @@ import static com.fadeland.editor.FadelandEditor.toolHeight;
 public class TileMenuTool extends Group
 {
     private Image background;
-    private Image image;
+    protected Image image;
 
-    private TileMenuToolPane tileMenuToolPane;
+    protected TileMenuToolPane tileMenuToolPane;
 
     public boolean isSelected;
 
-    private TileMenuTools tool;
+    public TileMenuTools tool;
 
+    /** For tile menu tools */
     public TileMenuTool(TileMenuTools tool, final TileMenuToolPane tileMenuToolPane, Skin skin)
     {
         this.tool = tool;
@@ -46,9 +47,34 @@ public class TileMenuTool extends Group
         });
     }
 
+    /** For tiles */
+    public TileMenuTool(TileMenuTools tool, Image image, final TileMenuToolPane tileMenuToolPane, Skin skin)
+    {
+        this.tool = tool;
+        this.tileMenuToolPane = tileMenuToolPane;
+        this.image = image;
+
+        addActor(image);
+        setSize(image.getWidth(), image.getHeight());
+
+        final TileMenuTool selectedTool = this;
+        addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                tileMenuToolPane.selectTool(selectedTool);
+            }
+        });
+    }
+
     public void select()
     {
-        this.background.setColor(Color.GREEN);
+        if(this.background!= null)
+            this.background.setColor(Color.GREEN);
+        else
+            this.image.setColor(Color.GREEN);
+
         this.isSelected = true;
 
         if(this.tool == TileMenuTools.LINES)
@@ -57,7 +83,11 @@ public class TileMenuTool extends Group
 
     public void unselect()
     {
-        this.background.setColor(Color.WHITE);
+        if(this.background!= null)
+            this.background.setColor(Color.WHITE);
+        else
+            this.image.setColor(Color.WHITE);
+
         this.isSelected = false;
 
         if(this.tool == TileMenuTools.LINES)

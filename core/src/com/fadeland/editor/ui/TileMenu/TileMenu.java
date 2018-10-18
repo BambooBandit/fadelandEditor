@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 
@@ -24,9 +24,13 @@ public class TileMenu extends Group
     private Table menuTable; // Holds the menu
     public Table tileTable; // Holds all the tiles
 
+    public Array<TileMenuTool> selectedTiles;
+
     public TileMenu(Skin skin, FadelandEditor fadelandEditor)
     {
         this.editor = fadelandEditor;
+
+        this.selectedTiles = new Array<>();
 
         this.stack = new Stack();
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
@@ -47,8 +51,8 @@ public class TileMenu extends Group
             for(int x = 0; x < tileSheet.getWidth(); x += tileSize)
             {
                 TextureRegion tileRegion = new TextureRegion(tileSheet, x, y, tileSize, tileSize);
-                Image tile = new Image(tileRegion);
-                tile.setSize(tileSize, tileSize);
+
+                TileTool tile = new TileTool(TileMenuTools.TILE, new Image(tileRegion), toolPane, skin);
                 tileTable.add(tile);
             }
             tileTable.row();

@@ -1,5 +1,7 @@
 package com.fadeland.editor.ui.TileMenu;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -20,7 +22,6 @@ public class TileMenuToolPane extends Group
     private FadelandEditor editor;
 
     private TileMenuTool lines;
-    private TileMenuTool selectedTool;
 
     public TileMenu menu;
 
@@ -58,12 +59,52 @@ public class TileMenuToolPane extends Group
         super.setSize(width, height);
     }
 
+    /** Tool was clicked on. If it's a tile, see if CONTROL was being held down to handle selecting or removing multiple tiles. */
     public void selectTool(TileMenuTool selectedTool)
     {
-        this.selectedTool = selectedTool;
-        if(selectedTool.isSelected)
-            selectedTool.unselect();
-        else
-            selectedTool.select();
+        if(selectedTool.tool == TileMenuTools.LINES)
+        {
+            if (selectedTool.isSelected)
+                selectedTool.unselect();
+            else
+                selectedTool.select();
+        }
+        else if(selectedTool.tool == TileMenuTools.TILE)
+        {
+            for(int i = 0; i < this.menu.tileTable.getChildren().size; i ++)
+            {
+                TileMenuTool tool = (TileMenuTool) this.menu.tileTable.getChildren().get(i);
+                if(tool == selectedTool)
+                {
+                    if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                    {
+                        if(tool.isSelected)
+                        {
+                            this.menu.selectedTiles.removeValue(tool, false);
+                            tool.unselect();
+                        }
+                        else
+                        {
+                            this.menu.selectedTiles.add(tool);
+                            tool.select();
+                        }
+                    }
+                    else
+                    {
+                        this.menu.selectedTiles.clear();
+                        this.menu.selectedTiles.add(tool);
+                        tool.select();
+                    }
+                }
+                else if(tool.tool == TileMenuTools.TILE)
+                {
+                    if(!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                    {
+                        this.menu.selectedTiles.removeValue(tool, false);
+                        tool.unselect();
+                    }
+                }
+            }
+        }
     }
 }
