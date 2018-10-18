@@ -1,4 +1,4 @@
-package com.fadeland.editor.ui.TileMenu;
+package com.fadeland.editor.ui.tileMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -9,9 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
-import com.fadeland.editor.ui.FileMenu.Tool;
 
-import static com.fadeland.editor.ui.TileMenu.TileMenu.toolHeight;
+import static com.fadeland.editor.ui.tileMenu.TileMenu.toolHeight;
 
 public class TileMenuToolPane extends Group
 {

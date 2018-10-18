@@ -1,4 +1,4 @@
-package com.fadeland.editor.ui.FileMenu;
+package com.fadeland.editor.ui.propertyMenu;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,20 +8,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.ui.tileMenu.TileMenuTool;
+import com.fadeland.editor.ui.tileMenu.TileMenuToolPane;
+import com.fadeland.editor.ui.tileMenu.TileMenuTools;
 
 import static com.fadeland.editor.FadelandEditor.toolHeight;
 
-public class Tool extends Group
+public class PropertyTool extends Group
 {
     private Image background;
-    private Image image;
+    protected Image image;
 
-    private ToolPane toolPane;
+    protected PropertyToolPane propertyToolPane;
 
-    private boolean selected;
+    public PropertyTools tool;
 
-    public Tool(Tools tool, final ToolPane toolPane, Skin skin)
+    public PropertyTool(PropertyTools tool, final PropertyToolPane propertyToolPane, Skin skin)
     {
+        this.tool = tool;
+        this.propertyToolPane = propertyToolPane;
         this.background = new Image(GameAssets.getUIAtlas().createPatch("textfield"));
         this.image = new Image(new Texture("ui/" + tool.name + ".png")); // TODO pack it in atlas
 
@@ -31,26 +36,13 @@ public class Tool extends Group
         addActor(background);
         addActor(image);
 
-        final Tool selectedTool = this;
         addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                toolPane.selectTool(selectedTool);
+                propertyToolPane.menu.newProperty();
             }
         });
-    }
-
-    public void select()
-    {
-        this.background.setColor(Color.GREEN);
-        this.selected = true;
-    }
-
-    public void unselect()
-    {
-        this.background.setColor(Color.WHITE);
-        this.selected = false;
     }
 }

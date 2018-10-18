@@ -1,4 +1,4 @@
-package com.fadeland.editor.ui.FileMenu;
+package com.fadeland.editor.ui.fileMenu;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;

@@ -8,8 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.fadeland.editor.map.TileMap;
-import com.fadeland.editor.ui.FileMenu.FileMenu;
-import com.fadeland.editor.ui.TileMenu.TileMenu;
+import com.fadeland.editor.ui.fileMenu.FileMenu;
+import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
+import com.fadeland.editor.ui.tileMenu.TileMenu;
 
 public class FadelandEditor extends Game
 {
@@ -21,6 +22,7 @@ public class FadelandEditor extends Game
 	private Stage stage;
 	private FileMenu fileMenu;
 	private TileMenu tileMenu;
+	private PropertyMenu propertyMenu;
 
 	public TileMap activeMap; // Map currently being edited
 	public Array<TileMap> maps; // All maps open in the program.
@@ -35,15 +37,20 @@ public class FadelandEditor extends Game
 		this.batch = new SpriteBatch();
 		this.stage = new Stage(new ScreenViewport());
 
-		// FileMenu
+		// fileMenu
 		this.fileMenu = new FileMenu(GameAssets.getUISkin(), this);
 		this.fileMenu.setVisible(true);
 		this.stage.addActor(this.fileMenu);
 
-		// TileMenu
+		// tileMenu
 		this.tileMenu = new TileMenu(GameAssets.getUISkin(), this);
 		this.tileMenu.setVisible(true);
 		this.stage.addActor(this.tileMenu);
+
+		// propertyMenu
+		this.propertyMenu = new PropertyMenu(GameAssets.getUISkin(), this);
+		this.propertyMenu.setVisible(true);
+		this.stage.addActor(this.propertyMenu);
 
 		Gdx.input.setInputProcessor(this.stage);
 	}
@@ -76,6 +83,9 @@ public class FadelandEditor extends Game
 
 		this.tileMenu.setSize(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - this.fileMenu.getHeight());
 		this.tileMenu.setPosition(Gdx.graphics.getWidth() - this.tileMenu.getWidth(), 0);
+
+		this.propertyMenu.setSize(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() - this.fileMenu.getHeight());
+		this.propertyMenu.setPosition(0, 0);
 	}
 
 	@Override

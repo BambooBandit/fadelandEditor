@@ -1,4 +1,4 @@
-package com.fadeland.editor.ui.FileMenu;
+package com.fadeland.editor.ui.fileMenu;
 
 public enum Tools
 {

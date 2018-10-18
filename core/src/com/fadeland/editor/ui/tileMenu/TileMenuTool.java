@@ -1,4 +1,4 @@
-package com.fadeland.editor.ui.TileMenu;
+package com.fadeland.editor.ui.tileMenu;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;

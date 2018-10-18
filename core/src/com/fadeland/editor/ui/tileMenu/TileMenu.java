@@ -1,4 +1,4 @@
-package com.fadeland.editor.ui.TileMenu;
+package com.fadeland.editor.ui.tileMenu;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,7 +21,6 @@ public class TileMenu extends Group
     private Stack stack;
     private Image background;
     private TileMenuToolPane toolPane;
-    private Table menuTable; // Holds the menu
     public Table tileTable; // Holds all the tiles
 
     public Array<TileMenuTool> selectedTiles;
@@ -36,7 +35,6 @@ public class TileMenu extends Group
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.toolPane = new TileMenuToolPane(editor, this, skin);
 
-        this.menuTable = new Table();
         this.tileTable = new Table();
         this.tileTable.left().top();
         this.scrollPane = new ScrollPane(this.tileTable, GameAssets.getUISkin());
@@ -77,11 +75,5 @@ public class TileMenu extends Group
         this.stack.invalidateHierarchy();
 
         super.setSize(width, height);
-    }
-
-    @Override
-    public void setPosition (float x, float y)
-    {
-        super.setPosition(x, y);
     }
 }

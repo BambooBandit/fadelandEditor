@@ -1,4 +1,4 @@
-package com.fadeland.editor.ui.TileMenu;
+package com.fadeland.editor.ui.tileMenu;
 
 public enum TileMenuTools
 {
