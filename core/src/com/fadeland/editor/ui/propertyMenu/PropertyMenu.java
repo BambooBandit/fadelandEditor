@@ -14,6 +14,7 @@ public class PropertyMenu extends Group
     private MapPropertyPanel mapPropertyPanel;
     private Stack propertyPanelStack; // Used to swap out tile and object property panels
     private TilePropertyPanel tilePropertyPanel;
+    private PropertyPanel propertyPanel; // Custom properties
     private ObjectPropertyPanel objectPropertyPanel;
     private PropertyToolPane toolPane;
 
@@ -31,6 +32,7 @@ public class PropertyMenu extends Group
         this.mapPropertyPanel = new MapPropertyPanel(skin, editor);
         this.tilePropertyPanel = new TilePropertyPanel(skin, editor);
         this.objectPropertyPanel = new ObjectPropertyPanel(skin, editor);
+        this.propertyPanel = new PropertyPanel(skin, editor);
         this.propertyPanelStack = new Stack();
         this.propertyPanelStack.add(this.tilePropertyPanel);
         this.propertyPanelStack.add(this.objectPropertyPanel);
@@ -40,6 +42,7 @@ public class PropertyMenu extends Group
         this.propertyTable.left().top();
         this.propertyTable.add(this.mapPropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.propertyPanelStack).padBottom(5).row();
+        this.propertyTable.add(this.propertyPanel).padBottom(5).row();
 
         this.stack.add(this.background);
         this.stack.add(this.propertyTable);
@@ -52,14 +55,20 @@ public class PropertyMenu extends Group
     @Override
     public void setSize(float width, float height)
     {
-        this.stack.setSize(width, height - toolHeight);
         this.background.setBounds(0, 0, width, height - toolHeight);
         this.mapPropertyPanel.setSize(width, toolHeight);
         this.tilePropertyPanel.setSize(width, toolHeight);
         this.objectPropertyPanel.setSize(width, toolHeight);
+        this.propertyPanel.setSize(width, toolHeight);
         this.propertyTable.invalidateHierarchy();
         this.toolPane.setSize(width, toolHeight);
 
+        this.propertyPanelStack.setSize(width, this.propertyPanelStack.getMinHeight());
+        this.propertyPanelStack.invalidateHierarchy();
+
+        System.out.println(this.propertyPanel.getHeight());
+
+        this.stack.setSize(width, height - toolHeight);
         this.stack.invalidateHierarchy();
 
         super.setSize(width, height);
