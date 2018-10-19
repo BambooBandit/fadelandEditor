@@ -5,9 +5,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 
-public class TilePropertyPanel extends Group
+public class MapPropertyPanel extends Group
 {
-    public static int textFieldHeight = 35;
+    public static int textFieldHeight = 32;
+
+    public static int mapWidth = 5;
+    public static int mapHeight = 5;
 
     private FadelandEditor editor;
 
@@ -15,10 +18,12 @@ public class TilePropertyPanel extends Group
     private Stack stack;
     public Table table; // Holds all the text fields
 
-    private Label probablityProperty;
-    private TextField probablityValue;
+    private Label mapWidthProperty;
+    private TextField mapWidthValue;
+    private Label mapHeightProperty;
+    private TextField mapHeightValue;
 
-    public TilePropertyPanel(Skin skin, FadelandEditor fadelandEditor)
+    public MapPropertyPanel(Skin skin, FadelandEditor fadelandEditor)
     {
         this.editor = fadelandEditor;
 
@@ -27,11 +32,15 @@ public class TilePropertyPanel extends Group
         this.table = new Table();
         this.table.left().top();
 
-        this.probablityProperty = new Label("Probablity", skin);
-        this.probablityValue = new TextField("1.0", skin);
+        this.mapWidthProperty = new Label("Map Width", skin);
+        this.mapWidthValue = new TextField(Integer.toString(mapWidth), skin);
+        this.mapHeightProperty = new Label("Map Height", skin);
+        this.mapHeightValue = new TextField(Integer.toString(mapHeight), skin);
 
-        this.table.add(this.probablityProperty);
-        this.table.add(this.probablityValue);
+        this.table.add(this.mapWidthProperty);
+        this.table.add(this.mapWidthValue).row();
+        this.table.add(this.mapHeightProperty);
+        this.table.add(this.mapHeightValue).row();
 
         this.stack.add(this.background);
         this.stack.add(this.table);
