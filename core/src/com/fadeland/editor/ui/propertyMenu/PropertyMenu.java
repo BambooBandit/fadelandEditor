@@ -12,6 +12,7 @@ public class PropertyMenu extends Group
     private Image background;
 
     private MapPropertyPanel mapPropertyPanel;
+    private Stack propertyPanelStack; // Used to swap out tile and object property panels
     private TilePropertyPanel tilePropertyPanel;
     private ObjectPropertyPanel objectPropertyPanel;
     private PropertyToolPane toolPane;
@@ -30,14 +31,15 @@ public class PropertyMenu extends Group
         this.mapPropertyPanel = new MapPropertyPanel(skin, editor);
         this.tilePropertyPanel = new TilePropertyPanel(skin, editor);
         this.objectPropertyPanel = new ObjectPropertyPanel(skin, editor);
+        this.propertyPanelStack = new Stack();
+        this.propertyPanelStack.add(this.tilePropertyPanel);
+        this.propertyPanelStack.add(this.objectPropertyPanel);
         this.toolPane = new PropertyToolPane(editor, this, skin);
 
         this.propertyTable = new Table();
         this.propertyTable.left().top();
         this.propertyTable.add(this.mapPropertyPanel).padBottom(5).row();
-        this.propertyTable.add(this.tilePropertyPanel).padBottom(5).row();
-        this.propertyTable.add(this.objectPropertyPanel).row();
-
+        this.propertyTable.add(this.propertyPanelStack).padBottom(5).row();
 
         this.stack.add(this.background);
         this.stack.add(this.propertyTable);
