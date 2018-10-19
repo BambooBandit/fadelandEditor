@@ -18,10 +18,8 @@ public class MapPropertyPanel extends Group
     private Stack stack;
     public Table table; // Holds all the text fields
 
-    private Label mapWidthProperty;
-    private TextField mapWidthValue;
-    private Label mapHeightProperty;
-    private TextField mapHeightValue;
+    private PropertyField mapWidthProperty;
+    private PropertyField mapHeightProperty;
 
     public MapPropertyPanel(Skin skin, FadelandEditor fadelandEditor)
     {
@@ -32,15 +30,11 @@ public class MapPropertyPanel extends Group
         this.table = new Table();
         this.table.left().top();
 
-        this.mapWidthProperty = new Label("Map Width", skin);
-        this.mapWidthValue = new TextField(Integer.toString(mapWidth), skin);
-        this.mapHeightProperty = new Label("Map Height", skin);
-        this.mapHeightValue = new TextField(Integer.toString(mapHeight), skin);
+        this.mapWidthProperty = new PropertyField("Map Width", Integer.toString(mapWidth), skin);
+        this.mapHeightProperty = new PropertyField("Map Height", Integer.toString(mapHeight), skin);
 
-        this.table.add(this.mapWidthProperty);
-        this.table.add(this.mapWidthValue).row();
-        this.table.add(this.mapHeightProperty);
-        this.table.add(this.mapHeightValue).row();
+        this.table.add(this.mapWidthProperty).row();
+        this.table.add(this.mapHeightProperty).row();
 
         this.stack.add(this.background);
         this.stack.add(this.table);
@@ -52,7 +46,10 @@ public class MapPropertyPanel extends Group
     public void setSize(float width, float height)
     {
         for(int i = 0; i < this.table.getChildren().size; i ++)
-            this.table.getCell(this.table.getChildren().get(i)).size(width / 2, textFieldHeight);
+        {
+            this.table.getChildren().get(i).setSize(width, textFieldHeight);
+            this.table.getCell(this.table.getChildren().get(i)).size(width, textFieldHeight);
+        }
 
         float newHeight = textFieldHeight * this.table.getChildren().size / 2;
 

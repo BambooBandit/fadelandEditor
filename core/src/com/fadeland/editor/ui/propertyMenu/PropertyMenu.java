@@ -36,6 +36,7 @@ public class PropertyMenu extends Group
         this.propertyPanelStack = new Stack();
         this.propertyPanelStack.add(this.tilePropertyPanel);
         this.propertyPanelStack.add(this.objectPropertyPanel);
+        this.objectPropertyPanel.setVisible(false);
         this.toolPane = new PropertyToolPane(editor, this, skin);
 
         this.propertyTable = new Table();
@@ -76,5 +77,6 @@ public class PropertyMenu extends Group
 
     public void newProperty()
     {
+        this.propertyPanel.newProperty();
     }
 }

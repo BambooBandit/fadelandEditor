@@ -15,8 +15,7 @@ public class TilePropertyPanel extends Group
     private Stack stack;
     public Table table; // Holds all the text fields
 
-    private Label probablityProperty;
-    private TextField probablityValue;
+    private PropertyField probabilty;
 
     public TilePropertyPanel(Skin skin, FadelandEditor fadelandEditor)
     {
@@ -27,11 +26,10 @@ public class TilePropertyPanel extends Group
         this.table = new Table();
         this.table.left().top();
 
-        this.probablityProperty = new Label("Probablity", skin);
-        this.probablityValue = new TextField("1.0", skin);
+        this.probabilty = new PropertyField("Probability", "1.0", skin);
 
-        this.table.add(this.probablityProperty);
-        this.table.add(this.probablityValue);
+        this.table.add(this.probabilty);
+        this.table.debug();
 
         this.stack.add(this.background);
         this.stack.add(this.table);
@@ -43,9 +41,13 @@ public class TilePropertyPanel extends Group
     public void setSize(float width, float height)
     {
         for(int i = 0; i < this.table.getChildren().size; i ++)
-            this.table.getCell(this.table.getChildren().get(i)).size(width / 2, textFieldHeight);
+        {
+            this.table.getChildren().get(i).setSize(width, textFieldHeight);
+            this.table.getCell(this.table.getChildren().get(i)).size(width, textFieldHeight);
+        }
 
-        float newHeight = textFieldHeight * this.table.getChildren().size / 2;
+        this.table.invalidateHierarchy();
+        float newHeight = textFieldHeight * this.table.getChildren().size;
 
         this.background.setBounds(0, 0, width, newHeight);
         this.stack.setSize(width, newHeight);

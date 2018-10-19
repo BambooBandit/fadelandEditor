@@ -15,8 +15,7 @@ public class ObjectPropertyPanel extends Group
     private Stack stack;
     public Table table; // Holds all the text fields
 
-    private Label probablityProperty;
-    private TextField probablityValue;
+    private PropertyField rotation;
 
     public ObjectPropertyPanel(Skin skin, FadelandEditor fadelandEditor)
     {
@@ -25,13 +24,11 @@ public class ObjectPropertyPanel extends Group
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.stack = new Stack();
         this.table = new Table();
-        this.table.left().top();
+        this.table.left().bottom();
 
-        this.probablityProperty = new Label("Rotation", skin);
-        this.probablityValue = new TextField("0", skin);
+        this.rotation = new PropertyField("Rotation", "0", skin);
 
-        this.table.add(this.probablityProperty);
-        this.table.add(this.probablityValue);
+        this.table.add(this.rotation);
 
         this.stack.add(this.background);
         this.stack.add(this.table);
@@ -43,7 +40,10 @@ public class ObjectPropertyPanel extends Group
     public void setSize(float width, float height)
     {
         for(int i = 0; i < this.table.getChildren().size; i ++)
-            this.table.getCell(this.table.getChildren().get(i)).size(width / 2, textFieldHeight);
+        {
+            this.table.getChildren().get(i).setSize(width, textFieldHeight);
+            this.table.getCell(this.table.getChildren().get(i)).size(width, textFieldHeight);
+        }
 
         float newHeight = textFieldHeight * this.table.getChildren().size / 2;
 

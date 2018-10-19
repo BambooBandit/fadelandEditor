@@ -34,7 +34,10 @@ public class PropertyPanel extends Group
     public void setSize(float width, float height)
     {
         for(int i = 0; i < this.table.getChildren().size; i ++)
-            this.table.getCell(this.table.getChildren().get(i)).size(width / 2, textFieldHeight);
+        {
+            this.table.getChildren().get(i).setSize(width, textFieldHeight);
+            this.table.getCell(this.table.getChildren().get(i)).size(width, textFieldHeight);
+        }
 
         float newHeight = textFieldHeight * this.table.getChildren().size / 2;
 
@@ -43,5 +46,10 @@ public class PropertyPanel extends Group
         this.stack.invalidateHierarchy();
 
         super.setSize(width, newHeight);
+    }
+
+    public void newProperty()
+    {
+
     }
 }
