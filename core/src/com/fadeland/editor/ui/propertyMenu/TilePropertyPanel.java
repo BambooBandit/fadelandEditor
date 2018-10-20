@@ -10,6 +10,7 @@ public class TilePropertyPanel extends Group
     public static int textFieldHeight = 35;
 
     private FadelandEditor editor;
+    private PropertyMenu menu;
 
     private Image background;
     private Stack stack;
@@ -17,16 +18,17 @@ public class TilePropertyPanel extends Group
 
     private PropertyField probabilty;
 
-    public TilePropertyPanel(Skin skin, FadelandEditor fadelandEditor)
+    public TilePropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
     {
         this.editor = fadelandEditor;
+        this.menu = menu;
 
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.stack = new Stack();
         this.table = new Table();
         this.table.left().top();
 
-        this.probabilty = new PropertyField("Probability", "1.0", skin);
+        this.probabilty = new PropertyField("Probability", "1.0", skin, menu, false);
 
         this.table.add(this.probabilty);
 

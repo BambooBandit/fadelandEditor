@@ -29,10 +29,10 @@ public class PropertyMenu extends Group
 
         this.stack = new Stack();
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
-        this.mapPropertyPanel = new MapPropertyPanel(skin, editor);
-        this.tilePropertyPanel = new TilePropertyPanel(skin, editor);
-        this.objectPropertyPanel = new ObjectPropertyPanel(skin, editor);
-        this.propertyPanel = new PropertyPanel(skin, editor);
+        this.mapPropertyPanel = new MapPropertyPanel(skin, this, editor);
+        this.tilePropertyPanel = new TilePropertyPanel(skin, this, editor);
+        this.objectPropertyPanel = new ObjectPropertyPanel(skin, this, editor);
+        this.propertyPanel = new PropertyPanel(skin, this, editor);
         this.propertyPanelStack = new Stack();
         this.propertyPanelStack.add(this.tilePropertyPanel);
         this.propertyPanelStack.add(this.objectPropertyPanel);
@@ -87,6 +87,18 @@ public class PropertyMenu extends Group
     public void newProperty()
     {
         this.propertyPanel.newProperty();
+        this.propertyTable.invalidateHierarchy();
+    }
+
+    public void removeProperty(String propertyName)
+    {
+        this.propertyPanel.removeProperty(propertyName);
+        this.propertyTable.invalidateHierarchy();
+    }
+
+    public void removeProperty(PropertyField propertyField)
+    {
+        this.propertyPanel.removeProperty(propertyField);
         this.propertyTable.invalidateHierarchy();
     }
 }

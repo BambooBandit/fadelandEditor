@@ -10,6 +10,7 @@ public class ObjectPropertyPanel extends Group
     public static int textFieldHeight = 35;
 
     private FadelandEditor editor;
+    private PropertyMenu menu;
 
     private Image background;
     private Stack stack;
@@ -17,8 +18,9 @@ public class ObjectPropertyPanel extends Group
 
     private PropertyField rotation;
 
-    public ObjectPropertyPanel(Skin skin, FadelandEditor fadelandEditor)
+    public ObjectPropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
     {
+        this.menu = menu;
         this.editor = fadelandEditor;
 
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
@@ -26,7 +28,7 @@ public class ObjectPropertyPanel extends Group
         this.table = new Table();
         this.table.left().bottom();
 
-        this.rotation = new PropertyField("Rotation", "0", skin);
+        this.rotation = new PropertyField("Rotation", "0", skin, menu, false);
 
         this.table.add(this.rotation);
 

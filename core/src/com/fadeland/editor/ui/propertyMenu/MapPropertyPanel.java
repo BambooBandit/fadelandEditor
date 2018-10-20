@@ -13,6 +13,7 @@ public class MapPropertyPanel extends Group
     public static int mapHeight = 5;
 
     private FadelandEditor editor;
+    private PropertyMenu menu;
 
     private Image background;
     private Stack stack;
@@ -21,17 +22,18 @@ public class MapPropertyPanel extends Group
     private PropertyField mapWidthProperty;
     private PropertyField mapHeightProperty;
 
-    public MapPropertyPanel(Skin skin, FadelandEditor fadelandEditor)
+    public MapPropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
     {
         this.editor = fadelandEditor;
+        this.menu = menu;
 
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.stack = new Stack();
         this.table = new Table();
         this.table.left().top();
 
-        this.mapWidthProperty = new PropertyField("Map Width", Integer.toString(mapWidth), skin);
-        this.mapHeightProperty = new PropertyField("Map Height", Integer.toString(mapHeight), skin);
+        this.mapWidthProperty = new PropertyField("Map Width", Integer.toString(mapWidth), skin, menu, false);
+        this.mapHeightProperty = new PropertyField("Map Height", Integer.toString(mapHeight), skin, menu, false);
 
         this.table.add(this.mapWidthProperty).padBottom(1).row();
         this.table.add(this.mapHeightProperty).row();
