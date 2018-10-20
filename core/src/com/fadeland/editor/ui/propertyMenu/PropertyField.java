@@ -7,7 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class PropertyField extends Group
 {
-    private Label property;
+    private Label property; // Null if removeable is true
+    private TextField propertyTextField; // Null if removeable is false
     private TextField value;
     private TextButton remove; // Null if removeable is false
     private Table table;
@@ -21,12 +22,18 @@ public class PropertyField extends Group
 
         this.removeable = removeable;
 
-        this.property = new Label(property, skin);
+        if(removeable)
+            this.propertyTextField = new TextField(property, skin);
+        else
+            this.property = new Label(property, skin);
         this.value = new TextField(value, skin);
 
         this.table = new Table();
         this.table.bottom().left();
-        this.table.add(this.property);
+        if(removeable)
+            this.table.add(this.propertyTextField);
+        else
+            this.table.add(this.property);
         this.table.add(this.value);
 
         if(removeable)
@@ -51,13 +58,19 @@ public class PropertyField extends Group
     @Override
     public void setSize(float width, float height)
     {
-        this.property.setSize(width / 2, height);
         this.value.setSize(width / 2, height);
-        this.table.getCell(this.property).size(width / 2, height);
         if(this.removeable)
+        {
+            this.propertyTextField.setSize(width / 2, height);
+            this.table.getCell(this.propertyTextField).size(width / 2, height);
             this.table.getCell(this.value).size((width / 2) - height, height);
+        }
         else
+        {
+            this.property.setSize(width / 2, height);
+            this.table.getCell(this.property).size(width / 2, height);
             this.table.getCell(this.value).size(width / 2, height);
+        }
         if(this.removeable)
             this.table.getCell(this.remove).size(height, height);
         this.table.invalidateHierarchy();
@@ -66,7 +79,10 @@ public class PropertyField extends Group
 
     public String getProperty()
     {
-        return this.property.getName();
+        if(this.removeable)
+            return this.propertyTextField.getText();
+        else
+            return this.property.getName();
     }
     public String getValue()
     {
