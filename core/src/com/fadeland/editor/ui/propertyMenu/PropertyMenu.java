@@ -40,10 +40,10 @@ public class PropertyMenu extends Group
         this.toolPane = new PropertyToolPane(editor, this, skin);
 
         this.propertyTable = new Table();
-        this.propertyTable.left().top();
+        this.propertyTable.left().bottom();
         this.propertyTable.add(this.mapPropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.propertyPanelStack).padBottom(5).row();
-        this.propertyTable.add(this.propertyPanel).padBottom(5).row();
+        this.propertyTable.add(this.propertyPanel);
 
         this.stack.add(this.background);
         this.stack.add(this.propertyTable);
@@ -60,14 +60,23 @@ public class PropertyMenu extends Group
         this.mapPropertyPanel.setSize(width, toolHeight);
         this.tilePropertyPanel.setSize(width, toolHeight);
         this.objectPropertyPanel.setSize(width, toolHeight);
-        this.propertyPanel.setSize(width, toolHeight);
+        float propertyPanelStackHeight = 0;
+        if(this.tilePropertyPanel.isVisible())
+            propertyPanelStackHeight = this.tilePropertyPanel.getHeight();
+        else if(this.objectPropertyPanel.isVisible())
+            propertyPanelStackHeight = this.objectPropertyPanel.getHeight();
+        else
+        {
+            this.tilePropertyPanel.setSize(width, 0);
+            this.objectPropertyPanel.setSize(width, 0);
+        }
+        this.propertyPanel.setSize(width, height - toolHeight - this.mapPropertyPanel.getHeight() - 5 - 5 - propertyPanelStackHeight);
+        this.propertyPanel.setPosition(0, toolHeight);
         this.propertyTable.invalidateHierarchy();
         this.toolPane.setSize(width, toolHeight);
 
         this.propertyPanelStack.setSize(width, this.propertyPanelStack.getMinHeight());
         this.propertyPanelStack.invalidateHierarchy();
-
-        System.out.println(this.propertyPanel.getHeight());
 
         this.stack.setSize(width, height - toolHeight);
         this.stack.invalidateHierarchy();
@@ -78,5 +87,6 @@ public class PropertyMenu extends Group
     public void newProperty()
     {
         this.propertyPanel.newProperty();
+        this.propertyTable.invalidateHierarchy();
     }
 }

@@ -29,7 +29,6 @@ public class TilePropertyPanel extends Group
         this.probabilty = new PropertyField("Probability", "1.0", skin);
 
         this.table.add(this.probabilty);
-        this.table.debug();
 
         this.stack.add(this.background);
         this.stack.add(this.table);
@@ -53,6 +52,9 @@ public class TilePropertyPanel extends Group
         this.stack.setSize(width, newHeight);
         this.stack.invalidateHierarchy();
 
-        super.setSize(width, newHeight);
+        if(height == 0)
+            super.setSize(0, 0);
+        else
+            super.setSize(width, newHeight);
     }
 }

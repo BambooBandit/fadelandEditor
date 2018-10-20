@@ -13,10 +13,14 @@ public class PropertyPanel extends Group
 
     private Image background;
     private Stack stack;
+    private ScrollPane scrollPane;
     public Table table; // Holds all the text fields
+
+    private Skin skin;
 
     public PropertyPanel(Skin skin, FadelandEditor fadelandEditor)
     {
+        this.skin = skin;
         this.editor = fadelandEditor;
 
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
@@ -24,10 +28,12 @@ public class PropertyPanel extends Group
         this.table = new Table();
         this.table.left().top();
 
-        this.stack.add(this.background);
-        this.stack.add(this.table);
+        this.scrollPane = new ScrollPane(this.table, skin);
 
-        this.addActor(this.stack);
+        this.stack.add(this.background);
+        this.stack.add(this.scrollPane);
+
+        this.addActor(this.scrollPane);
     }
 
     @Override
@@ -39,17 +45,23 @@ public class PropertyPanel extends Group
             this.table.getCell(this.table.getChildren().get(i)).size(width, textFieldHeight);
         }
 
-        float newHeight = textFieldHeight * this.table.getChildren().size / 2;
+        this.table.invalidateHierarchy();
 
-        this.background.setBounds(0, 0, width, newHeight);
-        this.stack.setSize(width, newHeight);
+        this.scrollPane.setSize(width, height);
+        this.scrollPane.invalidateHierarchy();
+
+        this.background.setBounds(0, 0, width, height);
+        this.stack.setSize(width, height);
         this.stack.invalidateHierarchy();
 
-        super.setSize(width, newHeight);
+        super.setSize(width, height);
     }
 
     public void newProperty()
     {
+        PropertyField property = new PropertyField("Property", "Value", this.skin);
+        this.table.add(property).padBottom(1).row();
 
+        setSize(getWidth(), getHeight()); // Resize to fit the new field
     }
 }

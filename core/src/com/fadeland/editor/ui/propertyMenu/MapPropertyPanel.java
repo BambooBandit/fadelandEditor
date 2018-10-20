@@ -33,7 +33,7 @@ public class MapPropertyPanel extends Group
         this.mapWidthProperty = new PropertyField("Map Width", Integer.toString(mapWidth), skin);
         this.mapHeightProperty = new PropertyField("Map Height", Integer.toString(mapHeight), skin);
 
-        this.table.add(this.mapWidthProperty).row();
+        this.table.add(this.mapWidthProperty).padBottom(1).row();
         this.table.add(this.mapHeightProperty).row();
 
         this.stack.add(this.background);
@@ -51,7 +51,7 @@ public class MapPropertyPanel extends Group
             this.table.getCell(this.table.getChildren().get(i)).size(width, textFieldHeight);
         }
 
-        float newHeight = textFieldHeight * this.table.getChildren().size / 2;
+        float newHeight = textFieldHeight * this.table.getChildren().size;
 
         this.background.setBounds(0, 0, width, newHeight);
         this.stack.setSize(width, newHeight);

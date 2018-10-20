@@ -51,6 +51,9 @@ public class ObjectPropertyPanel extends Group
         this.stack.setSize(width, newHeight);
         this.stack.invalidateHierarchy();
 
-        super.setSize(width, newHeight);
+        if(height == 0)
+            super.setSize(0, 0);
+        else
+            super.setSize(width, newHeight);
     }
 }
