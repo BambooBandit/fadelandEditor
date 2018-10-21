@@ -146,7 +146,6 @@ public class TileMap implements Screen
 
     public Tile getTile(float x, float y)
     {
-        System.out.println(x + ", " + y);
         if(x > mapWidth * tileSize || y > mapHeight * tileSize || x < 0 || y < -tileSize)
             return null;
 
