@@ -17,13 +17,13 @@ public class TileMenu extends Group
 
     private FadelandEditor editor;
 
-    private ScrollPane scrollPane;
+    public ScrollPane scrollPane;
     private Stack stack;
     private Image background;
-    private TileMenuToolPane toolPane;
+    public TileMenuToolPane toolPane;
     public Table tileTable; // Holds all the tiles
 
-    public Array<TileMenuTool> selectedTiles;
+    public Array<TileTool> selectedTiles;
 
     public TileMenu(Skin skin, FadelandEditor fadelandEditor)
     {

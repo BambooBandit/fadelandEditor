@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.Utils;
+import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.propertyMenu.MapPropertyPanel;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
@@ -80,17 +81,27 @@ public class TileMap implements Screen
         this.editor.shapeRenderer.setProjectionMatrix(camera.combined);
         this.editor.shapeRenderer.setAutoShapeType(true);
         this.editor.shapeRenderer.setColor(Color.BLACK);
-        this.editor.shapeRenderer.begin();
-        for(int y = 0; y <= mapHeight; y ++)
-            this.editor.shapeRenderer.line(0, y * tileSize, mapWidth * tileSize, y * tileSize);
-        for(int x = 0; x <= mapWidth; x ++)
-            this.editor.shapeRenderer.line(x * tileSize, 0, x * tileSize, mapHeight * tileSize);
-        this.editor.shapeRenderer.end();
+
 
         this.editor.batch.begin();
         for(int i = 0; i < tiles.size; i ++)
             this.tiles.get(i).draw();
         this.editor.batch.end();
+
+        this.editor.shapeRenderer.begin();
+        this.editor.shapeRenderer.line(0, 0, 0, mapHeight * tileSize);
+        this.editor.shapeRenderer.line(0, 0, mapWidth * tileSize, 0);
+        this.editor.shapeRenderer.line(0, mapHeight * tileSize, mapWidth * tileSize, mapHeight * tileSize);
+        this.editor.shapeRenderer.line(mapWidth * tileSize, 0, mapWidth * tileSize, mapHeight * tileSize);
+
+        if(editor.fileMenu.toolPane.lines.selected)
+        {
+            for (int y = 1; y < mapHeight; y++)
+                this.editor.shapeRenderer.line(0, y * tileSize, mapWidth * tileSize, y * tileSize);
+            for (int x = 1; x < mapWidth; x++)
+                this.editor.shapeRenderer.line(x * tileSize, 0, x * tileSize, mapHeight * tileSize);
+        }
+        this.editor.shapeRenderer.end();
     }
 
     @Override
@@ -130,9 +141,15 @@ public class TileMap implements Screen
 
     public Tile getTile(float x, float y)
     {
+        System.out.println(x + ", " +  y);
+        if(x > mapWidth * tileSize || y > mapHeight * tileSize)
+            return null;
         int index = 0;
         index += Math.ceil(y / tileSize) * mapWidth - 1;
         index += Math.ceil(x / tileSize);
+
+        if(index >= this.tiles.size || index < 0)
+            return null;
 
         Tile tile = tiles.get(index);
         return tile;

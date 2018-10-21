@@ -3,7 +3,12 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector3;
 import com.fadeland.editor.FadelandEditor;
+import com.fadeland.editor.Utils;
+import com.fadeland.editor.ui.fileMenu.Tools;
+
+import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 
 public class MapInput implements InputProcessor
 {
@@ -37,6 +42,16 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
+        editor.stage.unfocus(editor.tileMenu.scrollPane);
+        Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
+        Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
+        if(editor.getFileTool() != null && editor.getTileTool() != null && clickedTile != null)
+        {
+            if (editor.getFileTool().tool == Tools.BRUSH)
+                clickedTile.setTool(editor.getTileTool());
+            else if (editor.getFileTool().tool == Tools.ERASER)
+                clickedTile.setTool(null);
+        }
         return false;
     }
 

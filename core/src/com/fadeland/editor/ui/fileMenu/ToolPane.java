@@ -20,20 +20,23 @@ public class ToolPane extends Group
     private Tool randomBrush;
     private Tool eraser;
     private Tool grab;
+    public Tool lines;
     private Tool selectedTool;
 
     public ToolPane(FadelandEditor editor, Skin skin)
     {
         this.toolTable = new Table();
-        this.brush = new Tool(Tools.BRUSH, this, skin);
-        this.randomBrush = new Tool(Tools.RANDOMBRUSH, this, skin);
-        this.eraser = new Tool(Tools.ERASER, this, skin);
-        this.grab = new Tool(Tools.GRAB, this, skin);
+        this.brush = new Tool(Tools.BRUSH, this, skin, false);
+        this.randomBrush = new Tool(Tools.RANDOMBRUSH, this, skin, false);
+        this.eraser = new Tool(Tools.ERASER, this, skin, false);
+        this.grab = new Tool(Tools.GRAB, this, skin, false);
+        this.lines = new Tool(Tools.LINES, this, skin, true);
         this.toolTable.left();
         this.toolTable.add(this.brush).padRight(1);
         this.toolTable.add(this.randomBrush).padRight(1);
         this.toolTable.add(this.eraser).padRight(1);
-        this.toolTable.add(this.grab);
+        this.toolTable.add(this.grab).padRight(1);
+        this.toolTable.add(this.lines);
 
         this.editor = editor;
         this.skin = skin;
@@ -57,6 +60,7 @@ public class ToolPane extends Group
         this.toolTable.getCell(this.randomBrush).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.eraser).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.grab).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.lines).size(toolHeight, toolHeight);
         this.toolTable.invalidateHierarchy();
 
         this.pane.invalidateHierarchy();
@@ -66,14 +70,29 @@ public class ToolPane extends Group
 
     public void selectTool(Tool selectedTool)
     {
-        this.selectedTool = selectedTool;
-        for(int i = 0; i < this.toolTable.getChildren().size; i ++)
+        if(selectedTool.isToggleable)
         {
-            Tool tool = (Tool) this.toolTable.getChildren().get(i);
-            if(tool == selectedTool)
-                tool.select();
+            if(selectedTool.selected)
+                selectedTool.unselect();
             else
-                tool.unselect();
+                selectedTool.select();
         }
+        else
+        {
+            this.selectedTool = selectedTool;
+            for (int i = 0; i < this.toolTable.getChildren().size; i++)
+            {
+                Tool tool = (Tool) this.toolTable.getChildren().get(i);
+                if (tool == selectedTool)
+                    tool.select();
+                else if(!tool.isToggleable)
+                    tool.unselect();
+            }
+        }
+    }
+
+    public Tool getTool()
+    {
+        return selectedTool;
     }
 }

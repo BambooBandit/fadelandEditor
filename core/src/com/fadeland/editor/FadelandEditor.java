@@ -2,6 +2,7 @@ package com.fadeland.editor;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,9 +12,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.fileMenu.FileMenu;
+import com.fadeland.editor.ui.fileMenu.Tool;
 import com.fadeland.editor.ui.layerMenu.LayerMenu;
 import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
+import com.fadeland.editor.ui.tileMenu.TileMenuTool;
+import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class FadelandEditor extends Game
 {
@@ -25,10 +29,10 @@ public class FadelandEditor extends Game
 	public SpriteBatch batch;
 	public InputMultiplexer inputMultiplexer;
 	public Stage stage;
-	private FileMenu fileMenu;
-	private TileMenu tileMenu;
-	private PropertyMenu propertyMenu;
-	private LayerMenu layerMenu;
+	public FileMenu fileMenu;
+	public TileMenu tileMenu;
+	public PropertyMenu propertyMenu;
+	public LayerMenu layerMenu;
 
 	public TileMap activeMap; // Map currently being edited
 	public Array<TileMap> maps; // All maps open in the program.
@@ -86,7 +90,7 @@ public class FadelandEditor extends Game
 		this.batch.end();
 
 		stage.act();
-		stage.draw();
+        stage.draw();
 	}
 
 	@Override
@@ -118,4 +122,16 @@ public class FadelandEditor extends Game
 	{
 		this.fileMenu.mapTabPane.addMap(map);
 	}
+
+    public Tool getFileTool()
+    {
+        return this.fileMenu.toolPane.getTool();
+    }
+
+    public TileTool getTileTool()
+    {
+        if(this.tileMenu.selectedTiles.size == 0)
+            return null;
+        return this.tileMenu.selectedTiles.first();
+    }
 }

@@ -18,10 +18,16 @@ public class Tool extends Group
 
     private ToolPane toolPane;
 
-    private boolean selected;
+    public boolean selected;
 
-    public Tool(Tools tool, final ToolPane toolPane, Skin skin)
+    public Tools tool;
+
+    public boolean isToggleable;
+
+    public Tool(Tools tool, final ToolPane toolPane, Skin skin, boolean isToggleable)
     {
+        this.isToggleable = isToggleable;
+        this.tool = tool;
         this.background = new Image(GameAssets.getUIAtlas().createPatch("textfield"));
         this.image = new Image(new Texture("ui/" + tool.name + ".png")); // TODO pack it in atlas
 

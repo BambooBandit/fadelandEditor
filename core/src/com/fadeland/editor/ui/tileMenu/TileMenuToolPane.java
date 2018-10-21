@@ -72,7 +72,7 @@ public class TileMenuToolPane extends Group
         {
             for(int i = 0; i < this.menu.tileTable.getChildren().size; i ++)
             {
-                TileMenuTool tool = (TileMenuTool) this.menu.tileTable.getChildren().get(i);
+                TileTool tool = (TileTool) this.menu.tileTable.getChildren().get(i);
                 if(tool == selectedTool)
                 {
                     if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
