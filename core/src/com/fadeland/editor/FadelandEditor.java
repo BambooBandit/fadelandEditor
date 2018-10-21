@@ -2,8 +2,10 @@ package com.fadeland.editor;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -19,8 +21,10 @@ public class FadelandEditor extends Game
 	public static final int tabHeight = 25;
 	public static final int toolHeight = 35;
 	private static GameAssets gameAssets;
-	private SpriteBatch batch;
-	private Stage stage;
+	public ShapeRenderer shapeRenderer;
+	public SpriteBatch batch;
+	public InputMultiplexer inputMultiplexer;
+	public Stage stage;
 	private FileMenu fileMenu;
 	private TileMenu tileMenu;
 	private PropertyMenu propertyMenu;
@@ -34,9 +38,12 @@ public class FadelandEditor extends Game
 	{
 		gameAssets = GameAssets.get();
 
+		this.inputMultiplexer = new InputMultiplexer();
+
 		this.maps = new Array<>();
 
 		this.batch = new SpriteBatch();
+		this.shapeRenderer = new ShapeRenderer();
 		this.stage = new Stage(new ScreenViewport());
 
 		// fileMenu
@@ -59,7 +66,8 @@ public class FadelandEditor extends Game
 		this.layerMenu.setVisible(true);
 		this.stage.addActor(this.layerMenu);
 
-		Gdx.input.setInputProcessor(this.stage);
+		this.inputMultiplexer.addProcessor(this.stage);
+		Gdx.input.setInputProcessor(this.inputMultiplexer);
 	}
 
 	@Override

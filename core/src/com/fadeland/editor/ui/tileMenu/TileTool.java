@@ -1,6 +1,7 @@
 package com.fadeland.editor.ui.tileMenu;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -9,9 +10,12 @@ public class TileTool extends TileMenuTool
 
     public TileProperties properties;
 
-    public TileTool(TileMenuTools tool, Image image, TileMenuToolPane tileMenuToolPane, Skin skin)
+    public TextureRegion textureRegion;
+
+    public TileTool(TileMenuTools tool, Image image, TextureRegion textureRegion, TileMenuToolPane tileMenuToolPane, Skin skin)
     {
         super(tool, image, tileMenuToolPane, skin);
+        this.textureRegion = textureRegion;
         this.properties = new TileProperties();
     }
 

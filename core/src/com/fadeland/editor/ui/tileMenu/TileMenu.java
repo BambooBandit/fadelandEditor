@@ -50,7 +50,7 @@ public class TileMenu extends Group
             {
                 TextureRegion tileRegion = new TextureRegion(tileSheet, x, y, tileSize, tileSize);
 
-                TileTool tile = new TileTool(TileMenuTools.TILE, new Image(tileRegion), toolPane, skin);
+                TileTool tile = new TileTool(TileMenuTools.TILE, new Image(tileRegion), tileRegion, toolPane, skin);
                 tileTable.add(tile);
             }
             tileTable.row();

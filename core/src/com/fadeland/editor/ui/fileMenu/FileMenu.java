@@ -51,7 +51,7 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                TileMap newMap = new TileMap("untitled " + untitledCount ++);
+                TileMap newMap = new TileMap(editor, "untitled " + untitledCount ++);
                 editor.addToMaps(newMap);
                 mapTabPane.lookAtMap(newMap);
             }
