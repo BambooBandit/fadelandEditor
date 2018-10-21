@@ -8,6 +8,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.fileMenu.Tools;
@@ -19,6 +23,7 @@ public class TileMap implements Screen
 {
     public FadelandEditor editor;
     public OrthographicCamera camera;
+    public Viewport viewport;
     public static int untitledCount = 0;
 
     public float r = Utils.randomFloat(0, 1);
@@ -41,22 +46,21 @@ public class TileMap implements Screen
 
         this.input = new MapInput(editor, this);
 
-        this.camera = new OrthographicCamera();
-        this.camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.viewport = new ScreenViewport(this.camera);
+        this.viewport.apply();
         this.camera.position.x = 160;
         this.camera.position.y = 150;
 
         this.tiles = new Array<>();
 
         this.mapWidth = MapPropertyPanel.mapWidth;
-        this.mapHeight = MapPropertyPanel.mapWidth;
+        this.mapHeight = MapPropertyPanel.mapHeight;
 
         for(int y = 0; y < mapHeight; y ++)
         {
             for(int x = 0; x < mapWidth; x ++)
-            {
                 this.tiles.add(new Tile(this, x * 64, y * 64));
-            }
         }
     }
 
@@ -82,7 +86,6 @@ public class TileMap implements Screen
         this.editor.shapeRenderer.setAutoShapeType(true);
         this.editor.shapeRenderer.setColor(Color.BLACK);
 
-
         this.editor.batch.begin();
         for(int i = 0; i < tiles.size; i ++)
             this.tiles.get(i).draw();
@@ -107,7 +110,9 @@ public class TileMap implements Screen
     @Override
     public void resize(int width, int height)
     {
-        camera.setToOrtho(false, width, height);
+        this.camera.viewportWidth = width;
+        this.camera.viewportHeight = height;
+        this.viewport.update(width, height);
     }
 
     @Override
@@ -141,9 +146,9 @@ public class TileMap implements Screen
 
     public Tile getTile(float x, float y)
     {
-        System.out.println(x + ", " +  y);
         if(x > mapWidth * tileSize || y > mapHeight * tileSize)
             return null;
+
         int index = 0;
         index += Math.ceil(y / tileSize) * mapWidth - 1;
         index += Math.ceil(x / tileSize);

@@ -108,6 +108,9 @@ public class FadelandEditor extends Game
 
 		this.layerMenu.setSize(Gdx.graphics.getWidth() / 4, (Gdx.graphics.getHeight() - this.fileMenu.getHeight()) / 2);
 		this.layerMenu.setPosition(Gdx.graphics.getWidth() - this.tileMenu.getWidth(), this.tileMenu.getHeight());
+
+		if(this.getScreen() != null)
+		    this.getScreen().resize(width, height);
 	}
 
 	@Override

@@ -64,6 +64,16 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
+        editor.stage.unfocus(editor.tileMenu.scrollPane);
+        Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
+        Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
+        if(editor.getFileTool() != null && editor.getTileTool() != null && clickedTile != null)
+        {
+            if (editor.getFileTool().tool == Tools.BRUSH)
+                clickedTile.setTool(editor.getTileTool());
+            else if (editor.getFileTool().tool == Tools.ERASER)
+                clickedTile.setTool(null);
+        }
         return false;
     }
 
@@ -77,14 +87,21 @@ public class MapInput implements InputProcessor
     public boolean scrolled(int amount)
     {
         if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+        {
             this.map.camera.position.x += amount * 10;
+            this.map.camera.update();
+        }
         else if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT))
+        {
             this.map.camera.position.y += amount * 10;
+            this.map.camera.update();
+        }
         else
         {
             this.map.camera.zoom += amount / 3f;
             if(this.map.camera.zoom < .1f)
                 this.map.camera.zoom = .1f;
+            this.map.camera.update();
         }
 
         return false;
