@@ -32,12 +32,14 @@ public class LayerTool extends Group
         addActor(background);
         addActor(image);
 
+        final LayerTypes newLayerType = tool.type;
+
         addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                layerToolPane.menu.newLayer();
+                layerToolPane.menu.newLayer(newLayerType);
             }
         });
     }

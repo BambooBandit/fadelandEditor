@@ -8,22 +8,25 @@ import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 public class Tile
 {
     private TileMap map;
+    private TileLayer layer;
     private Sprite sprite;
     private int x, y, width, height;
     public TileTool tool;
 
-    public Tile(TileMap map, int x, int y)
+    public Tile(TileMap map, TileLayer layer, int x, int y)
     {
         this.map = map;
+        this.layer = layer;
         this.x = x;
         this.y = y;
         this.width = tileSize;
         this.height = tileSize;
     }
 
-    public Tile(TileMap map, TileTool tool, int x, int y)
+    public Tile(TileMap map, TileLayer layer, TileTool tool, int x, int y)
     {
         this.map = map;
+        this.layer = layer;
         this.sprite = new Sprite(tool.textureRegion);
         this.x = x;
         this.y = y;

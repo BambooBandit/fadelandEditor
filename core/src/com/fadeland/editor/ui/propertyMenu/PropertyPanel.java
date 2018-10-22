@@ -37,7 +37,6 @@ public class PropertyPanel extends Group
         this.scrollPane = new ScrollPane(this.table, skin);
 
         this.stack.add(this.background);
-        this.stack.add(this.scrollPane);
 
         this.addActor(this.scrollPane);
     }

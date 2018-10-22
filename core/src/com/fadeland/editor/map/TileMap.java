@@ -32,17 +32,20 @@ public class TileMap implements Screen
 
     public String name;
 
-    public Array<Tile> tiles;
-
     public int mapWidth;
     public int mapHeight;
 
     private MapInput input;
 
+    public Array<Layer> layers;
+    public Layer selectedLayer;
+
     public TileMap(FadelandEditor editor, String name)
     {
         this.editor = editor;
         this.name = name;
+
+        this.layers = new Array<>();
 
         this.input = new MapInput(editor, this);
 
@@ -52,16 +55,8 @@ public class TileMap implements Screen
         this.camera.position.x = 160;
         this.camera.position.y = 150;
 
-        this.tiles = new Array<>();
-
         this.mapWidth = MapPropertyPanel.mapWidth;
         this.mapHeight = MapPropertyPanel.mapHeight;
-
-        for(int y = 0; y < mapHeight; y ++)
-        {
-            for(int x = 0; x < mapWidth; x ++)
-                this.tiles.add(new Tile(this, x * 64, y * 64));
-        }
     }
 
     @Override
@@ -87,8 +82,8 @@ public class TileMap implements Screen
         this.editor.shapeRenderer.setColor(Color.BLACK);
 
         this.editor.batch.begin();
-        for(int i = 0; i < tiles.size; i ++)
-            this.tiles.get(i).draw();
+        for(int i = 0; i < this.layers.size; i ++)
+            this.layers.get(i).draw();
         this.editor.batch.end();
 
         this.editor.shapeRenderer.begin();
@@ -146,17 +141,19 @@ public class TileMap implements Screen
 
     public Tile getTile(float x, float y)
     {
-        if(x > mapWidth * tileSize || y > mapHeight * tileSize || x < 0 || y < -tileSize)
+        if(selectedLayer == null || !(selectedLayer instanceof TileLayer) || x > mapWidth * tileSize || y > mapHeight * tileSize || x < 0 || y < -tileSize)
             return null;
+
+        TileLayer selectedTileLayer = (TileLayer) selectedLayer;
 
         int index = 0;
         index += Math.ceil(y / tileSize) * mapWidth - 1;
         index += Math.ceil(x / tileSize);
 
-        if(index >= this.tiles.size || index < 0)
+        if(index >= selectedTileLayer.tiles.size || index < 0)
             return null;
 
-        Tile tile = tiles.get(index);
+        Tile tile = selectedTileLayer.tiles.get(index);
         return tile;
     }
 }
