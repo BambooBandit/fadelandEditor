@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.map.TileMap;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.toolHeight;
 
@@ -19,14 +20,16 @@ public class TileMenuToolPane extends Group
     private Image background;
     private Skin skin;
     private FadelandEditor editor;
+    private TileMap map;
 
     private TileMenuTool lines;
 
     public TileMenu menu;
 
-    public TileMenuToolPane(FadelandEditor editor, TileMenu menu, Skin skin)
+    public TileMenuToolPane(FadelandEditor editor, TileMenu menu, TileMap map, Skin skin)
     {
         this.menu = menu;
+        this.map = map;
         this.toolTable = new Table();
         this.lines = new TileMenuTool(TileMenuTools.LINES, this, skin);
         this.toolTable.left();
@@ -80,11 +83,13 @@ public class TileMenuToolPane extends Group
                         if(tool.isSelected)
                         {
                             this.menu.selectedTiles.removeValue(tool, false);
+                            this.map.propertyMenu.rebuild();
                             tool.unselect();
                         }
                         else
                         {
                             this.menu.selectedTiles.add(tool);
+                            this.map.propertyMenu.rebuild();
                             tool.select();
                         }
                     }
@@ -92,6 +97,7 @@ public class TileMenuToolPane extends Group
                     {
                         this.menu.selectedTiles.clear();
                         this.menu.selectedTiles.add(tool);
+                        this.map.propertyMenu.rebuild();
                         tool.select();
                     }
                 }
@@ -100,6 +106,7 @@ public class TileMenuToolPane extends Group
                     if(!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                     {
                         this.menu.selectedTiles.removeValue(tool, false);
+                        this.map.propertyMenu.rebuild();
                         tool.unselect();
                     }
                 }

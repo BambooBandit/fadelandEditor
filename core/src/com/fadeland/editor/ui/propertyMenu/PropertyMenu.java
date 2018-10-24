@@ -4,10 +4,13 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.map.TileMap;
 
 public class PropertyMenu extends Group
 {
     private FadelandEditor editor;
+
+    public TileMap map;
 
     private Image background;
 
@@ -23,16 +26,17 @@ public class PropertyMenu extends Group
     private Stack stack;
     public Table propertyTable; // Holds all the properties
 
-    public PropertyMenu(Skin skin, FadelandEditor fadelandEditor)
+    public PropertyMenu(Skin skin, FadelandEditor fadelandEditor, TileMap map)
     {
         this.editor = fadelandEditor;
+        this.map = map;
 
         this.stack = new Stack();
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.mapPropertyPanel = new MapPropertyPanel(skin, this, editor);
         this.tilePropertyPanel = new TilePropertyPanel(skin, this, editor);
         this.objectPropertyPanel = new ObjectPropertyPanel(skin, this, editor);
-        this.propertyPanel = new PropertyPanel(skin, this, editor);
+        this.propertyPanel = new PropertyPanel(skin, this, editor, map);
         this.propertyPanelStack = new Stack();
         this.propertyPanelStack.add(this.tilePropertyPanel);
         this.propertyPanelStack.add(this.objectPropertyPanel);
@@ -86,19 +90,33 @@ public class PropertyMenu extends Group
 
     public void newProperty()
     {
-        this.propertyPanel.newProperty();
-        this.propertyTable.invalidateHierarchy();
+        if(map.tileMenu.selectedTiles.size > 0)
+        {
+            this.propertyPanel.newProperty();
+
+            rebuild();
+        }
     }
 
     public void removeProperty(String propertyName)
     {
         this.propertyPanel.removeProperty(propertyName);
+        rebuild();
         this.propertyTable.invalidateHierarchy();
     }
 
     public void removeProperty(PropertyField propertyField)
     {
         this.propertyPanel.removeProperty(propertyField);
+        rebuild();
+        this.propertyTable.invalidateHierarchy();
+    }
+
+    /** Upon selecting a new tile tool, rebuild property menu to only show the properties of that tile.
+     * If multiple tiles are selected, only show the common properties. A common property has the same property and value. */
+    public void rebuild()
+    {
+        this.propertyPanel.rebuild();
         this.propertyTable.invalidateHierarchy();
     }
 }

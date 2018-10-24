@@ -71,12 +71,12 @@ public class TileMap implements Screen
         this.stage = new Stage(new ScreenViewport());
 
         // tileMenu
-        this.tileMenu = new TileMenu(GameAssets.getUISkin(), editor);
+        this.tileMenu = new TileMenu(GameAssets.getUISkin(), editor, this);
         this.tileMenu.setVisible(true);
         this.stage.addActor(this.tileMenu);
 
         // propertyMenu
-        this.propertyMenu = new PropertyMenu(GameAssets.getUISkin(), editor);
+        this.propertyMenu = new PropertyMenu(GameAssets.getUISkin(), editor, this);
         this.propertyMenu.setVisible(true);
         this.stage.addActor(this.propertyMenu);
 

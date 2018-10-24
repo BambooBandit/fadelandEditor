@@ -1,20 +1,27 @@
 package com.fadeland.editor.ui.propertyMenu;
 
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
+import com.fadeland.editor.TextFieldAction;
+import com.fadeland.editor.map.TileMap;
 
 public class PropertyField extends Group
 {
     private Label property; // Null if removeable is true
-    private TextField propertyTextField; // Null if removeable is false
-    private TextField value;
+    public TextField propertyTextField; // Null if removeable is false
+    public TextField value;
     private TextButton remove; // Null if removeable is false
     private Table table;
     private boolean removeable;
 
     private PropertyMenu menu;
+
+    private static Array<TextFieldAction> textFieldActions = new Array<>();
 
     public PropertyField(String property, String value, Skin skin, final PropertyMenu menu, boolean removeable)
     {
@@ -50,7 +57,10 @@ public class PropertyField extends Group
             });
 
             this.table.add(this.remove);
+
+            addListener();
         }
+
 
         addActor(this.table);
     }
@@ -87,5 +97,83 @@ public class PropertyField extends Group
     public String getValue()
     {
         return this.value.getText();
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o instanceof PropertyField)
+        {
+            PropertyField toCompare = (PropertyField) o;
+            return this.propertyTextField.getText().equals(toCompare.propertyTextField.getText()) && this.value.getText().equals(toCompare.value.getText());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.propertyTextField.getText().hashCode() + this.value.getText().hashCode();
+    }
+
+    private void addListener()
+    {
+        this.propertyTextField.getListeners().clear();
+        this.value.getListeners().clear();
+
+        final TileMap map = menu.map;
+
+        final PropertyField property = this;
+
+        TextField.TextFieldClickListener propertyClickListener = propertyTextField.new TextFieldClickListener(){
+            @Override
+            public boolean keyTyped (InputEvent event, char character)
+            {
+                for(int i = 0; i < map.tileMenu.selectedTiles.size; i ++)
+                {
+                    if(map.tileMenu.selectedTiles.get(i).properties.contains(property, true))
+                        continue;
+                    PropertyField propertyField = null;
+                    if(map.tileMenu.selectedTiles.get(i).properties.contains(property, false))
+                        propertyField = map.tileMenu.selectedTiles.get(i).properties.get(map.tileMenu.selectedTiles.get(i).properties.indexOf(property, false));
+                    if(propertyField != null)
+                    {
+                        final PropertyField finalPropertyField = propertyField;
+                        textFieldActions.add(() -> {finalPropertyField.propertyTextField.setText(property.propertyTextField.getText());} );
+                    }
+                }
+                super.keyTyped(event, character);
+                for(int i = 0; i < textFieldActions.size; i ++)
+                    textFieldActions.get(i).action();
+                textFieldActions.clear();
+                return false;
+            }
+        };
+        this.propertyTextField.addListener(propertyClickListener);
+
+        TextField.TextFieldClickListener valueClickListener = value.new TextFieldClickListener(){
+            @Override
+            public boolean keyTyped (InputEvent event, char character)
+            {
+                for(int i = 0; i < map.tileMenu.selectedTiles.size; i ++)
+                {
+                    if(map.tileMenu.selectedTiles.get(i).properties.contains(property, true))
+                        continue;
+                    PropertyField propertyField = null;
+                    if(map.tileMenu.selectedTiles.get(i).properties.contains(property, false))
+                        propertyField = map.tileMenu.selectedTiles.get(i).properties.get(map.tileMenu.selectedTiles.get(i).properties.indexOf(property, false));
+                    if(propertyField != null)
+                    {
+                        final PropertyField finalPropertyField = propertyField;
+                        textFieldActions.add(() -> {finalPropertyField.value.setText(property.value.getText());} );
+                    }
+                }
+                super.keyTyped(event, character);
+                for(int i = 0; i < textFieldActions.size; i ++)
+                    textFieldActions.get(i).action();
+                textFieldActions.clear();
+                return false;
+            }
+        };
+        this.value.addListener(valueClickListener);
     }
 }

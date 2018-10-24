@@ -4,11 +4,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
+import com.fadeland.editor.ui.propertyMenu.PropertyField;
 
 public class TileTool extends TileMenuTool
 {
 
-    public TileProperties properties;
+//    public TileProperties properties;
+    public Array<PropertyField> properties;
+
 
     public TextureRegion textureRegion;
 
@@ -16,7 +20,8 @@ public class TileTool extends TileMenuTool
     {
         super(tool, image, tileMenuToolPane, skin);
         this.textureRegion = textureRegion;
-        this.properties = new TileProperties();
+//        this.properties = new TileProperties();
+        this.properties = new Array<>();
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.map.TileMap;
 
 public class TileMenu extends Group
 {
@@ -16,6 +17,7 @@ public class TileMenu extends Group
     public static String tileSheetName = "tiles.png";
 
     private FadelandEditor editor;
+    private TileMap map;
 
     public ScrollPane scrollPane;
     private Stack stack;
@@ -25,15 +27,16 @@ public class TileMenu extends Group
 
     public Array<TileTool> selectedTiles;
 
-    public TileMenu(Skin skin, FadelandEditor fadelandEditor)
+    public TileMenu(Skin skin, FadelandEditor fadelandEditor, TileMap map)
     {
         this.editor = fadelandEditor;
+        this.map = map;
 
         this.selectedTiles = new Array<>();
 
         this.stack = new Stack();
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
-        this.toolPane = new TileMenuToolPane(editor, this, skin);
+        this.toolPane = new TileMenuToolPane(editor, this, map, skin);
 
         this.tileTable = new Table();
         this.tileTable.left().top();

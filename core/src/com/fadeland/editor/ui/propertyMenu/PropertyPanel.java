@@ -1,33 +1,36 @@
 package com.fadeland.editor.ui.propertyMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class PropertyPanel extends Group
 {
     public static int textFieldHeight = 35;
 
     private FadelandEditor editor;
+    private TileMap map;
     private PropertyMenu menu;
 
     private Image background;
     private Stack stack;
     private ScrollPane scrollPane;
     public Table table; // Holds all the text fields
-    public Array<PropertyField> properties;
 
     private Skin skin;
 
-    public PropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
+    public PropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor, TileMap map)
     {
         this.skin = skin;
         this.menu = menu;
         this.editor = fadelandEditor;
-
-        this.properties = new Array<>();
+        this.map = map;
 
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.stack = new Stack();
@@ -64,11 +67,10 @@ public class PropertyPanel extends Group
 
     public void newProperty()
     {
-        PropertyField property = new PropertyField("Property", "Value", this.skin, menu, true);
-        this.table.add(property).padBottom(1).row();
-        this.properties.add(property);
+        final PropertyField property = new PropertyField("Property", "Value", this.skin, menu, true);
 
-        setSize(getWidth(), getHeight()); // Resize to fit the new field
+        for(int i = 0; i < map.tileMenu.selectedTiles.size; i ++)
+            this.map.tileMenu.selectedTiles.get(i).properties.add(property);
     }
 
     /** Remove all properties with the property value of the string.
@@ -76,37 +78,65 @@ public class PropertyPanel extends Group
      * External use always returns false. */
     public boolean removeProperty(String propertyName)
     {
-        PropertyField propertyField = null;
-        for(int i = 0; i < this.properties.size; i ++)
+        for(int i = 0; i < map.tileMenu.selectedTiles.size; i ++)
         {
-            propertyField = this.properties.get(i);
-            if(propertyField.getProperty().equals(propertyName))
-                break;
+            PropertyField propertyField = null;
+            Array<PropertyField> properties = map.tileMenu.selectedTiles.get(i).properties;
+            for (int k = 0; k < properties.size; k++)
+            {
+                propertyField = properties.get(k);
+                if (propertyField.getProperty().equals(propertyName))
+                    break;
 
-        }
-        if(propertyField != null)
-        {
-            this.table.removeActor(propertyField, false);
-            this.properties.removeValue(propertyField, false);
-            rebuild();
-            return removeProperty(propertyName);
+            }
+            if (propertyField != null)
+            {
+                properties.removeValue(propertyField, false);
+                return removeProperty(propertyName);
+            }
         }
         return false;
     }
 
     public void removeProperty(PropertyField propertyField)
     {
-        this.table.removeActor(propertyField, false);
-        this.properties.removeValue(propertyField, false);
-        rebuild();
+        for(int i = 0; i < map.tileMenu.selectedTiles.size; i ++)
+        {
+            Array<PropertyField> properties = map.tileMenu.selectedTiles.get(i).properties;
+            properties.removeValue(propertyField, false);
+        }
     }
 
     /** Rebuilds the table to remove gaps when removing properties. */
-    private void rebuild()
+    public void rebuild()
     {
         this.table.clearChildren();
-        for(int i = 0; i < this.properties.size; i ++)
-            this.table.add(this.properties.get(i)).padBottom(1).row();
+
+        if(map.tileMenu.selectedTiles.size == 1)
+        {
+            Array<PropertyField> properties = map.tileMenu.selectedTiles.first().properties;
+            for (int i = 0; i < properties.size; i++)
+                this.table.add(properties.get(i)).padBottom(1).row();
+        }
+        else if(map.tileMenu.selectedTiles.size > 1) // Only add properties
+        {
+            TileTool firstTool = map.tileMenu.selectedTiles.first();
+            for(int i = 0; i < firstTool.properties.size; i ++)
+            {
+                boolean commonProperty = true;
+                for(int k = 1; k < map.tileMenu.selectedTiles.size; k ++)
+                {
+                    if(!map.tileMenu.selectedTiles.get(k).properties.contains(firstTool.properties.get(i), false))
+                    {
+                        commonProperty = false;
+                        break;
+                    }
+                }
+                if(commonProperty)
+                    this.table.add(firstTool.properties.get(i)).padBottom(1).row();
+            }
+        }
+
         setSize(getWidth(), getHeight()); // Resize to fit the fields
     }
 }
