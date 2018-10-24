@@ -13,6 +13,7 @@ import com.fadeland.editor.ui.propertyMenu.PropertyField;
 public class LayerMenu extends Group
 {
     private FadelandEditor editor;
+    private TileMap map;
 
     private Image background;
 
@@ -29,10 +30,11 @@ public class LayerMenu extends Group
 
     public Array<LayerField> layers;
 
-    public LayerMenu(Skin skin, FadelandEditor fadelandEditor)
+    public LayerMenu(Skin skin, FadelandEditor fadelandEditor, TileMap map)
     {
         this.skin = skin;
         this.editor = fadelandEditor;
+        this.map = map;
 
         this.layers = new Array<>();
 
@@ -78,14 +80,11 @@ public class LayerMenu extends Group
 
     public void newLayer(LayerTypes type)
     {
-        if(editor.getScreen() == null) // Don't make a new layer if a map isn't open.
-            return;
-
-        final TileMap map = (TileMap) editor.getScreen();
+        final TileMap selectedMap = this.map;
         final LayerField layer = new LayerField(type.name, type, editor, map, skin, this);
         this.table.add(layer).padBottom(1).row();
         this.layers.add(layer);
-        map.layers.add(layer.mapLayer);
+        selectedMap.layers.add(layer.mapLayer);
 
         ClickListener listener = new ClickListener()
         {
@@ -94,7 +93,7 @@ public class LayerMenu extends Group
             {
                 unselectAll();
                 layer.select();
-                map.selectedLayer = layer.mapLayer;
+                selectedMap.selectedLayer = layer.mapLayer;
             }
         };
         layer.layerName.addListener(listener);
@@ -135,8 +134,7 @@ public class LayerMenu extends Group
     {
         this.table.removeActor(layerField, false);
         this.layers.removeValue(layerField, false);
-        TileMap map = (TileMap) editor.getScreen();
-        map.layers.removeValue(layerField.mapLayer, false);
+        this.map.layers.removeValue(layerField.mapLayer, false);
 
         rearrangeLayers();
         rebuild();
@@ -145,11 +143,9 @@ public class LayerMenu extends Group
     /** Fixes the TileMap array to draw in the correct order. */
     private void rearrangeLayers()
     {
-        TileMap map = (TileMap) editor.getScreen(); // TODO remove all casts by passing in map to constructor
-
-        map.layers.clear();
+        this.map.layers.clear();
         for(int i = this.layers.size - 1; i >= 0; i --)
-            map.layers.add(layers.get(i).mapLayer);
+            this.map.layers.add(layers.get(i).mapLayer);
     }
 
     /** Rebuilds the table to remove gaps when removing properties. */
@@ -165,6 +161,6 @@ public class LayerMenu extends Group
     {
         for(int i = 0; i < this.layers.size; i ++)
             this.layers.get(i).unselect();
-        ((TileMap)editor.getScreen()).selectedLayer = null;
+        this.map.selectedLayer = null;
     }
 }
