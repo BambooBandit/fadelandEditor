@@ -30,9 +30,6 @@ public class FadelandEditor extends Game
 	public InputMultiplexer inputMultiplexer;
 	public Stage stage;
 	public FileMenu fileMenu;
-	public TileMenu tileMenu;
-	public PropertyMenu propertyMenu;
-	public LayerMenu layerMenu;
 
 	public TileMap activeMap; // Map currently being edited
 	public Array<TileMap> maps; // All maps open in the program.
@@ -55,22 +52,8 @@ public class FadelandEditor extends Game
 		this.fileMenu.setVisible(true);
 		this.stage.addActor(this.fileMenu);
 
-		// tileMenu
-		this.tileMenu = new TileMenu(GameAssets.getUISkin(), this);
-		this.tileMenu.setVisible(true);
-		this.stage.addActor(this.tileMenu);
-
-		// propertyMenu
-		this.propertyMenu = new PropertyMenu(GameAssets.getUISkin(), this);
-		this.propertyMenu.setVisible(true);
-		this.stage.addActor(this.propertyMenu);
-
-		// layerMenu
-		this.layerMenu = new LayerMenu(GameAssets.getUISkin(), this);
-		this.layerMenu.setVisible(true);
-		this.stage.addActor(this.layerMenu);
-
 		this.inputMultiplexer.addProcessor(this.stage);
+
 		Gdx.input.setInputProcessor(this.inputMultiplexer);
 	}
 
@@ -100,15 +83,6 @@ public class FadelandEditor extends Game
 		this.fileMenu.setSize(Gdx.graphics.getWidth(), buttonHeight, tabHeight, toolHeight);
 		this.fileMenu.setPosition(0, Gdx.graphics.getHeight() - this.fileMenu.getHeight());
 
-		this.tileMenu.setSize(Gdx.graphics.getWidth() / 4, (Gdx.graphics.getHeight() - this.fileMenu.getHeight()) / 2);
-		this.tileMenu.setPosition(Gdx.graphics.getWidth() - this.tileMenu.getWidth(), 0);
-
-		this.propertyMenu.setSize(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() - this.fileMenu.getHeight());
-		this.propertyMenu.setPosition(0, 0);
-
-		this.layerMenu.setSize(Gdx.graphics.getWidth() / 4, (Gdx.graphics.getHeight() - this.fileMenu.getHeight()) / 2);
-		this.layerMenu.setPosition(Gdx.graphics.getWidth() - this.tileMenu.getWidth(), this.tileMenu.getHeight());
-
 		if(this.getScreen() != null)
 		    this.getScreen().resize(width, height);
 	}
@@ -133,8 +107,14 @@ public class FadelandEditor extends Game
 
     public TileTool getTileTool()
     {
-        if(this.tileMenu.selectedTiles.size == 0)
+    	TileMenu tileMenu;
+    	if(getScreen() != null)
+    		tileMenu = ((TileMap) getScreen()).tileMenu;
+    	else
+    		return null;
+
+        if(tileMenu.selectedTiles.size == 0)
             return null;
-        return this.tileMenu.selectedTiles.first();
+        return tileMenu.selectedTiles.first();
     }
 }

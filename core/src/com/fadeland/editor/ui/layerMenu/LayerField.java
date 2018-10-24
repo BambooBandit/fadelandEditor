@@ -14,11 +14,14 @@ import com.fadeland.editor.map.TileMap;
 
 public class LayerField extends Group
 {
-    private TextField layerName;
+    public TextField layerName;
     private LayerTypes type;
-    private Image typeImage;
+    public Image typeImage;
     private TextButton up;
     private TextButton down;
+    private Stack visibilityStack;
+    public Image visibleImg;
+    public Image notVisibleImg;
     private TextButton remove;
     private Table table;
 
@@ -32,9 +35,9 @@ public class LayerField extends Group
         this.type = type;
 
         if(type == LayerTypes.TILE)
-            this.mapLayer = new TileLayer(editor, map);
+            this.mapLayer = new TileLayer(editor, map, this);
         else if(type == LayerTypes.OBJECT)
-            this.mapLayer = new ObjectLayer(editor, map);
+            this.mapLayer = new ObjectLayer(editor, map, this);
 
         this.layerName = new TextField(name, skin);
         this.table = new Table();
@@ -42,12 +45,19 @@ public class LayerField extends Group
         this.typeImage = new Image(new Texture("ui/" + type.name + ".png")); // TODO pack it in atlas
         this.up = new TextButton("^", skin);
         this.down = new TextButton("v", skin);
+        this.visibilityStack = new Stack();
+        this.visibleImg = new Image(new Texture("ui/visible.png")); // TODO pack it in atlas
+        this.notVisibleImg = new Image(new Texture("ui/notVisible.png")); // TODO pack it in atlas
+        this.visibilityStack.add(this.visibleImg);
+        this.visibilityStack.add(this.notVisibleImg);
+        this.notVisibleImg.setVisible(false);
         this.remove = new TextButton("X", skin);
 
         this.table.add(this.layerName);
         this.table.add(this.typeImage);
         this.table.add(this.up);
         this.table.add(this.down);
+        this.table.add(this.visibilityStack);
         this.table.add(this.remove);
 
         final LayerField layer = this;
@@ -67,6 +77,24 @@ public class LayerField extends Group
                 menu.moveLayerDown(layer);
             }
         });
+        this.visibleImg.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                visibleImg.setVisible(false);
+                notVisibleImg.setVisible(true);
+            }
+        });
+        this.notVisibleImg.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                visibleImg.setVisible(true);
+                notVisibleImg.setVisible(false);
+            }
+        });
         this.remove.addListener(new ClickListener()
         {
             @Override
@@ -82,11 +110,14 @@ public class LayerField extends Group
     @Override
     public void setSize(float width, float height)
     {
-        this.layerName.setSize(width - (height * 4), height);
-        this.table.getCell(this.layerName).size(width - (height * 4), height);
+        this.layerName.setSize(width - (height * 5), height);
+        this.table.getCell(this.layerName).size(width - (height * 5), height);
         this.table.getCell(this.typeImage).size(height, height);
         this.table.getCell(this.up).size(height, height);
         this.table.getCell(this.down).size(height, height);
+        this.table.getCell(this.visibilityStack).size(height, height);
+        this.visibleImg.setSize(height, height);
+        this.notVisibleImg.setSize(height, height);
         this.table.getCell(this.remove).size(height, height);
         this.table.invalidateHierarchy();
         super.setSize(width, height);

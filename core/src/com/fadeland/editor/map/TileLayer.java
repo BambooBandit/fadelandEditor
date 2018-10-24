@@ -2,15 +2,16 @@ package com.fadeland.editor.map;
 
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
+import com.fadeland.editor.ui.layerMenu.LayerField;
 
 public class TileLayer extends Layer
 {
 
     public Array<Tile> tiles;
 
-    public TileLayer(FadelandEditor editor, TileMap map)
+    public TileLayer(FadelandEditor editor, TileMap map, LayerField layerField)
     {
-        super(editor, map);
+        super(editor, map, layerField);
 
         this.tiles = new Array<>();
 

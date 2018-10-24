@@ -7,15 +7,20 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fadeland.editor.FadelandEditor;
+import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.fileMenu.Tools;
+import com.fadeland.editor.ui.layerMenu.LayerMenu;
 import com.fadeland.editor.ui.propertyMenu.MapPropertyPanel;
+import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
+import com.fadeland.editor.ui.tileMenu.TileMenu;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 
@@ -40,6 +45,11 @@ public class TileMap implements Screen
     public Array<Layer> layers;
     public Layer selectedLayer;
 
+    public Stage stage;
+    public TileMenu tileMenu;
+    public PropertyMenu propertyMenu;
+    public LayerMenu layerMenu;
+
     public TileMap(FadelandEditor editor, String name)
     {
         this.editor = editor;
@@ -57,6 +67,24 @@ public class TileMap implements Screen
 
         this.mapWidth = MapPropertyPanel.mapWidth;
         this.mapHeight = MapPropertyPanel.mapHeight;
+
+        this.stage = new Stage(new ScreenViewport());
+
+        // tileMenu
+        this.tileMenu = new TileMenu(GameAssets.getUISkin(), editor);
+        this.tileMenu.setVisible(true);
+        this.stage.addActor(this.tileMenu);
+
+        // propertyMenu
+        this.propertyMenu = new PropertyMenu(GameAssets.getUISkin(), editor);
+        this.propertyMenu.setVisible(true);
+        this.stage.addActor(this.propertyMenu);
+
+        // layerMenu
+        this.layerMenu = new LayerMenu(GameAssets.getUISkin(), editor);
+        this.layerMenu.setVisible(true);
+        this.stage.addActor(this.layerMenu);
+
     }
 
     @Override
@@ -64,6 +92,7 @@ public class TileMap implements Screen
     {
         this.editor.inputMultiplexer.clear();
         this.editor.inputMultiplexer.addProcessor(this.editor.stage);
+        this.editor.inputMultiplexer.addProcessor(this.stage);
         this.editor.inputMultiplexer.addProcessor(this.input);
         Gdx.input.setInputProcessor(this.editor.inputMultiplexer);
     }
@@ -83,7 +112,10 @@ public class TileMap implements Screen
 
         this.editor.batch.begin();
         for(int i = 0; i < this.layers.size; i ++)
-            this.layers.get(i).draw();
+        {
+            if(this.layers.get(i).layerField.visibleImg.isVisible())
+                this.layers.get(i).draw();
+        }
         this.editor.batch.end();
 
         this.editor.shapeRenderer.begin();
@@ -100,11 +132,24 @@ public class TileMap implements Screen
                 this.editor.shapeRenderer.line(x * tileSize, 0, x * tileSize, mapHeight * tileSize);
         }
         this.editor.shapeRenderer.end();
+
+        this.stage.act();
+        this.stage.draw();
     }
 
     @Override
     public void resize(int width, int height)
     {
+        this.stage.getViewport().update(width, height, true);
+        this.tileMenu.setSize(Gdx.graphics.getWidth() / 4, (Gdx.graphics.getHeight() - this.editor.fileMenu.getHeight()) / 2);
+        this.tileMenu.setPosition(Gdx.graphics.getWidth() - this.tileMenu.getWidth(), 0);
+
+        this.propertyMenu.setSize(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() - this.editor.fileMenu.getHeight());
+        this.propertyMenu.setPosition(0, 0);
+
+        this.layerMenu.setSize(Gdx.graphics.getWidth() / 4, (Gdx.graphics.getHeight() - this.editor.fileMenu.getHeight()) / 2);
+        this.layerMenu.setPosition(Gdx.graphics.getWidth() - this.tileMenu.getWidth(), this.tileMenu.getHeight());
+
         this.camera.viewportWidth = width;
         this.camera.viewportHeight = height;
         this.viewport.update(width, height);

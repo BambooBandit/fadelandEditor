@@ -81,22 +81,26 @@ public class LayerMenu extends Group
         if(editor.getScreen() == null) // Don't make a new layer if a map isn't open.
             return;
 
-        TileMap map = (TileMap) editor.getScreen();
+        final TileMap map = (TileMap) editor.getScreen();
         final LayerField layer = new LayerField(type.name, type, editor, map, skin, this);
         this.table.add(layer).padBottom(1).row();
         this.layers.add(layer);
         map.layers.add(layer.mapLayer);
 
-        layer.addListener(new ClickListener()
+        ClickListener listener = new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
                 unselectAll();
                 layer.select();
-                ((TileMap)editor.getScreen()).selectedLayer = layer.mapLayer;
+                map.selectedLayer = layer.mapLayer;
             }
-        });
+        };
+        layer.layerName.addListener(listener);
+        layer.typeImage.addListener(listener);
+
+        rearrangeLayers();
 
         setSize(getWidth(), getHeight()); // Resize to fit the new field
     }
@@ -109,6 +113,8 @@ public class LayerMenu extends Group
             index = 0;
         this.layers.removeValue(layer, false);
         this.layers.insert(index, layer);
+
+        rearrangeLayers();
         rebuild();
     }
 
@@ -120,6 +126,8 @@ public class LayerMenu extends Group
             index = this.layers.size - 1;
         this.layers.removeValue(layer, false);
         this.layers.insert(index, layer);
+
+        rearrangeLayers();
         rebuild();
     }
 
@@ -129,7 +137,19 @@ public class LayerMenu extends Group
         this.layers.removeValue(layerField, false);
         TileMap map = (TileMap) editor.getScreen();
         map.layers.removeValue(layerField.mapLayer, false);
+
+        rearrangeLayers();
         rebuild();
+    }
+
+    /** Fixes the TileMap array to draw in the correct order. */
+    private void rearrangeLayers()
+    {
+        TileMap map = (TileMap) editor.getScreen(); // TODO remove all casts by passing in map to constructor
+
+        map.layers.clear();
+        for(int i = this.layers.size - 1; i >= 0; i --)
+            map.layers.add(layers.get(i).mapLayer);
     }
 
     /** Rebuilds the table to remove gaps when removing properties. */
