@@ -141,13 +141,13 @@ public class TileMap implements Screen
     public void resize(int width, int height)
     {
         this.stage.getViewport().update(width, height, true);
-        this.tileMenu.setSize(Gdx.graphics.getWidth() / 4, (Gdx.graphics.getHeight() - this.editor.fileMenu.getHeight()) / 2);
+        this.tileMenu.setSize(Gdx.graphics.getWidth() / 6, (Gdx.graphics.getHeight() - this.editor.fileMenu.getHeight()) / 2);
         this.tileMenu.setPosition(Gdx.graphics.getWidth() - this.tileMenu.getWidth(), 0);
 
-        this.propertyMenu.setSize(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() - this.editor.fileMenu.getHeight());
+        this.propertyMenu.setSize(Gdx.graphics.getWidth() / 6, Gdx.graphics.getHeight() - this.editor.fileMenu.getHeight());
         this.propertyMenu.setPosition(0, 0);
 
-        this.layerMenu.setSize(Gdx.graphics.getWidth() / 4, (Gdx.graphics.getHeight() - this.editor.fileMenu.getHeight()) / 2);
+        this.layerMenu.setSize(Gdx.graphics.getWidth() / 6, (Gdx.graphics.getHeight() - this.editor.fileMenu.getHeight()) / 2);
         this.layerMenu.setPosition(Gdx.graphics.getWidth() - this.tileMenu.getWidth(), this.tileMenu.getHeight());
 
         this.camera.viewportWidth = width;
