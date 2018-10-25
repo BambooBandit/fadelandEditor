@@ -17,6 +17,7 @@ import com.fadeland.editor.ui.layerMenu.LayerMenu;
 import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
 import com.fadeland.editor.ui.tileMenu.TileMenuTool;
+import com.fadeland.editor.ui.tileMenu.TileMenuTools;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class FadelandEditor extends Game
@@ -115,6 +116,23 @@ public class FadelandEditor extends Game
 
         if(tileMenu.selectedTiles.size == 0)
             return null;
+        if(tileMenu.selectedTiles.first().tool != TileMenuTools.TILE)
+        	return  null;
         return tileMenu.selectedTiles.first();
     }
+
+	public TileTool getSpriteTool()
+	{
+		TileMenu tileMenu;
+		if(getScreen() != null)
+			tileMenu = ((TileMap) getScreen()).tileMenu;
+		else
+			return null;
+
+		if(tileMenu.selectedTiles.size == 0)
+			return null;
+		if(tileMenu.selectedTiles.first().tool != TileMenuTools.SPRITE)
+			return  null;
+		return tileMenu.selectedTiles.first();
+	}
 }

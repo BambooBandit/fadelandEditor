@@ -7,13 +7,13 @@ import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 
 public class Tile
 {
-    private TileMap map;
-    private TileLayer layer;
-    private Sprite sprite;
-    private int x, y, width, height;
+    protected TileMap map;
+    protected Layer layer;
+    protected Sprite sprite;
+    protected float x, y, width, height;
     public TileTool tool;
 
-    public Tile(TileMap map, TileLayer layer, int x, int y)
+    public Tile(TileMap map, TileLayer layer, float x, float y)
     {
         this.map = map;
         this.layer = layer;
@@ -23,7 +23,7 @@ public class Tile
         this.height = tileSize;
     }
 
-    public Tile(TileMap map, TileLayer layer, TileTool tool, int x, int y)
+    public Tile(TileMap map, SpriteLayer layer, TileTool tool, float x, float y)
     {
         this.map = map;
         this.layer = layer;

@@ -45,13 +45,27 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.tileScrollPane);
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
-        Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
-        if(editor.getFileTool() != null && editor.getTileTool() != null && clickedTile != null)
+        if(map.selectedLayer instanceof TileLayer)
         {
-            if (editor.getFileTool().tool == Tools.BRUSH)
-                clickedTile.setTool(editor.getTileTool());
-            else if (editor.getFileTool().tool == Tools.ERASER)
-                clickedTile.setTool(null);
+            Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
+            if (editor.getFileTool() != null && editor.getTileTool() != null && clickedTile != null)
+            {
+                if (editor.getFileTool().tool == Tools.BRUSH)
+                    clickedTile.setTool(editor.getTileTool());
+                else if (editor.getFileTool().tool == Tools.ERASER)
+                    clickedTile.setTool(null);
+            }
+        }
+        else if(map.selectedLayer instanceof SpriteLayer)
+        {
+            if (editor.getFileTool() != null && editor.getSpriteTool() != null
+                    && coords.x > 0 && coords.y > 0 && coords.x < map.mapWidth * tileSize && coords.y < map.mapHeight * tileSize)
+            {
+                if (editor.getFileTool().tool == Tools.BRUSH)
+                    ((SpriteLayer) map.selectedLayer).sprites.add(new MapSprite(map, (SpriteLayer) map.selectedLayer, editor.getSpriteTool(), coords.x, coords.y));
+//                else if (editor.getFileTool().tool == Tools.ERASER)
+//                    clickedTile.setTool(null);
+            }
         }
         return false;
     }
@@ -68,13 +82,16 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.tileScrollPane);
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
-        Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
-        if(editor.getFileTool() != null && editor.getTileTool() != null && clickedTile != null)
+        if(map.selectedLayer instanceof TileLayer)
         {
-            if (editor.getFileTool().tool == Tools.BRUSH)
-                clickedTile.setTool(editor.getTileTool());
-            else if (editor.getFileTool().tool == Tools.ERASER)
-                clickedTile.setTool(null);
+            Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
+            if (editor.getFileTool() != null && editor.getTileTool() != null && clickedTile != null)
+            {
+                if (editor.getFileTool().tool == Tools.BRUSH)
+                    clickedTile.setTool(editor.getTileTool());
+                else if (editor.getFileTool().tool == Tools.ERASER)
+                    clickedTile.setTool(null);
+            }
         }
         return false;
     }
