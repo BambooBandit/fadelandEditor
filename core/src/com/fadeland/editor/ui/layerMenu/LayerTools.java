@@ -2,7 +2,7 @@ package com.fadeland.editor.ui.layerMenu;
 
 public enum LayerTools
 {
-    NEWTILE("newTileLayer", LayerTypes.TILE), NEWOBJECT("newObjectLayer", LayerTypes.OBJECT);
+    NEWTILE("newTileLayer", LayerTypes.TILE), NEWSPRITE("newSpriteLayer", LayerTypes.SPRITE);
 
     public String name;
     public LayerTypes type;

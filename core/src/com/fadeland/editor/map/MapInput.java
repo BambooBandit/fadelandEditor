@@ -42,7 +42,8 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
-        editor.stage.unfocus(map.tileMenu.scrollPane);
+        editor.stage.unfocus(map.tileMenu.tileScrollPane);
+        editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
         if(editor.getFileTool() != null && editor.getTileTool() != null && clickedTile != null)
@@ -64,7 +65,8 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
-        editor.stage.unfocus(map.tileMenu.scrollPane);
+        editor.stage.unfocus(map.tileMenu.tileScrollPane);
+        editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
         if(editor.getFileTool() != null && editor.getTileTool() != null && clickedTile != null)

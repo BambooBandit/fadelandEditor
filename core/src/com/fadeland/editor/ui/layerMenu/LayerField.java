@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.map.Layer;
-import com.fadeland.editor.map.ObjectLayer;
+import com.fadeland.editor.map.SpriteLayer;
 import com.fadeland.editor.map.TileLayer;
 import com.fadeland.editor.map.TileMap;
 
@@ -36,8 +36,8 @@ public class LayerField extends Group
 
         if(type == LayerTypes.TILE)
             this.mapLayer = new TileLayer(editor, map, this);
-        else if(type == LayerTypes.OBJECT)
-            this.mapLayer = new ObjectLayer(editor, map, this);
+        else if(type == LayerTypes.SPRITE)
+            this.mapLayer = new SpriteLayer(editor, map, this);
 
         this.layerName = new TextField(name, skin);
         this.table = new Table();

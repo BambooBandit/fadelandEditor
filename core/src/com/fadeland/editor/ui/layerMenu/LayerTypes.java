@@ -2,7 +2,7 @@ package com.fadeland.editor.ui.layerMenu;
 
 public enum LayerTypes
 {
-    TILE("tileLayer"), OBJECT("objectLayer");
+    TILE("tileLayer"), SPRITE("spriteLayer");
 
     public String name;
 

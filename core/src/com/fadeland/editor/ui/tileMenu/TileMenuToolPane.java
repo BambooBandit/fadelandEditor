@@ -22,6 +22,8 @@ public class TileMenuToolPane extends Group
     private FadelandEditor editor;
     private TileMap map;
 
+    private TileMenuTool tiles;
+    private TileMenuTool sprites;
     private TileMenuTool lines;
 
     public TileMenu menu;
@@ -31,9 +33,15 @@ public class TileMenuToolPane extends Group
         this.menu = menu;
         this.map = map;
         this.toolTable = new Table();
+        this.tiles = new TileMenuTool(TileMenuTools.TILESELECT, this, skin);
+        this.sprites = new TileMenuTool(TileMenuTools.SPRITESELECT, this, skin);
         this.lines = new TileMenuTool(TileMenuTools.LINES, this, skin);
         this.toolTable.left();
+        this.toolTable.add(this.tiles).padRight(1);
+        this.toolTable.add(this.sprites).padRight(1);
         this.toolTable.add(this.lines).padRight(1);
+
+        selectTool(this.tiles);
 
         this.editor = editor;
         this.skin = skin;
@@ -53,6 +61,8 @@ public class TileMenuToolPane extends Group
         this.background.setBounds(0, 0, width, height);
 
         // Resize all buttons in the pane
+        this.toolTable.getCell(this.tiles).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.sprites).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.lines).size(toolHeight, toolHeight);
         this.toolTable.invalidateHierarchy();
 
@@ -70,6 +80,18 @@ public class TileMenuToolPane extends Group
                 selectedTool.unselect();
             else
                 selectedTool.select();
+        }
+        else if(selectedTool.tool == TileMenuTools.TILESELECT)
+        {
+            this.sprites.unselect();
+            this.tiles.select();
+            selectMultipleTiles();
+        }
+        else if(selectedTool.tool == TileMenuTools.SPRITESELECT)
+        {
+            this.tiles.unselect();
+            this.sprites.select();
+            selectMultipleTiles();
         }
         else if(selectedTool.tool == TileMenuTools.TILE)
         {
@@ -112,5 +134,70 @@ public class TileMenuToolPane extends Group
                 }
             }
         }
+        else if(selectedTool.tool == TileMenuTools.SPRITE)
+        {
+            for(int i = 0; i < this.menu.spriteTable.getChildren().size; i ++)
+            {
+                TileTool tool = (TileTool) this.menu.spriteTable.getChildren().get(i);
+                if(tool == selectedTool)
+                {
+                    if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                    {
+                        if(tool.isSelected)
+                        {
+                            this.menu.selectedTiles.removeValue(tool, false);
+                            this.map.propertyMenu.rebuild();
+                            tool.unselect();
+                        }
+                        else
+                        {
+                            this.menu.selectedTiles.add(tool);
+                            this.map.propertyMenu.rebuild();
+                            tool.select();
+                        }
+                    }
+                    else
+                    {
+                        this.menu.selectedTiles.clear();
+                        this.menu.selectedTiles.add(tool);
+                        this.map.propertyMenu.rebuild();
+                        tool.select();
+                    }
+                }
+                else if(tool.tool == TileMenuTools.SPRITE)
+                {
+                    if(!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                    {
+                        this.menu.selectedTiles.removeValue(tool, false);
+                        this.map.propertyMenu.rebuild();
+                        tool.unselect();
+                    }
+                }
+            }
+        }
+    }
+
+    /** Used to select all the selected tiles/sprites when switching from tiles to sprites panels*/
+    private void selectMultipleTiles()
+    {
+        this.menu.selectedTiles.clear();
+        if(this.tiles.isSelected)
+        {
+            for(int i = 0; i < this.menu.tileTable.getChildren().size; i ++)
+            {
+                if(((TileTool)this.menu.tileTable.getChildren().get(i)).isSelected)
+                    this.menu.selectedTiles.add((TileTool) this.menu.tileTable.getChildren().get(i));
+            }
+        }
+        else if(this.sprites.isSelected)
+        {
+            for(int i = 0; i < this.menu.spriteTable.getChildren().size; i ++)
+            {
+                if(((TileTool)this.menu.spriteTable.getChildren().get(i)).isSelected)
+                    this.menu.selectedTiles.add((TileTool) this.menu.spriteTable.getChildren().get(i));
+            }
+        }
+        if(this.map.propertyMenu != null)
+            this.map.propertyMenu.rebuild();
     }
 }

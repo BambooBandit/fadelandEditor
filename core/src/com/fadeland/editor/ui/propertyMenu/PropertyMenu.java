@@ -15,10 +15,10 @@ public class PropertyMenu extends Group
     private Image background;
 
     private MapPropertyPanel mapPropertyPanel;
-    private Stack propertyPanelStack; // Used to swap out tile and object property panels
+    private Stack propertyPanelStack; // Used to swap out tile and sprite property panels
     private TilePropertyPanel tilePropertyPanel;
     private PropertyPanel propertyPanel; // Custom properties
-    private ObjectPropertyPanel objectPropertyPanel;
+    private SpritePropertyPanel spritePropertyPanel;
     private PropertyToolPane toolPane;
 
     public static int toolHeight = 35;
@@ -35,12 +35,12 @@ public class PropertyMenu extends Group
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.mapPropertyPanel = new MapPropertyPanel(skin, this, editor);
         this.tilePropertyPanel = new TilePropertyPanel(skin, this, editor);
-        this.objectPropertyPanel = new ObjectPropertyPanel(skin, this, editor);
+        this.spritePropertyPanel = new SpritePropertyPanel(skin, this, editor);
         this.propertyPanel = new PropertyPanel(skin, this, editor, map);
         this.propertyPanelStack = new Stack();
         this.propertyPanelStack.add(this.tilePropertyPanel);
-        this.propertyPanelStack.add(this.objectPropertyPanel);
-        this.objectPropertyPanel.setVisible(false);
+        this.propertyPanelStack.add(this.spritePropertyPanel);
+        this.spritePropertyPanel.setVisible(false);
         this.toolPane = new PropertyToolPane(editor, this, skin);
 
         this.propertyTable = new Table();
@@ -63,16 +63,16 @@ public class PropertyMenu extends Group
         this.background.setBounds(0, 0, width, height - toolHeight);
         this.mapPropertyPanel.setSize(width, toolHeight);
         this.tilePropertyPanel.setSize(width, toolHeight);
-        this.objectPropertyPanel.setSize(width, toolHeight);
+        this.spritePropertyPanel.setSize(width, toolHeight);
         float propertyPanelStackHeight = 0;
         if(this.tilePropertyPanel.isVisible())
             propertyPanelStackHeight = this.tilePropertyPanel.getHeight();
-        else if(this.objectPropertyPanel.isVisible())
-            propertyPanelStackHeight = this.objectPropertyPanel.getHeight();
+        else if(this.spritePropertyPanel.isVisible())
+            propertyPanelStackHeight = this.spritePropertyPanel.getHeight();
         else
         {
             this.tilePropertyPanel.setSize(width, 0);
-            this.objectPropertyPanel.setSize(width, 0);
+            this.spritePropertyPanel.setSize(width, 0);
         }
         this.propertyPanel.setSize(width, height - toolHeight - this.mapPropertyPanel.getHeight() - 5 - 5 - propertyPanelStackHeight);
         this.propertyPanel.setPosition(0, toolHeight);

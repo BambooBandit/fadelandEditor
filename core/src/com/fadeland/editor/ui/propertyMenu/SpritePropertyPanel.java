@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 
-public class ObjectPropertyPanel extends Group
+public class SpritePropertyPanel extends Group
 {
     public static int textFieldHeight = 35;
 
@@ -18,7 +18,7 @@ public class ObjectPropertyPanel extends Group
 
     private PropertyField rotation;
 
-    public ObjectPropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
+    public SpritePropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
     {
         this.menu = menu;
         this.editor = fadelandEditor;

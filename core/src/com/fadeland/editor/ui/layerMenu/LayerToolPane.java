@@ -19,7 +19,7 @@ public class LayerToolPane extends Group
     private FadelandEditor editor;
 
     private LayerTool newTileLayer;
-    private LayerTool newObjectLayer;
+    private LayerTool newSpriteLayer;
 
     public LayerMenu menu;
 
@@ -28,10 +28,10 @@ public class LayerToolPane extends Group
         this.menu = menu;
         this.toolTable = new Table();
         this.newTileLayer = new LayerTool(LayerTools.NEWTILE, this, skin);
-        this.newObjectLayer = new LayerTool(LayerTools.NEWOBJECT, this, skin);
+        this.newSpriteLayer = new LayerTool(LayerTools.NEWSPRITE, this, skin);
         this.toolTable.left();
         this.toolTable.add(this.newTileLayer).padRight(1);
-        this.toolTable.add(this.newObjectLayer).padRight(1);
+        this.toolTable.add(this.newSpriteLayer).padRight(1);
 
         this.editor = editor;
         this.skin = skin;
@@ -52,7 +52,7 @@ public class LayerToolPane extends Group
 
         // Resize all buttons in the pane
         this.toolTable.getCell(this.newTileLayer).size(toolHeight, toolHeight);
-        this.toolTable.getCell(this.newObjectLayer).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.newSpriteLayer).size(toolHeight, toolHeight);
         this.toolTable.invalidateHierarchy();
 
         this.pane.invalidateHierarchy();

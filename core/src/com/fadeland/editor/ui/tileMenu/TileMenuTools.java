@@ -2,7 +2,7 @@ package com.fadeland.editor.ui.tileMenu;
 
 public enum TileMenuTools
 {
-    TILE(), LINES("lines");
+    TILE(), SPRITE(), TILESELECT("tileLayer"), SPRITESELECT("spriteLayer"), LINES("lines");
 
     public String name;
     TileMenuTools(String name)
