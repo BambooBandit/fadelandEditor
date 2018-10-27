@@ -47,13 +47,18 @@ public class MapInput implements InputProcessor
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         if(map.selectedLayer instanceof TileLayer)
         {
-            Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
-            if (editor.getFileTool() != null && editor.getTileTool() != null && clickedTile != null)
+            for(int i = 0; i < editor.getTileTools().size; i ++)
             {
-                if (editor.getFileTool().tool == Tools.BRUSH)
-                    clickedTile.setTool(editor.getTileTool());
-                else if (editor.getFileTool().tool == Tools.ERASER)
-                    clickedTile.setTool(null);
+                int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
+                int yOffset = editor.getTileTools().first().y - editor.getTileTools().get(i).y;
+                Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
+                if (editor.getFileTool() != null && clickedTile != null)
+                {
+                    if (editor.getFileTool().tool == Tools.BRUSH)
+                        clickedTile.setTool(editor.getTileTools().get(i));
+                    else if (editor.getFileTool().tool == Tools.ERASER)
+                        clickedTile.setTool(null);
+                }
             }
         }
         else if(map.selectedLayer instanceof SpriteLayer)
@@ -85,13 +90,18 @@ public class MapInput implements InputProcessor
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         if(map.selectedLayer instanceof TileLayer)
         {
-            Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
-            if (editor.getFileTool() != null && editor.getTileTool() != null && clickedTile != null)
+            for(int i = 0; i < editor.getTileTools().size; i ++)
             {
-                if (editor.getFileTool().tool == Tools.BRUSH)
-                    clickedTile.setTool(editor.getTileTool());
-                else if (editor.getFileTool().tool == Tools.ERASER)
-                    clickedTile.setTool(null);
+                int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
+                int yOffset = editor.getTileTools().first().y - editor.getTileTools().get(i).y;
+                Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
+                if (editor.getFileTool() != null && clickedTile != null)
+                {
+                    if (editor.getFileTool().tool == Tools.BRUSH)
+                        clickedTile.setTool(editor.getTileTools().get(i));
+                    else if (editor.getFileTool().tool == Tools.ERASER)
+                        clickedTile.setTool(null);
+                }
             }
         }
         return false;

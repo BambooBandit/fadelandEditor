@@ -106,7 +106,7 @@ public class FadelandEditor extends Game
         return this.fileMenu.toolPane.getTool();
     }
 
-    public TileTool getTileTool()
+    public Array<TileTool> getTileTools()
     {
     	TileMenu tileMenu;
     	if(getScreen() != null)
@@ -118,7 +118,7 @@ public class FadelandEditor extends Game
             return null;
         if(tileMenu.selectedTiles.first().tool != TileMenuTools.TILE)
         	return  null;
-        return tileMenu.selectedTiles.first();
+        return tileMenu.selectedTiles;
     }
 
 	public TileTool getSpriteTool()

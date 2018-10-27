@@ -59,7 +59,7 @@ public class TileMenu extends Group
             {
                 TextureRegion tileRegion = new TextureRegion(tileSheet, x, y, tileSize, tileSize);
 
-                TileTool tile = new TileTool(TileMenuTools.TILE, new Image(tileRegion), tileRegion, toolPane, skin);
+                TileTool tile = new TileTool(TileMenuTools.TILE, new Image(tileRegion), tileRegion, x + y, tileSheet.getWidth() - x, y, toolPane, skin);
                 tileTable.add(tile);
             }
             tileTable.row();
@@ -75,7 +75,7 @@ public class TileMenu extends Group
             {
                 TextureRegion spriteRegion = new TextureRegion(spriteSheet, x, y, tileSize, tileSize);
 
-                TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion, toolPane, skin);
+                TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion,x + y, spriteSheet.getWidth() - x, y, toolPane, skin);
                 spriteTable.add(sprite);
             }
             spriteTable.row();

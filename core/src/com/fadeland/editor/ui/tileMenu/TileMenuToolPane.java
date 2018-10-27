@@ -175,6 +175,7 @@ public class TileMenuToolPane extends Group
                 }
             }
         }
+        this.menu.selectedTiles.sort();
     }
 
     /** Used to select all the selected tiles/sprites when switching from tiles to sprites panels*/
