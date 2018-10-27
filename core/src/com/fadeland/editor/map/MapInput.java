@@ -110,6 +110,21 @@ public class MapInput implements InputProcessor
     @Override
     public boolean mouseMoved(int screenX, int screenY)
     {
+        editor.stage.unfocus(map.tileMenu.tileScrollPane);
+        editor.stage.unfocus(map.tileMenu.spriteScrollPane);
+        Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
+        if(map.selectedLayer instanceof TileLayer)
+        {
+            for(int i = 0; i < editor.getTileTools().size; i ++)
+            {
+                int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
+                int yOffset = editor.getTileTools().first().y - editor.getTileTools().get(i).y;
+                Tile hoverTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
+
+                if (editor.getFileTool() != null && hoverTile != null && editor.getFileTool().tool == Tools.BRUSH)
+                    editor.getTileTools().get(i).previewSprite.setPosition(hoverTile.x, hoverTile.y);
+            }
+        }
         return false;
     }
 

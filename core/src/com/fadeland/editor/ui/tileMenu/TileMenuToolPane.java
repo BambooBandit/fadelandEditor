@@ -2,11 +2,13 @@ package com.fadeland.editor.ui.tileMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.TileMap;
@@ -200,5 +202,11 @@ public class TileMenuToolPane extends Group
         }
         if(this.map.propertyMenu != null)
             this.map.propertyMenu.rebuild();
+    }
+
+    /** Draws preview sprites to show how the tiles/sprites would look like if placed. */
+    private void buildPreviewSprites()
+    {
+
     }
 }

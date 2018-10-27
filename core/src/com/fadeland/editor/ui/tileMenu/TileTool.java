@@ -1,6 +1,7 @@
 package com.fadeland.editor.ui.tileMenu;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,10 +18,13 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
 
     public TextureRegion textureRegion;
 
+    public Sprite previewSprite;
+
     public TileTool(TileMenuTools tool, Image image, TextureRegion textureRegion, int id, int x, int y, TileMenuToolPane tileMenuToolPane, Skin skin)
     {
         super(tool, image, tileMenuToolPane, skin);
         this.textureRegion = textureRegion;
+        this.previewSprite = new Sprite(textureRegion);
 //        this.properties = new TileProperties();
         this.properties = new Array<>();
         this.id = id;

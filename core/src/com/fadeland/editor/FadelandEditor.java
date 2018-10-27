@@ -114,10 +114,9 @@ public class FadelandEditor extends Game
     	else
     		return null;
 
-        if(tileMenu.selectedTiles.size == 0)
-            return null;
-        if(tileMenu.selectedTiles.first().tool != TileMenuTools.TILE)
-        	return  null;
+        if(tileMenu.selectedTiles.size > 0)
+	        if(tileMenu.selectedTiles.first().tool != TileMenuTools.TILE)
+    	    	return  null;
         return tileMenu.selectedTiles;
     }
 

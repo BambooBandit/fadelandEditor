@@ -2,6 +2,7 @@ package com.fadeland.editor.map;
 
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
+import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.layerMenu.LayerField;
 
 public class TileLayer extends Layer
@@ -27,6 +28,14 @@ public class TileLayer extends Layer
     {
         for(int i = 0; i < tiles.size; i ++)
             this.tiles.get(i).draw();
+        if(map.selectedLayer == this && layerField.visibleImg.isVisible() && editor.getFileTool().tool == Tools.BRUSH)
+        {
+            for (int i = 0; i < editor.getTileTools().size; i ++)
+            {
+                editor.getTileTools().get(i).previewSprite.setAlpha(.25f);
+                editor.getTileTools().get(i).previewSprite.draw(editor.batch);
+            }
+        }
     }
 
 }
