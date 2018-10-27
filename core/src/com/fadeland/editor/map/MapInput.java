@@ -62,7 +62,8 @@ public class MapInput implements InputProcessor
                     && coords.x > 0 && coords.y > 0 && coords.x < map.mapWidth * tileSize && coords.y < map.mapHeight * tileSize)
             {
                 if (editor.getFileTool().tool == Tools.BRUSH)
-                    ((SpriteLayer) map.selectedLayer).sprites.add(new MapSprite(map, (SpriteLayer) map.selectedLayer, editor.getSpriteTool(), coords.x, coords.y));
+                    ((SpriteLayer) map.selectedLayer).sprites.add(new MapSprite(map, (SpriteLayer) map.selectedLayer, editor.getSpriteTool(),
+                            coords.x - editor.getSpriteTool().textureRegion.getRegionWidth() / 2, coords.y - editor.getSpriteTool().textureRegion.getRegionHeight() / 2));
 //                else if (editor.getFileTool().tool == Tools.ERASER)
 //                    clickedTile.setTool(null);
             }

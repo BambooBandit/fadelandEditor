@@ -69,6 +69,7 @@ public class GameAssets
     {
         int size = Gdx.graphics.getHeight() / 30;
 
+        FreeTypeFontGenerator.setMaxTextureSize(2048);
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/sitka.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
