@@ -17,10 +17,10 @@ public class ToolPane extends Group
     private FadelandEditor editor;
 
     private Tool brush;
-    private Tool randomBrush;
     private Tool eraser;
     private Tool fill;
     private Tool grab;
+    private Tool random;
     public Tool lines;
     private Tool selectedTool;
 
@@ -28,17 +28,17 @@ public class ToolPane extends Group
     {
         this.toolTable = new Table();
         this.brush = new Tool(Tools.BRUSH, this, skin, false);
-        this.randomBrush = new Tool(Tools.RANDOMBRUSH, this, skin, false);
         this.eraser = new Tool(Tools.ERASER, this, skin, false);
         this.fill = new Tool(Tools.FILL, this, skin, false);
         this.grab = new Tool(Tools.GRAB, this, skin, false);
+        this.random = new Tool(Tools.RANDOM, this, skin, true);
         this.lines = new Tool(Tools.LINES, this, skin, true);
         this.toolTable.left();
         this.toolTable.add(this.brush).padRight(1);
-        this.toolTable.add(this.randomBrush).padRight(1);
         this.toolTable.add(this.eraser).padRight(1);
         this.toolTable.add(this.fill).padRight(1);
         this.toolTable.add(this.grab).padRight(1);
+        this.toolTable.add(this.random).padRight(1);
         this.toolTable.add(this.lines);
 
         this.editor = editor;
@@ -60,10 +60,10 @@ public class ToolPane extends Group
 
         // Resize all buttons in the pane
         this.toolTable.getCell(this.brush).size(toolHeight, toolHeight);
-        this.toolTable.getCell(this.randomBrush).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.eraser).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.fill).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.grab).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.random).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.lines).size(toolHeight, toolHeight);
         this.toolTable.invalidateHierarchy();
 
