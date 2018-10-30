@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class MapPropertyPanel extends Group
 {
@@ -32,8 +33,12 @@ public class MapPropertyPanel extends Group
         this.table = new Table();
         this.table.left().top();
 
+        TextField.TextFieldFilter.DigitsOnlyFilter filter = new TextField.TextFieldFilter.DigitsOnlyFilter();
+
         this.mapWidthProperty = new PropertyField("Map Width", Integer.toString(mapWidth), skin, menu, false);
+        this.mapWidthProperty.value.setTextFieldFilter(filter);
         this.mapHeightProperty = new PropertyField("Map Height", Integer.toString(mapHeight), skin, menu, false);
+        this.mapHeightProperty.value.setTextFieldFilter(filter);
 
         this.table.add(this.mapWidthProperty).padBottom(1).row();
         this.table.add(this.mapHeightProperty).row();
