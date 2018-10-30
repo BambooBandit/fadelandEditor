@@ -2,9 +2,12 @@ package com.fadeland.editor.ui.propertyMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.tileMenu.TileMenuTools;
+import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class PropertyMenu extends Group
 {
@@ -16,9 +19,9 @@ public class PropertyMenu extends Group
 
     private MapPropertyPanel mapPropertyPanel;
     private Stack propertyPanelStack; // Used to swap out tile and sprite property panels
-    private TilePropertyPanel tilePropertyPanel;
+    public TilePropertyPanel tilePropertyPanel;
+    public SpritePropertyPanel spritePropertyPanel;
     private PropertyPanel propertyPanel; // Custom properties
-    private SpritePropertyPanel spritePropertyPanel;
     private PropertyToolPane toolPane;
 
     public static int toolHeight = 35;
@@ -26,10 +29,13 @@ public class PropertyMenu extends Group
     private Stack stack;
     public Table propertyTable; // Holds all the properties
 
+    private Skin skin;
+
     public PropertyMenu(Skin skin, FadelandEditor fadelandEditor, TileMap map)
     {
         this.editor = fadelandEditor;
         this.map = map;
+        this.skin = skin;
 
         this.stack = new Stack();
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
@@ -48,6 +54,9 @@ public class PropertyMenu extends Group
         this.propertyTable.add(this.mapPropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.propertyPanelStack).padBottom(5).row();
         this.propertyTable.add(this.propertyPanel);
+
+        setTileProperties();
+        setSpriteProperties();
 
         this.stack.add(this.background);
         this.stack.add(this.propertyTable);
@@ -74,6 +83,7 @@ public class PropertyMenu extends Group
             this.tilePropertyPanel.setSize(width, 0);
             this.spritePropertyPanel.setSize(width, 0);
         }
+
         this.propertyPanel.setSize(width, height - toolHeight - this.mapPropertyPanel.getHeight() - 5 - 5 - propertyPanelStackHeight);
         this.propertyPanel.setPosition(0, toolHeight);
         this.propertyTable.invalidateHierarchy();
@@ -98,6 +108,18 @@ public class PropertyMenu extends Group
         }
     }
 
+    private void setTileProperties()
+    {
+        for(int i = 0; i < map.tileMenu.tileTable.getChildren().size; i ++)
+            ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(new PropertyField("Probability", "1.0", skin, this, false));
+    }
+
+    private void setSpriteProperties()
+    {
+        for(int i = 0; i < map.tileMenu.spriteTable.getChildren().size; i ++)
+            ((TileTool) map.tileMenu.spriteTable.getChildren().get(i)).lockedProperties.add(new PropertyField("Rotation", "0", skin, this, false));
+    }
+
     public void removeProperty(String propertyName)
     {
         this.propertyPanel.removeProperty(propertyName);
@@ -116,7 +138,39 @@ public class PropertyMenu extends Group
      * If multiple tiles are selected, only show the common properties. A common property has the same property and value. */
     public void rebuild()
     {
+        this.tilePropertyPanel.table.clearChildren();
+        this.spritePropertyPanel.table.clearChildren();
+        if(map.tileMenu.selectedTiles.size == 1)
+        {
+            if(map.tileMenu.selectedTiles.first().tool == TileMenuTools.TILE)
+            {
+                Array<PropertyField> tileProperties = map.tileMenu.selectedTiles.first().lockedProperties;
+                for (int i = 0; i < tileProperties.size; i++)
+                    this.tilePropertyPanel.table.add(tileProperties.get(i)).padBottom(1).row();
+                this.tilePropertyPanel.setVisible(true);
+                this.spritePropertyPanel.setVisible(false);
+            }
+            else if(map.tileMenu.selectedTiles.first().tool == TileMenuTools.SPRITE)
+            {
+                Array<PropertyField> spriteProperties = map.tileMenu.selectedTiles.first().lockedProperties;
+                for (int i = 0; i < spriteProperties.size; i++)
+                    this.spritePropertyPanel.table.add(spriteProperties.get(i)).padBottom(1).row();
+                this.tilePropertyPanel.setVisible(false);
+                this.spritePropertyPanel.setVisible(true);
+            }
+        }
+        if(this.tilePropertyPanel.isVisible())
+            this.tilePropertyPanel.setSize(getWidth(), toolHeight);
+        else
+            this.tilePropertyPanel.setSize(getWidth(), 0);
+        if(this.spritePropertyPanel.isVisible())
+            this.spritePropertyPanel.setSize(getWidth(), toolHeight);
+        else
+            this.spritePropertyPanel.setSize(getWidth(), 0);
+
         this.propertyPanel.rebuild();
         this.propertyTable.invalidateHierarchy();
+
+        setSize(getWidth(), getHeight()); // refits everything
     }
 }

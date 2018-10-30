@@ -16,8 +16,6 @@ public class SpritePropertyPanel extends Group
     private Stack stack;
     public Table table; // Holds all the text fields
 
-    private PropertyField rotation;
-
     public SpritePropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
     {
         this.menu = menu;
@@ -27,10 +25,6 @@ public class SpritePropertyPanel extends Group
         this.stack = new Stack();
         this.table = new Table();
         this.table.left().bottom();
-
-        this.rotation = new PropertyField("Rotation", "0", skin, menu, false);
-
-        this.table.add(this.rotation);
 
         this.stack.add(this.background);
         this.stack.add(this.table);
@@ -47,7 +41,8 @@ public class SpritePropertyPanel extends Group
             this.table.getCell(this.table.getChildren().get(i)).size(width, textFieldHeight);
         }
 
-        float newHeight = textFieldHeight * this.table.getChildren().size / 2;
+        this.table.invalidateHierarchy();
+        float newHeight = textFieldHeight * this.table.getChildren().size;
 
         this.background.setBounds(0, 0, width, newHeight);
         this.stack.setSize(width, newHeight);

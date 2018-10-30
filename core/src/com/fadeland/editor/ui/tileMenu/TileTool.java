@@ -12,6 +12,7 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
 {
 
 //    public TileProperties properties;
+    public Array<PropertyField> lockedProperties; // properties such as probability and rotation. They belong to all tiles and sprites
     public Array<PropertyField> properties;
 
     public int id, x, y;
@@ -26,6 +27,7 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
         this.textureRegion = textureRegion;
         this.previewSprite = new Sprite(textureRegion);
 //        this.properties = new TileProperties();
+        this.lockedProperties = new Array<>();
         this.properties = new Array<>();
         this.id = id;
         this.x = x;

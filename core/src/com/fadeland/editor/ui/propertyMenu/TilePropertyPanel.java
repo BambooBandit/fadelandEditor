@@ -16,7 +16,6 @@ public class TilePropertyPanel extends Group
     private Stack stack;
     public Table table; // Holds all the text fields
 
-    private PropertyField probabilty;
 
     public TilePropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
     {
@@ -26,11 +25,7 @@ public class TilePropertyPanel extends Group
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.stack = new Stack();
         this.table = new Table();
-        this.table.left().top();
-
-        this.probabilty = new PropertyField("Probability", "1.0", skin, menu, false);
-
-        this.table.add(this.probabilty);
+        this.table.left().bottom();
 
         this.stack.add(this.background);
         this.stack.add(this.table);

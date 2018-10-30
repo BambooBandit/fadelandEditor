@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.tileMenu.TileMenuTools;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class PropertyPanel extends Group
@@ -136,7 +137,6 @@ public class PropertyPanel extends Group
                     this.table.add(firstTool.properties.get(i)).padBottom(1).row();
             }
         }
-
         setSize(getWidth(), getHeight()); // Resize to fit the fields
     }
 }
