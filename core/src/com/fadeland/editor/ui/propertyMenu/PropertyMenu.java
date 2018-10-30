@@ -111,13 +111,23 @@ public class PropertyMenu extends Group
     private void setTileProperties()
     {
         for(int i = 0; i < map.tileMenu.tileTable.getChildren().size; i ++)
-            ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(new PropertyField("Probability", "1.0", skin, this, false));
+        {
+            PropertyField propertyField = new PropertyField("Probability", "1.0", skin, this, false);
+            propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+            ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(propertyField);
+        }
     }
 
     private void setSpriteProperties()
     {
         for(int i = 0; i < map.tileMenu.spriteTable.getChildren().size; i ++)
-            ((TileTool) map.tileMenu.spriteTable.getChildren().get(i)).lockedProperties.add(new PropertyField("Rotation", "0", skin, this, false));
+        {
+            {
+                PropertyField propertyField = new PropertyField("Rotation", "0", skin, this, false);
+                propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+                ((TileTool) map.tileMenu.spriteTable.getChildren().get(i)).lockedProperties.add(propertyField);
+            }
+        }
     }
 
     public void removeProperty(String propertyName)
