@@ -70,7 +70,6 @@ public class MapInput implements InputProcessor
                     partialSum += Float.parseFloat(editor.getTileTools().get(i).getPropertyField("Probability").value.getText());
                     if(partialSum >= random)
                     {
-                        System.out.println(i);
                         randomTile = editor.getTileTools().get(i);
                         break;
                     }
@@ -131,7 +130,6 @@ public class MapInput implements InputProcessor
         }
         if(map.selectedLayer instanceof TileLayer)
         {
-            System.out.println(editor.getTileTools().size + ", " + editor.getTileTools().first() + ", " +  editor.getFileTool() + ", " + editor.fileMenu.toolPane.random.selected);
             if(editor.getTileTools().size > 1 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.fileMenu.toolPane.random.selected)
             {
                 // Randomly pick a tile from the selected tiles based on weighted probabilities
@@ -153,7 +151,6 @@ public class MapInput implements InputProcessor
                     partialSum += Float.parseFloat(editor.getTileTools().get(i).getPropertyField("Probability").value.getText());
                     if(partialSum >= random)
                     {
-                        System.out.println(i);
                         randomTile = editor.getTileTools().get(i);
                         break;
                     }
