@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.fileMenu.Tools;
+import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 
@@ -54,17 +55,43 @@ public class MapInput implements InputProcessor
         this.dragOrigin.set(coords.x, coords.y);
         if(map.selectedLayer instanceof TileLayer)
         {
-            for(int i = 0; i < editor.getTileTools().size; i ++)
+            if(editor.getTileTools().size > 1 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.fileMenu.toolPane.random.selected)
             {
-                int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
-                int yOffset = editor.getTileTools().first().y - editor.getTileTools().get(i).y;
-                Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
-                if (editor.getFileTool() != null && clickedTile != null)
+                // Randomly pick a tile from the selected tiles based on weighted probabilities
+                TileTool randomTile = null;
+                Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
+                float totalSum = 0;
+                float partialSum = 0;
+                for(int i = 0; i < editor.getTileTools().size; i ++)
+                    totalSum += Float.parseFloat(editor.getTileTools().get(i).getPropertyField("Probability").value.getText());
+                float random = Utils.randomFloat(0, totalSum);
+                for(int i = 0; i < editor.getTileTools().size; i ++)
                 {
-                    if (editor.getFileTool().tool == Tools.BRUSH)
-                        clickedTile.setTool(editor.getTileTools().get(i));
-                    else if (editor.getFileTool().tool == Tools.ERASER)
-                        clickedTile.setTool(null);
+                    partialSum += Float.parseFloat(editor.getTileTools().get(i).getPropertyField("Probability").value.getText());
+                    if(partialSum >= random)
+                    {
+                        System.out.println(i);
+                        randomTile = editor.getTileTools().get(i);
+                        break;
+                    }
+                }
+                if(randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
+                    clickedTile.setTool(randomTile);
+            }
+            else
+            {
+                for (int i = 0; i < editor.getTileTools().size; i++)
+                {
+                    int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
+                    int yOffset = editor.getTileTools().first().y - editor.getTileTools().get(i).y;
+                    Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
+                    if (editor.getFileTool() != null && clickedTile != null)
+                    {
+                        if (editor.getFileTool().tool == Tools.BRUSH)
+                            clickedTile.setTool(editor.getTileTools().get(i));
+                        else if (editor.getFileTool().tool == Tools.ERASER)
+                            clickedTile.setTool(null);
+                    }
                 }
             }
         }
@@ -104,17 +131,50 @@ public class MapInput implements InputProcessor
         }
         if(map.selectedLayer instanceof TileLayer)
         {
-            for(int i = 0; i < editor.getTileTools().size; i ++)
+            System.out.println(editor.getTileTools().size + ", " + editor.getTileTools().first() + ", " +  editor.getFileTool() + ", " + editor.fileMenu.toolPane.random.selected);
+            if(editor.getTileTools().size > 1 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.fileMenu.toolPane.random.selected)
             {
-                int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
-                int yOffset = editor.getTileTools().first().y - editor.getTileTools().get(i).y;
-                Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
-                if (editor.getFileTool() != null && clickedTile != null)
+                // Randomly pick a tile from the selected tiles based on weighted probabilities
+                TileTool randomTile = null;
+                Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
+                float totalSum = 0;
+                float partialSum = 0;
+                for(int i = 0; i < editor.getTileTools().size; i ++)
                 {
-                    if (editor.getFileTool().tool == Tools.BRUSH)
-                        clickedTile.setTool(editor.getTileTools().get(i));
-                    else if (editor.getFileTool().tool == Tools.ERASER)
-                        clickedTile.setTool(null);
+                    if(editor.getTileTools().get(i).getPropertyField("Probability") == null)
+                        continue;
+                    totalSum += Float.parseFloat(editor.getTileTools().get(i).getPropertyField("Probability").value.getText());
+                }
+                float random = Utils.randomFloat(0, totalSum);
+                for(int i = 0; i < editor.getTileTools().size; i ++)
+                {
+                    if(editor.getTileTools().get(i).getPropertyField("Probability") == null)
+                        continue;
+                    partialSum += Float.parseFloat(editor.getTileTools().get(i).getPropertyField("Probability").value.getText());
+                    if(partialSum >= random)
+                    {
+                        System.out.println(i);
+                        randomTile = editor.getTileTools().get(i);
+                        break;
+                    }
+                }
+                if(clickedTile != null && randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
+                    clickedTile.setTool(randomTile);
+            }
+            else
+            {
+                for (int i = 0; i < editor.getTileTools().size; i++)
+                {
+                    int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
+                    int yOffset = editor.getTileTools().first().y - editor.getTileTools().get(i).y;
+                    Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
+                    if (editor.getFileTool() != null && clickedTile != null)
+                    {
+                        if (editor.getFileTool().tool == Tools.BRUSH)
+                            clickedTile.setTool(editor.getTileTools().get(i));
+                        else if (editor.getFileTool().tool == Tools.ERASER)
+                            clickedTile.setTool(null);
+                    }
                 }
             }
         }

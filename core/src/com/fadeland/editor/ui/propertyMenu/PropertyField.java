@@ -92,7 +92,7 @@ public class PropertyField extends Group
         if(this.removeable)
             return this.propertyTextField.getText();
         else
-            return this.property.getName();
+            return this.property.getText().toString();
     }
     public String getValue()
     {

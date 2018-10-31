@@ -65,4 +65,20 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
             return -1;
         return 0;
     }
+
+    public PropertyField getPropertyField(String propertyName)
+    {
+        for(int i = 0; i < this.lockedProperties.size; i ++)
+        {
+            if(this.lockedProperties.get(i).getProperty().equals(propertyName))
+                return this.lockedProperties.get(i);
+        }
+
+        for(int i = 0; i < this.properties.size; i ++)
+        {
+            if(this.properties.get(i).getProperty().equals(propertyName))
+                return this.properties.get(i);
+        }
+        return null;
+    }
 }

@@ -20,7 +20,7 @@ public class ToolPane extends Group
     private Tool eraser;
     private Tool fill;
     private Tool grab;
-    private Tool random;
+    public Tool random;
     public Tool lines;
     private Tool selectedTool;
 

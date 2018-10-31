@@ -113,7 +113,14 @@ public class PropertyMenu extends Group
         for(int i = 0; i < map.tileMenu.tileTable.getChildren().size; i ++)
         {
             PropertyField propertyField = new PropertyField("Probability", "1.0", skin, this, false);
-            propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+            propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter()
+            {
+                @Override
+                public boolean acceptChar(TextField textField, char c)
+                {
+                    return c == '.' || Character.isDigit(c);
+                }
+            });
             ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(propertyField);
         }
     }
@@ -124,7 +131,14 @@ public class PropertyMenu extends Group
         {
             {
                 PropertyField propertyField = new PropertyField("Rotation", "0", skin, this, false);
-                propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+                propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter()
+                {
+                    @Override
+                    public boolean acceptChar(TextField textField, char c)
+                    {
+                        return c == '.' || Character.isDigit(c);
+                    }
+                });
                 ((TileTool) map.tileMenu.spriteTable.getChildren().get(i)).lockedProperties.add(propertyField);
             }
         }
