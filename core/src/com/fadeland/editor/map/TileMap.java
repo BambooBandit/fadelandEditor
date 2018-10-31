@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -65,9 +66,6 @@ public class TileMap implements Screen
         this.camera.position.x = 160;
         this.camera.position.y = 150;
 
-        this.mapWidth = MapPropertyPanel.mapWidth;
-        this.mapHeight = MapPropertyPanel.mapHeight;
-
         this.stage = new Stage(new ScreenViewport());
 
         // tileMenu
@@ -84,6 +82,9 @@ public class TileMap implements Screen
         this.layerMenu = new LayerMenu(GameAssets.getUISkin(), editor, this);
         this.layerMenu.setVisible(true);
         this.stage.addActor(this.layerMenu);
+
+        this.mapWidth = propertyMenu.mapPropertyPanel.mapWidth;
+        this.mapHeight = propertyMenu.mapPropertyPanel.mapHeight;
 
     }
 
@@ -200,5 +201,16 @@ public class TileMap implements Screen
 
         Tile tile = selectedTileLayer.tiles.get(index);
         return tile;
+    }
+
+    public void resizeMap(int width, int height)
+    {
+        this.propertyMenu.mapPropertyPanel.mapWidth = width;
+        this.propertyMenu.mapPropertyPanel.mapHeight = height;
+        this.mapWidth = width;
+        this.mapHeight = height;
+        for(int i = 0; i < this.layers.size; i ++)
+            if(layers.get(i) instanceof TileLayer)
+                ((TileLayer)layers.get(i)).resize(width, height, propertyMenu.mapPropertyPanel.down.isChecked(), propertyMenu.mapPropertyPanel.right.isChecked());
     }
 }

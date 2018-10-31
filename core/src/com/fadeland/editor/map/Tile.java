@@ -49,4 +49,10 @@ public class Tile
         if(this.sprite != null)
             map.editor.batch.draw(sprite, x, y, width, height);
     }
+
+    public void setPosition(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
 }

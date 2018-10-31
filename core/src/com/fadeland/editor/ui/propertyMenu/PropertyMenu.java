@@ -17,7 +17,7 @@ public class PropertyMenu extends Group
 
     private Image background;
 
-    private MapPropertyPanel mapPropertyPanel;
+    public MapPropertyPanel mapPropertyPanel;
     private Stack propertyPanelStack; // Used to swap out tile and sprite property panels
     public TilePropertyPanel tilePropertyPanel;
     public SpritePropertyPanel spritePropertyPanel;
