@@ -3,6 +3,7 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.Utils;
@@ -15,10 +16,15 @@ public class MapInput implements InputProcessor
     private FadelandEditor editor;
     private TileMap map;
 
+    private Vector2 dragOrigin;
+    private Vector3 pos;
+
     public MapInput(FadelandEditor editor, TileMap map)
     {
         this.editor = editor;
         this.map = map;
+        this.dragOrigin = new Vector2();
+        this.pos = new Vector3();
     }
 
     @Override
@@ -45,6 +51,7 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.tileScrollPane);
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
+        this.dragOrigin.set(coords.x, coords.y);
         if(map.selectedLayer instanceof TileLayer)
         {
             for(int i = 0; i < editor.getTileTools().size; i ++)
@@ -88,6 +95,13 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.tileScrollPane);
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
+        if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.GRAB)
+        {
+            this.pos = coords.sub(dragOrigin.x, dragOrigin.y, 0);
+            map.camera.position.x -= this.pos.x / 15f;
+            map.camera.position.y -= this.pos.y / 15f;
+            map.camera.update();
+        }
         if(map.selectedLayer instanceof TileLayer)
         {
             for(int i = 0; i < editor.getTileTools().size; i ++)
