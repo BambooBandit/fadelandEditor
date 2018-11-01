@@ -3,6 +3,7 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.fadeland.editor.FadelandEditor;
@@ -96,14 +97,31 @@ public class MapInput implements InputProcessor
         }
         else if(map.selectedLayer instanceof SpriteLayer)
         {
-            if (editor.getFileTool() != null && editor.getSpriteTool() != null
-                    && coords.x > 0 && coords.y > 0 && coords.x < map.mapWidth * tileSize && coords.y < map.mapHeight * tileSize)
+            if(editor.getFileTool() != null)
             {
-                if (editor.getFileTool().tool == Tools.BRUSH)
-                    ((SpriteLayer) map.selectedLayer).sprites.add(new MapSprite(map, (SpriteLayer) map.selectedLayer, editor.getSpriteTool(),
-                            coords.x - editor.getSpriteTool().textureRegion.getRegionWidth() / 2, coords.y - editor.getSpriteTool().textureRegion.getRegionHeight() / 2));
+                if(editor.getFileTool().tool == Tools.SELECT)
+                {
+                    this.editor.shapeRenderer.setColor(Color.YELLOW);
+                    for (int i = 0; i < map.selectedLayer.tiles.size; i++)
+                    {
+                        MapSprite mapSprite = ((MapSprite) map.selectedLayer.tiles.get(i));
+                        if (mapSprite.polygon.contains(coords.x, coords.y))
+                        {
+                            map.selectedSprites.clear();
+                            map.selectedSprites.add(mapSprite);
+                            break;
+                        }
+                    }
+                }
+                else if(editor.getSpriteTool() != null &&
+                        coords.x > 0 && coords.y > 0 && coords.x < map.mapWidth * tileSize && coords.y < map.mapHeight * tileSize)
+                {
+                    if (editor.getFileTool().tool == Tools.BRUSH)
+                        ((SpriteLayer) map.selectedLayer).tiles.add(new MapSprite(map, (SpriteLayer) map.selectedLayer, editor.getSpriteTool(),
+                                coords.x - editor.getSpriteTool().textureRegion.getRegionWidth() / 2, coords.y - editor.getSpriteTool().textureRegion.getRegionHeight() / 2));
 //                else if (editor.getFileTool().tool == Tools.ERASER)
 //                    clickedTile.setTool(null);
+                }
             }
         }
         return false;
@@ -184,7 +202,7 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.tileScrollPane);
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
-        if(map.selectedLayer instanceof TileLayer)
+        if(map.selectedLayer instanceof TileLayer && editor.getTileTools() != null)
         {
             for(int i = 0; i < editor.getTileTools().size; i ++)
             {

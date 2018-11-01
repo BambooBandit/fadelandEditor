@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Array;
@@ -51,12 +52,16 @@ public class TileMap implements Screen
     public PropertyMenu propertyMenu;
     public LayerMenu layerMenu;
 
+    public Array<MapSprite> selectedSprites;
+
     public TileMap(FadelandEditor editor, String name)
     {
         this.editor = editor;
         this.name = name;
 
         this.layers = new Array<>();
+
+        this.selectedSprites = new Array<>();
 
         this.input = new MapInput(editor, this);
 
@@ -119,6 +124,7 @@ public class TileMap implements Screen
         }
         this.editor.batch.end();
 
+        this.editor.shapeRenderer.setColor(Color.BLACK);
         this.editor.shapeRenderer.begin();
         this.editor.shapeRenderer.line(0, 0, 0, mapHeight * tileSize);
         this.editor.shapeRenderer.line(0, 0, mapWidth * tileSize, 0);
@@ -132,6 +138,39 @@ public class TileMap implements Screen
             for (int x = 1; x < mapWidth; x++)
                 this.editor.shapeRenderer.line(x * tileSize, 0, x * tileSize, mapHeight * tileSize);
         }
+
+        if(selectedLayer != null && selectedLayer instanceof SpriteLayer)
+        {
+            Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
+            boolean hoverDrawed = false;
+            for (int i = 0; i < selectedLayer.tiles.size; i++)
+            {
+                MapSprite mapSprite = ((MapSprite) selectedLayer.tiles.get(i));
+                boolean selected = selectedSprites.contains(mapSprite, true);
+                boolean hoveredOver = mapSprite.polygon.contains(mouseCoords.x, mouseCoords.y);
+                if (hoveredOver || selected)
+                {
+                    if(selected && hoveredOver && !hoverDrawed)
+                    {
+                        this.editor.shapeRenderer.setColor(Color.YELLOW);
+                        hoverDrawed = true;
+                        mapSprite.drawOutline();
+                    }
+                    else if(selected)
+                    {
+                        this.editor.shapeRenderer.setColor(Color.GREEN);
+                        mapSprite.drawOutline();
+                    }
+                    else if(hoveredOver && !hoverDrawed)
+                    {
+                        this.editor.shapeRenderer.setColor(Color.ORANGE);
+                        hoverDrawed = true;
+                        mapSprite.drawOutline();
+                    }
+                }
+            }
+        }
+
         this.editor.shapeRenderer.end();
 
         this.stage.act();

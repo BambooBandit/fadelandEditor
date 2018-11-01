@@ -8,15 +8,11 @@ import com.fadeland.editor.ui.layerMenu.LayerField;
 public class TileLayer extends Layer
 {
 
-    public Array<Tile> tiles;
-
     private int width, height;
 
     public TileLayer(FadelandEditor editor, TileMap map, LayerField layerField)
     {
         super(editor, map, layerField);
-
-        this.tiles = new Array<>();
 
         this.width = map.mapWidth;
         this.height = map.mapHeight;

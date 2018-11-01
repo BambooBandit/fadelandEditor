@@ -54,5 +54,6 @@ public class Tile
     {
         this.x = x;
         this.y = y;
+        this.sprite.setPosition(x, y);
     }
 }
