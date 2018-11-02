@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -55,13 +56,15 @@ public class TileMap implements Screen
 
     public Array<MapSprite> selectedSprites;
 
+    public BoxSelect boxSelect;
+
     public TileMap(FadelandEditor editor, String name)
     {
         this.editor = editor;
         this.name = name;
 
         this.layers = new Array<>();
-
+        this.boxSelect = new BoxSelect(this);
         this.selectedSprites = new Array<>();
 
         this.input = new MapInput(editor, this);
@@ -145,7 +148,7 @@ public class TileMap implements Screen
                 this.editor.shapeRenderer.line(x * tileSize, 0, x * tileSize, mapHeight * tileSize);
         }
 
-        if(selectedLayer != null && selectedLayer instanceof SpriteLayer && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT)
+        if(selectedLayer != null && selectedLayer instanceof SpriteLayer && editor.getFileTool() != null && (editor.getFileTool().tool == Tools.SELECT || editor.getFileTool().tool == Tools.BOXSELECT))
         {
             Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
             boolean hoverDrawed = false;
@@ -154,7 +157,12 @@ public class TileMap implements Screen
                 MapSprite mapSprite = ((MapSprite) selectedLayer.tiles.get(i));
                 boolean selected = selectedSprites.contains(mapSprite, true);
                 boolean hoveredOver = mapSprite.polygon.contains(mouseCoords.x, mouseCoords.y);
-                if (hoveredOver || selected)
+                if(selected && editor.getFileTool().tool == Tools.BOXSELECT)
+                {
+                    this.editor.shapeRenderer.setColor(Color.GREEN);
+                    mapSprite.drawOutline();
+                }
+                else if (hoveredOver || selected)
                 {
                     if(selected && hoveredOver && !hoverDrawed)
                     {
@@ -175,6 +183,24 @@ public class TileMap implements Screen
                     }
                 }
             }
+        }
+        if(boxSelect.isDragging && selectedLayer != null && selectedLayer instanceof SpriteLayer && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT)
+        {
+            for (int i = 0; i < selectedLayer.tiles.size; i++)
+            {
+                MapSprite mapSprite = ((MapSprite)selectedLayer.tiles.get(i));
+                if(Intersector.overlapConvexPolygons(mapSprite.polygon.getTransformedVertices(), boxSelect.getVertices(), null))
+                {
+                    boolean selected = selectedSprites.contains(mapSprite, true);
+                    if(!selected)
+                    {
+                        this.editor.shapeRenderer.setColor(Color.YELLOW);
+                        mapSprite.drawOutline();
+                    }
+                }
+            }
+            this.editor.shapeRenderer.setColor(Color.CYAN);
+            editor.shapeRenderer.rect(boxSelect.rectangle.x, boxSelect.rectangle.y, boxSelect.rectangle.width, boxSelect.rectangle.height);
         }
         else if(selectedLayer != null && selectedLayer instanceof TileLayer && editor.getFileTool() != null && editor.getFileTool().tool == Tools.FILL)
         {

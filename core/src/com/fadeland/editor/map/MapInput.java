@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -75,6 +76,11 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         this.dragOrigin.set(coords.x, coords.y);
+        if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT)
+        {
+            map.boxSelect.startDrag(coords.x, coords.y);
+            return false;
+        }
         for(int i = 0; i < map.selectedSprites.size; i ++)
         {
             if(map.selectedSprites.get(i).rotationBox.contains(coords.x, coords.y))
@@ -249,6 +255,31 @@ public class MapInput implements InputProcessor
     {
         this.draggingRotateBox = false;
         this.draggingMoveBox = false;
+        if(map.boxSelect.isDragging)
+        {
+            if(!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+            {
+                for (int k = 0; k < map.selectedSprites.size; k++)
+                    map.selectedSprites.get(k).unselect();
+                map.selectedSprites.clear();
+            }
+            for (int i = 0; i < map.selectedLayer.tiles.size; i++)
+            {
+                MapSprite mapSprite = ((MapSprite) map.selectedLayer.tiles.get(i));
+                if (Intersector.overlapConvexPolygons(mapSprite.polygon.getTransformedVertices(), map.boxSelect.getVertices(), null))
+                {
+                    boolean selected = map.selectedSprites.contains(mapSprite, true);
+                    if (!selected)
+                    {
+                        map.selectedSprites.add(mapSprite);
+                        mapSprite.select();
+                        map.propertyMenu.spritePropertyPanel.setVisible(true);
+                    }
+                }
+            }
+            map.propertyMenu.rebuild();
+            map.boxSelect.isDragging = false;
+        }
         return false;
     }
 
@@ -258,6 +289,11 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.tileScrollPane);
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
+        if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT)
+        {
+            map.boxSelect.continueDrag(coords.x, coords.y);
+            return false;
+        }
         this.pos = coords.cpy().sub(dragOrigin.x, dragOrigin.y, 0);
         if(draggingRotateBox)
         {
