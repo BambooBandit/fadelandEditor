@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.fadeland.editor.FadelandEditor;
@@ -217,9 +218,27 @@ public class MapInput implements InputProcessor
                         @Override
                         public boolean acceptChar(TextField textField, char c)
                         {
-                            return c == '.' || Character.isDigit(c);
+                            return c == '.' || c == '-' || Character.isDigit(c);
                         }
                     });
+
+                    propertyField.value.getListeners().clear();
+
+                    TextField.TextFieldClickListener rotationListener = propertyField.value.new TextFieldClickListener(){
+                        @Override
+                        public boolean keyUp (InputEvent event, int keycode)
+                        {
+                            try
+                            {
+                                if (keycode == Input.Keys.ENTER)
+                                    mapSprite.setRotation(Float.parseFloat(propertyField.value.getText()));
+                            }
+                            catch (NumberFormatException e){}
+                            return true;
+                        }
+                    };
+                    propertyField.value.addListener(rotationListener);
+
                     mapSprite.lockedProperties.add(propertyField);
 
                     if (editor.getFileTool().tool == Tools.BRUSH)

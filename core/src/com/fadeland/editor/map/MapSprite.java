@@ -82,6 +82,15 @@ public class MapSprite extends Tile
         this.sprite.setRotation(degree);
         this.polygon.setRotation(degree);
         editorSprite.setRotation(degree);
+
+        for(int i = 0; i < lockedProperties.size; i ++)
+        {
+            if(lockedProperties.get(i).getProperty().equals("Rotation"))
+            {
+                lockedProperties.get(i).value.setText(Float.toString(this.rotation));
+                break;
+            }
+        }
     }
 
     public void rotate(float degree)
@@ -101,6 +110,15 @@ public class MapSprite extends Tile
         this.sprite.rotate(degree);
         this.polygon.rotate(degree);
         editorSprite.rotate(degree);
+
+        for(int i = 0; i < lockedProperties.size; i ++)
+        {
+            if(lockedProperties.get(i).getProperty().equals("Rotation"))
+            {
+                lockedProperties.get(i).value.setText(Float.toString(this.rotation));
+                break;
+            }
+        }
 
 //        editorSprite.getVertices();
 
