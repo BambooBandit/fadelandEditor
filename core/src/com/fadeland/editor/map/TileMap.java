@@ -122,6 +122,11 @@ public class TileMap implements Screen
             if(this.layers.get(i).layerField.visibleImg.isVisible())
                 this.layers.get(i).draw();
         }
+        for(int i = 0; i < this.selectedSprites.size; i ++)
+        {
+            this.selectedSprites.get(i).drawRotationBox();
+            this.selectedSprites.get(i).drawMoveBox();
+        }
         this.editor.batch.end();
 
         this.editor.shapeRenderer.setColor(Color.BLACK);
@@ -139,7 +144,7 @@ public class TileMap implements Screen
                 this.editor.shapeRenderer.line(x * tileSize, 0, x * tileSize, mapHeight * tileSize);
         }
 
-        if(selectedLayer != null && selectedLayer instanceof SpriteLayer)
+        if(selectedLayer != null && selectedLayer instanceof SpriteLayer && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT)
         {
             Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
             boolean hoverDrawed = false;

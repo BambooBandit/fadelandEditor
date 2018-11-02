@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.fileMenu.Tools;
@@ -20,6 +22,11 @@ public class MapInput implements InputProcessor
 
     private Vector2 dragOrigin;
     private Vector3 pos;
+    private ObjectMap<MapSprite, Float> oldXofDragMap;
+    private ObjectMap<MapSprite, Float> oldYofDragMap;
+
+    private boolean draggingRotateBox = false;
+    private boolean draggingMoveBox = false;
 
     public MapInput(FadelandEditor editor, TileMap map)
     {
@@ -27,6 +34,8 @@ public class MapInput implements InputProcessor
         this.map = map;
         this.dragOrigin = new Vector2();
         this.pos = new Vector3();
+        this.oldXofDragMap = new ObjectMap<>();
+        this.oldYofDragMap = new ObjectMap<>();
     }
 
     @Override
@@ -54,6 +63,63 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         this.dragOrigin.set(coords.x, coords.y);
+        for(int i = 0; i < map.selectedSprites.size; i ++)
+        {
+            if(map.selectedSprites.get(i).rotationBox.contains(coords.x, coords.y))
+            {
+                // If clicked rotateBox with SELECT tool, ignore everything
+                this.draggingRotateBox = true;
+
+                float xSum = 0, ySum = 0;
+                for(MapSprite mapSprite : map.selectedSprites)
+                {
+                    xSum += mapSprite.x;
+                    ySum += mapSprite.y;
+                }
+                float xAverage = xSum / map.selectedSprites.size;
+                float yAverage = ySum / map.selectedSprites.size;
+                Vector2 centerOrigin = Utils.setCenterOrigin(xAverage, yAverage);
+                boolean center = map.selectedSprites.size == 1;
+                for(MapSprite mapSprite : map.selectedSprites)
+                {
+                    Vector2 origin = centerOrigin.cpy().sub(mapSprite.x, mapSprite.y);
+//                    mapSprite.setOrigin(origin.x, origin.y, center);
+                }
+
+                return false;
+            }
+            else if(map.selectedSprites.get(i).moveBox.contains(coords.x, coords.y))
+            {
+                // If clicked moveBox with SELECT tool, ignore everything
+                this.draggingMoveBox = true;
+
+                this.oldXofDragMap.clear();
+                this.oldYofDragMap.clear();
+                for(int k = 0; k < map.selectedSprites.size; k ++)
+                {
+                    this.oldXofDragMap.put(map.selectedSprites.get(k), map.selectedSprites.get(k).x);
+                    this.oldYofDragMap.put(map.selectedSprites.get(k), map.selectedSprites.get(k).y);
+                }
+
+                float xSum = 0, ySum = 0;
+                for(MapSprite mapSprite : map.selectedSprites)
+                {
+                    xSum += mapSprite.x;
+                    ySum += mapSprite.y;
+                }
+                float xAverage = xSum / map.selectedSprites.size;
+                float yAverage = ySum / map.selectedSprites.size;
+                Vector2 centerOrigin = Utils.setCenterOrigin(xAverage, yAverage);
+                boolean center = map.selectedSprites.size == 1;
+                for(MapSprite mapSprite : map.selectedSprites)
+                {
+                    Vector2 origin = centerOrigin.cpy().sub(mapSprite.x, mapSprite.y);
+//                    mapSprite.setOrigin(origin.x, origin.y, center);
+                }
+
+                return false;
+            }
+        }
         if(map.selectedLayer instanceof TileLayer)
         {
             if(editor.getTileTools().size > 1 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.fileMenu.toolPane.random.selected)
@@ -107,8 +173,27 @@ public class MapInput implements InputProcessor
                         MapSprite mapSprite = ((MapSprite) map.selectedLayer.tiles.get(i));
                         if (mapSprite.polygon.contains(coords.x, coords.y))
                         {
-                            map.selectedSprites.clear();
-                            map.selectedSprites.add(mapSprite);
+                            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                            {
+                                if(map.selectedSprites.contains(mapSprite, true))
+                                {
+                                    map.selectedSprites.removeValue(mapSprite, true);
+                                    mapSprite.unselect();
+                                }
+                                else
+                                {
+                                    map.selectedSprites.add(mapSprite);
+                                    mapSprite.select();
+                                }
+                            }
+                            else
+                            {
+                                for (int k = 0; k < map.selectedSprites.size; k++)
+                                    map.selectedSprites.get(k).unselect();
+                                map.selectedSprites.clear();
+                                map.selectedSprites.add(mapSprite);
+                                mapSprite.select();
+                            }
                             break;
                         }
                     }
@@ -130,6 +215,8 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
+        this.draggingRotateBox = false;
+        this.draggingMoveBox = false;
         return false;
     }
 
@@ -139,9 +226,25 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.tileScrollPane);
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
+        this.pos = coords.cpy().sub(dragOrigin.x, dragOrigin.y, 0);
+        System.out.println(coords.cpy().sub(dragOrigin.x, dragOrigin.y, 0).x + ", " + coords.cpy().sub(dragOrigin.x, dragOrigin.y, 0).y);
+        if(draggingRotateBox)
+        {
+            Vector2 pos2 = new Vector2(this.pos.x, this.pos.y);
+            for(int i = 0; i < map.selectedSprites.size; i ++)
+            {
+                map.selectedSprites.get(i).rotate(dragOrigin.angle(pos2) / 35f);
+            }
+            return false;
+        }
+        else if(draggingMoveBox)
+        {
+            for(int i = 0; i < map.selectedSprites.size; i ++)
+                map.selectedSprites.get(i).setPosition(this.oldXofDragMap.get(map.selectedSprites.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedSprites.get(i)) + pos.y);
+            return false;
+        }
         if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.GRAB)
         {
-            this.pos = coords.sub(dragOrigin.x, dragOrigin.y, 0);
             map.camera.position.x -= this.pos.x / 15f;
             map.camera.position.y -= this.pos.y / 15f;
             map.camera.update();

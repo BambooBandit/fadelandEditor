@@ -4,12 +4,14 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.RandomXS128;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class Utils
 {
     private static RandomXS128 random = new RandomXS128();
     private static Vector3 unprojector = new Vector3();
+    public static Vector2 centerOrigin = new Vector2();
     public static boolean print = true;
     public static void centerPrint(SpriteBatch batch, String string, float x, float y)
     {
@@ -98,4 +100,9 @@ public class Utils
     }
 
 
+    public static Vector2 setCenterOrigin(float x, float y)
+    {
+        centerOrigin.set(x, y);
+        return centerOrigin;
+    }
 }
