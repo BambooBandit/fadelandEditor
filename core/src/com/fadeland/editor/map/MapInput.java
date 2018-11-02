@@ -7,10 +7,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.fadeland.editor.FadelandEditor;
+import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.fileMenu.Tools;
+import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
@@ -184,7 +187,9 @@ public class MapInput implements InputProcessor
                                 {
                                     map.selectedSprites.add(mapSprite);
                                     mapSprite.select();
+                                    map.propertyMenu.spritePropertyPanel.setVisible(true);
                                 }
+                                map.propertyMenu.rebuild();
                             }
                             else
                             {
@@ -192,7 +197,9 @@ public class MapInput implements InputProcessor
                                     map.selectedSprites.get(k).unselect();
                                 map.selectedSprites.clear();
                                 map.selectedSprites.add(mapSprite);
+                                map.propertyMenu.spritePropertyPanel.setVisible(true);
                                 mapSprite.select();
+                                map.propertyMenu.rebuild();
                             }
                             break;
                         }
@@ -201,9 +208,22 @@ public class MapInput implements InputProcessor
                 else if(editor.getSpriteTool() != null &&
                         coords.x > 0 && coords.y > 0 && coords.x < map.mapWidth * tileSize && coords.y < map.mapHeight * tileSize)
                 {
+                    MapSprite mapSprite = new MapSprite(map, (SpriteLayer) map.selectedLayer, editor.getSpriteTool(),
+                            coords.x - editor.getSpriteTool().textureRegion.getRegionWidth() / 2, coords.y - editor.getSpriteTool().textureRegion.getRegionHeight() / 2);
+
+                    PropertyField propertyField = new PropertyField("Rotation", "0", GameAssets.getUISkin(), map.propertyMenu, false);
+                    propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter()
+                    {
+                        @Override
+                        public boolean acceptChar(TextField textField, char c)
+                        {
+                            return c == '.' || Character.isDigit(c);
+                        }
+                    });
+                    mapSprite.lockedProperties.add(propertyField);
+
                     if (editor.getFileTool().tool == Tools.BRUSH)
-                        ((SpriteLayer) map.selectedLayer).tiles.add(new MapSprite(map, (SpriteLayer) map.selectedLayer, editor.getSpriteTool(),
-                                coords.x - editor.getSpriteTool().textureRegion.getRegionWidth() / 2, coords.y - editor.getSpriteTool().textureRegion.getRegionHeight() / 2));
+                        ((SpriteLayer) map.selectedLayer).tiles.add(mapSprite);
 //                else if (editor.getFileTool().tool == Tools.ERASER)
 //                    clickedTile.setTool(null);
                 }

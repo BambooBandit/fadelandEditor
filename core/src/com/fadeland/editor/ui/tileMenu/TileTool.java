@@ -12,7 +12,7 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
 {
 
 //    public TileProperties properties;
-    public Array<PropertyField> lockedProperties; // properties such as probability and rotation. They belong to all tiles and sprites
+    public Array<PropertyField> lockedProperties; // properties such as probability. They belong to all tiles
     public Array<PropertyField> properties;
 
     public int id, x, y;

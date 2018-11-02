@@ -18,7 +18,6 @@ public class PropertyMenu extends Group
     private Image background;
 
     public MapPropertyPanel mapPropertyPanel;
-    private Stack propertyPanelStack; // Used to swap out tile and sprite property panels
     public TilePropertyPanel tilePropertyPanel;
     public SpritePropertyPanel spritePropertyPanel;
     private PropertyPanel propertyPanel; // Custom properties
@@ -42,21 +41,18 @@ public class PropertyMenu extends Group
         this.mapPropertyPanel = new MapPropertyPanel(skin, this, editor);
         this.tilePropertyPanel = new TilePropertyPanel(skin, this, editor);
         this.spritePropertyPanel = new SpritePropertyPanel(skin, this, editor);
-        this.propertyPanel = new PropertyPanel(skin, this, editor, map);
-        this.propertyPanelStack = new Stack();
-        this.propertyPanelStack.add(this.tilePropertyPanel);
-        this.propertyPanelStack.add(this.spritePropertyPanel);
         this.spritePropertyPanel.setVisible(false);
+        this.propertyPanel = new PropertyPanel(skin, this, editor, map);
         this.toolPane = new PropertyToolPane(editor, this, skin);
 
         this.propertyTable = new Table();
         this.propertyTable.left().bottom();
         this.propertyTable.add(this.mapPropertyPanel).padBottom(5).row();
-        this.propertyTable.add(this.propertyPanelStack).padBottom(5).row();
+        this.propertyTable.add(this.spritePropertyPanel).padBottom(5).row();
+        this.propertyTable.add(this.tilePropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.propertyPanel);
 
         setTileProperties();
-        setSpriteProperties();
 
         this.stack.add(this.background);
         this.stack.add(this.propertyTable);
@@ -75,22 +71,22 @@ public class PropertyMenu extends Group
         this.spritePropertyPanel.setSize(width, toolHeight);
         float propertyPanelStackHeight = 0;
         if(this.tilePropertyPanel.isVisible())
-            propertyPanelStackHeight = this.tilePropertyPanel.getHeight();
-        else if(this.spritePropertyPanel.isVisible())
-            propertyPanelStackHeight = this.spritePropertyPanel.getHeight();
+            propertyPanelStackHeight += this.tilePropertyPanel.getHeight();
         else
-        {
             this.tilePropertyPanel.setSize(width, 0);
+
+        if(this.spritePropertyPanel.isVisible())
+            propertyPanelStackHeight += this.spritePropertyPanel.getHeight();
+        else
             this.spritePropertyPanel.setSize(width, 0);
-        }
 
         this.propertyPanel.setSize(width, height - toolHeight - this.mapPropertyPanel.getHeight() - 5 - 5 - propertyPanelStackHeight);
         this.propertyPanel.setPosition(0, toolHeight);
         this.propertyTable.invalidateHierarchy();
         this.toolPane.setSize(width, toolHeight);
 
-        this.propertyPanelStack.setSize(width, this.propertyPanelStack.getMinHeight());
-        this.propertyPanelStack.invalidateHierarchy();
+//        this.propertyPanelStack.setSize(width, this.propertyPanelStack.getMinHeight());
+//        this.propertyPanelStack.invalidateHierarchy();
 
         this.stack.setSize(width, height - toolHeight);
         this.stack.invalidateHierarchy();
@@ -125,23 +121,6 @@ public class PropertyMenu extends Group
         }
     }
 
-    private void setSpriteProperties()
-    {
-        for(int i = 0; i < map.tileMenu.spriteTable.getChildren().size; i ++)
-        {
-            PropertyField propertyField = new PropertyField("Rotation", "0", skin, this, false);
-            propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter()
-            {
-                @Override
-                public boolean acceptChar(TextField textField, char c)
-                {
-                    return c == '.' || Character.isDigit(c);
-                }
-            });
-            ((TileTool) map.tileMenu.spriteTable.getChildren().get(i)).lockedProperties.add(propertyField);
-        }
-    }
-
     public void removeProperty(String propertyName)
     {
         this.propertyPanel.removeProperty(propertyName);
@@ -170,16 +149,14 @@ public class PropertyMenu extends Group
                 for (int i = 0; i < tileProperties.size; i++)
                     this.tilePropertyPanel.table.add(tileProperties.get(i)).padBottom(1).row();
                 this.tilePropertyPanel.setVisible(true);
-                this.spritePropertyPanel.setVisible(false);
             }
-            else if(map.tileMenu.selectedTiles.first().tool == TileMenuTools.SPRITE)
-            {
-                Array<PropertyField> spriteProperties = map.tileMenu.selectedTiles.first().lockedProperties;
-                for (int i = 0; i < spriteProperties.size; i++)
-                    this.spritePropertyPanel.table.add(spriteProperties.get(i)).padBottom(1).row();
-                this.tilePropertyPanel.setVisible(false);
-                this.spritePropertyPanel.setVisible(true);
-            }
+        }
+        if(map.selectedSprites.size > 0)
+        {
+            Array<PropertyField> spriteProperties = map.selectedSprites.first().lockedProperties;
+            for (int i = 0; i < spriteProperties.size; i++)
+                this.spritePropertyPanel.table.add(spriteProperties.get(i)).padBottom(1).row();
+            this.spritePropertyPanel.setVisible(true);
         }
         if(this.tilePropertyPanel.isVisible())
             this.tilePropertyPanel.setSize(getWidth(), toolHeight);

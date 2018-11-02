@@ -3,7 +3,9 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.Utils;
+import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
@@ -15,12 +17,15 @@ public class MapSprite extends Tile
     public RotationBox rotationBox;
     public MoveBox moveBox;
     private boolean selected;
+    public Array<PropertyField> lockedProperties; // properties such as probability and rotation. They belong to all tiles and sprites
+
 
     EditorSprite editorSprite;
 
     public MapSprite(TileMap map, SpriteLayer layer, TileTool tool, float x, float y)
     {
         super(map, layer, tool, x, y);
+        this.lockedProperties = new Array<>();
         this.sprite = new Sprite(tool.textureRegion);
         this.sprite.setPosition(x, y);
         this.width = this.sprite.getWidth();
