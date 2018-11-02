@@ -12,6 +12,7 @@ public class Tile
     protected Sprite sprite;
     protected float x, y, width, height;
     public TileTool tool;
+    public boolean hasBeenPainted = false;
 
     public Tile(TileMap map, TileLayer layer, float x, float y)
     {

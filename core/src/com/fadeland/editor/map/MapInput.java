@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -135,25 +134,18 @@ public class MapInput implements InputProcessor
         }
         if(map.selectedLayer instanceof TileLayer)
         {
-            if(editor.getTileTools().size > 1 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.fileMenu.toolPane.random.selected)
+            if(editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.getFileTool().tool == Tools.FILL)
+            {
+                for(int i = 0; i < map.selectedLayer.tiles.size; i ++)
+                    map.selectedLayer.tiles.get(i).hasBeenPainted = false;
+                Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
+                fill(coords.x, coords.y, clickedTile.tool);
+            }
+            else if(editor.getTileTools().size > 1 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.fileMenu.toolPane.random.selected)
             {
                 // Randomly pick a tile from the selected tiles based on weighted probabilities
-                TileTool randomTile = null;
                 Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
-                float totalSum = 0;
-                float partialSum = 0;
-                for(int i = 0; i < editor.getTileTools().size; i ++)
-                    totalSum += Float.parseFloat(editor.getTileTools().get(i).getPropertyField("Probability").value.getText());
-                float random = Utils.randomFloat(0, totalSum);
-                for(int i = 0; i < editor.getTileTools().size; i ++)
-                {
-                    partialSum += Float.parseFloat(editor.getTileTools().get(i).getPropertyField("Probability").value.getText());
-                    if(partialSum >= random)
-                    {
-                        randomTile = editor.getTileTools().get(i);
-                        break;
-                    }
-                }
+                TileTool randomTile = randomTile();
                 if(randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
                     clickedTile.setTool(randomTile);
             }
@@ -397,5 +389,48 @@ public class MapInput implements InputProcessor
         }
 
         return false;
+    }
+
+    private TileTool randomTile()
+    {
+        // Randomly pick a tile from the selected tiles based on weighted probabilities
+        TileTool randomTile = null;
+        float totalSum = 0;
+        float partialSum = 0;
+        for(int i = 0; i < editor.getTileTools().size; i ++)
+            totalSum += Float.parseFloat(editor.getTileTools().get(i).getPropertyField("Probability").value.getText());
+        float random = Utils.randomFloat(0, totalSum);
+        for(int i = 0; i < editor.getTileTools().size; i ++)
+        {
+            partialSum += Float.parseFloat(editor.getTileTools().get(i).getPropertyField("Probability").value.getText());
+            if(partialSum >= random)
+            {
+                randomTile = editor.getTileTools().get(i);
+                break;
+            }
+        }
+        return randomTile;
+    }
+
+    private void fill(float x, float y, TileTool tool)
+    {
+        Tile tileToPaint = map.getTile(x, y - tileSize);
+        if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+        {
+            TileTool tile;
+            if(editor.fileMenu.toolPane.random.selected)
+                tile = randomTile();
+            else
+                tile = editor.getTileTools().first();
+            if(tile != null)
+            {
+                tileToPaint.hasBeenPainted = true;
+                tileToPaint.setTool(tile);
+                fill(x + 64, y, tool);
+                fill(x - 64, y, tool);
+                fill(x, y + 64, tool);
+                fill(x, y - 64, tool);
+            }
+        }
     }
 }
