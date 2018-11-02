@@ -13,6 +13,8 @@ public class Utils
     private static Vector3 unprojector = new Vector3();
     public static Vector2 centerOrigin = new Vector2();
     public static boolean print = true;
+    public static Vector2 tilePositionCopy = new Vector2();
+
     public static void centerPrint(SpriteBatch batch, String string, float x, float y)
     {
         GameAssets.getGlyph().setText(GameAssets.getFont(), string);
