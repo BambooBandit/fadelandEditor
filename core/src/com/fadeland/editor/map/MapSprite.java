@@ -3,6 +3,7 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
@@ -95,18 +96,9 @@ public class MapSprite extends Tile
 
     public void rotate(float degree)
     {
-//        float[] vertices = this.sprite.getVertices();
-//        System.out.println();
-//        System.out.println("(" + x + ", " + y + "), " + sprite.getRotation());
-//        System.out.print("(" + vertices[0] + ", " + vertices[1] + "), ");
-//        System.out.println("(" + vertices[10] + ", " + vertices[11] + ")");
-//        float centerX = (vertices[0] + vertices[10]) / 2;
-//        float centerY = (vertices[1] + vertices[11]) / 2;
-//        System.out.println("centerX: " + x + ". " + (centerX - (Math.cos(Math.toRadians(sprite.getRotation())) * 32) + (Math.sin(Math.toRadians(sprite.getRotation())) * 32)) );
-//        System.out.println("centerY: " + y + ". " + (centerY - (Math.cos(Math.toRadians(sprite.getRotation())) * 32) - (Math.sin(Math.toRadians(sprite.getRotation())) * 32)) );
-//        System.out.println();
-
         this.rotation += degree;
+        Vector2 endPos = position.cpy().sub(Utils.centerOrigin).rotate(degree).add(Utils.centerOrigin); // TODO don't assume this was set in case rotate is used somewhere else
+        setPosition(endPos.x, endPos.y);
         this.sprite.rotate(degree);
         this.polygon.rotate(degree);
         editorSprite.rotate(degree);
@@ -119,11 +111,6 @@ public class MapSprite extends Tile
                 break;
             }
         }
-
-//        editorSprite.getVertices();
-
-//        this.sprite.setPosition(editorSprite.getEditorX(), editorSprite.getEditorY());
-//        this.sprite.setOriginCenter();
     }
 
     public void select()

@@ -85,18 +85,12 @@ public class MapInput implements InputProcessor
                 float xSum = 0, ySum = 0;
                 for(MapSprite mapSprite : map.selectedSprites)
                 {
-                    xSum += mapSprite.x;
-                    ySum += mapSprite.y;
+                    xSum += mapSprite.position.x;
+                    ySum += mapSprite.position.y;
                 }
                 float xAverage = xSum / map.selectedSprites.size;
                 float yAverage = ySum / map.selectedSprites.size;
-                Vector2 centerOrigin = Utils.setCenterOrigin(xAverage, yAverage);
-                boolean center = map.selectedSprites.size == 1;
-                for(MapSprite mapSprite : map.selectedSprites)
-                {
-                    Vector2 origin = centerOrigin.cpy().sub(mapSprite.x, mapSprite.y);
-//                    mapSprite.setOrigin(origin.x, origin.y, center);
-                }
+                Utils.setCenterOrigin(xAverage, yAverage);
 
                 return false;
             }
@@ -109,25 +103,19 @@ public class MapInput implements InputProcessor
                 this.oldYofDragMap.clear();
                 for(int k = 0; k < map.selectedSprites.size; k ++)
                 {
-                    this.oldXofDragMap.put(map.selectedSprites.get(k), map.selectedSprites.get(k).x);
-                    this.oldYofDragMap.put(map.selectedSprites.get(k), map.selectedSprites.get(k).y);
+                    this.oldXofDragMap.put(map.selectedSprites.get(k), map.selectedSprites.get(k).position.x);
+                    this.oldYofDragMap.put(map.selectedSprites.get(k), map.selectedSprites.get(k).position.y);
                 }
 
                 float xSum = 0, ySum = 0;
                 for(MapSprite mapSprite : map.selectedSprites)
                 {
-                    xSum += mapSprite.x;
-                    ySum += mapSprite.y;
+                    xSum += mapSprite.position.x;
+                    ySum += mapSprite.position.y;
                 }
                 float xAverage = xSum / map.selectedSprites.size;
                 float yAverage = ySum / map.selectedSprites.size;
-                Vector2 centerOrigin = Utils.setCenterOrigin(xAverage, yAverage);
-                boolean center = map.selectedSprites.size == 1;
-                for(MapSprite mapSprite : map.selectedSprites)
-                {
-                    Vector2 origin = centerOrigin.cpy().sub(mapSprite.x, mapSprite.y);
-//                    mapSprite.setOrigin(origin.x, origin.y, center);
-                }
+                Utils.setCenterOrigin(xAverage, yAverage);
 
                 return false;
             }
@@ -275,9 +263,7 @@ public class MapInput implements InputProcessor
         {
             Vector2 pos2 = new Vector2(this.pos.x, this.pos.y);
             for(int i = 0; i < map.selectedSprites.size; i ++)
-            {
                 map.selectedSprites.get(i).rotate(dragOrigin.angle(pos2) / 35f);
-            }
             return false;
         }
         else if(draggingMoveBox)
@@ -357,7 +343,7 @@ public class MapInput implements InputProcessor
                 Tile hoverTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
 
                 if (editor.getFileTool() != null && hoverTile != null && editor.getFileTool().tool == Tools.BRUSH)
-                    editor.getTileTools().get(i).previewSprite.setPosition(hoverTile.x, hoverTile.y);
+                    editor.getTileTools().get(i).previewSprite.setPosition(hoverTile.position.x, hoverTile.position.y);
             }
         }
         else if(map.selectedLayer instanceof SpriteLayer && editor.getSpriteTool() != null)

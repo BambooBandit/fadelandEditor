@@ -278,7 +278,7 @@ public class TileMap implements Screen
             {
                 tileToPaint.hasBeenPainted = true;
                 editor.shapeRenderer.setColor(.2f, .85f, 1f, .5f);
-                editor.shapeRenderer.rect(tileToPaint.x, tileToPaint.y, tileSize, tileSize);
+                editor.shapeRenderer.rect(tileToPaint.position.x, tileToPaint.position.y, tileSize, tileSize);
                 fillPreview(x + 64, y, tool);
                 fillPreview(x - 64, y, tool);
                 fillPreview(x, y + 64, tool);

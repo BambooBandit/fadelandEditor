@@ -1,6 +1,7 @@
 package com.fadeland.editor.map;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
@@ -10,7 +11,8 @@ public class Tile
     protected TileMap map;
     protected Layer layer;
     protected Sprite sprite;
-    protected float x, y, width, height;
+    protected float width, height;
+    public Vector2 position;
     public TileTool tool;
     public boolean hasBeenPainted = false;
 
@@ -18,8 +20,7 @@ public class Tile
     {
         this.map = map;
         this.layer = layer;
-        this.x = x;
-        this.y = y;
+        this.position = new Vector2(x, y);
         this.width = tileSize;
         this.height = tileSize;
     }
@@ -29,8 +30,7 @@ public class Tile
         this.map = map;
         this.layer = layer;
         this.sprite = new Sprite(tool.textureRegion);
-        this.x = x;
-        this.y = y;
+        this.position = new Vector2(x, y);
         this.width = tileSize;
         this.height = tileSize;
         this.tool = tool;
@@ -48,13 +48,12 @@ public class Tile
     public void draw()
     {
         if(this.sprite != null)
-            map.editor.batch.draw(sprite, x, y, width, height);
+            map.editor.batch.draw(sprite, position.x, position.y, width, height);
     }
 
     public void setPosition(float x, float y)
     {
-        this.x = x;
-        this.y = y;
+        this.position.set(x, y);
         this.sprite.setPosition(x, y);
     }
 }
