@@ -227,7 +227,6 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         this.pos = coords.cpy().sub(dragOrigin.x, dragOrigin.y, 0);
-        System.out.println(coords.cpy().sub(dragOrigin.x, dragOrigin.y, 0).x + ", " + coords.cpy().sub(dragOrigin.x, dragOrigin.y, 0).y);
         if(draggingRotateBox)
         {
             Vector2 pos2 = new Vector2(this.pos.x, this.pos.y);
