@@ -231,7 +231,10 @@ public class MapInput implements InputProcessor
                             try
                             {
                                 if (keycode == Input.Keys.ENTER)
-                                    mapSprite.setRotation(Float.parseFloat(propertyField.value.getText()));
+                                {
+                                    for(int i = 0; i < map.selectedSprites.size; i ++)
+                                        map.selectedSprites.get(i).setRotation(Float.parseFloat(propertyField.value.getText()));
+                                }
                             }
                             catch (NumberFormatException e){}
                             return true;
@@ -354,6 +357,11 @@ public class MapInput implements InputProcessor
                 if (editor.getFileTool() != null && hoverTile != null && editor.getFileTool().tool == Tools.BRUSH)
                     editor.getTileTools().get(i).previewSprite.setPosition(hoverTile.x, hoverTile.y);
             }
+        }
+        else if(map.selectedLayer instanceof SpriteLayer && editor.getSpriteTool() != null)
+        {
+            if (editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH)
+                editor.getSpriteTool().previewSprite.setPosition(coords.x - editor.getSpriteTool().previewSprite.getWidth() / 2, coords.y - editor.getSpriteTool().previewSprite.getHeight() / 2);
         }
         return false;
     }
