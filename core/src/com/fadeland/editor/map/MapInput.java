@@ -45,6 +45,15 @@ public class MapInput implements InputProcessor
     @Override
     public boolean keyDown(int keycode)
     {
+        if(keycode == Input.Keys.FORWARD_DEL)
+        {
+            if(map.selectedLayer != null)
+            {
+                map.selectedLayer.tiles.removeAll(map.selectedSprites, true);
+                map.selectedSprites.clear();
+                map.propertyMenu.rebuild();
+            }
+        }
         return false;
     }
 
