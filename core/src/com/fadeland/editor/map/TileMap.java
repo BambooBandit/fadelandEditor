@@ -23,6 +23,7 @@ import com.fadeland.editor.ui.layerMenu.LayerMenu;
 import com.fadeland.editor.ui.propertyMenu.MapPropertyPanel;
 import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
+import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 
@@ -175,6 +176,15 @@ public class TileMap implements Screen
                 }
             }
         }
+        else if(selectedLayer != null && selectedLayer instanceof TileLayer && editor.getFileTool() != null && editor.getFileTool().tool == Tools.FILL)
+        {
+            Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
+            for(int i = 0; i < selectedLayer.tiles.size; i ++)
+                selectedLayer.tiles.get(i).hasBeenPainted = false;
+            Tile clickedTile = getTile(mouseCoords.x, mouseCoords.y - tileSize);
+            if(clickedTile != null)
+                fillPreview(mouseCoords.x, mouseCoords.y, clickedTile.tool);
+        }
 
         this.editor.shapeRenderer.end();
 
@@ -256,5 +266,24 @@ public class TileMap implements Screen
         for(int i = 0; i < this.layers.size; i ++)
             if(layers.get(i) instanceof TileLayer)
                 ((TileLayer)layers.get(i)).resize(width, height, propertyMenu.mapPropertyPanel.down.isChecked(), propertyMenu.mapPropertyPanel.right.isChecked());
+    }
+
+    private void fillPreview(float x, float y, TileTool tool)
+    {
+        Tile tileToPaint = getTile(x, y - tileSize);
+        if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+        {
+            TileTool tile = editor.getTileTools().first();
+            if(tile != null)
+            {
+                tileToPaint.hasBeenPainted = true;
+                editor.shapeRenderer.setColor(.2f, .85f, 1f, .5f);
+                editor.shapeRenderer.rect(tileToPaint.x, tileToPaint.y, tileSize, tileSize);
+                fillPreview(x + 64, y, tool);
+                fillPreview(x - 64, y, tool);
+                fillPreview(x, y + 64, tool);
+                fillPreview(x, y - 64, tool);
+            }
+        }
     }
 }

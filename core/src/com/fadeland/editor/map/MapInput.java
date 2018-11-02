@@ -134,12 +134,13 @@ public class MapInput implements InputProcessor
         }
         if(map.selectedLayer instanceof TileLayer)
         {
-            if(editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.getFileTool().tool == Tools.FILL)
+            if(editor.getTileTools().size > 0 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.getFileTool().tool == Tools.FILL)
             {
                 for(int i = 0; i < map.selectedLayer.tiles.size; i ++)
                     map.selectedLayer.tiles.get(i).hasBeenPainted = false;
                 Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
-                fill(coords.x, coords.y, clickedTile.tool);
+                if(clickedTile != null)
+                    fill(coords.x, coords.y, clickedTile.tool);
             }
             else if(editor.getTileTools().size > 1 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.fileMenu.toolPane.random.selected)
             {
