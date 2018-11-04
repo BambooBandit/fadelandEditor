@@ -76,7 +76,7 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         this.dragOrigin.set(coords.x, coords.y);
-        if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT)
+        if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT && map.selectedLayer instanceof SpriteLayer)
         {
             map.boxSelect.startDrag(coords.x, coords.y);
             return false;
@@ -255,7 +255,7 @@ public class MapInput implements InputProcessor
     {
         this.draggingRotateBox = false;
         this.draggingMoveBox = false;
-        if(map.boxSelect.isDragging)
+        if(map.boxSelect.isDragging && map.selectedLayer != null && map.selectedLayer instanceof SpriteLayer)
         {
             if(!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
             {
