@@ -1,0 +1,34 @@
+
+map.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+boulder
+  rotate: false
+  xy: 563, 282
+  size: 215, 183
+  orig: 300, 300
+  offset: 37, 42
+  index: -1
+grass
+  rotate: false
+  xy: 2, 181
+  size: 278, 284
+  orig: 300, 300
+  offset: 7, 2
+  index: -1
+log
+  rotate: false
+  xy: 2, 2
+  size: 272, 177
+  orig: 300, 300
+  offset: 19, 42
+  index: -1
+puddle
+  rotate: false
+  xy: 282, 224
+  size: 279, 241
+  orig: 300, 300
+  offset: 17, 31
+  index: -1

@@ -69,17 +69,28 @@ public class TileMenu extends Group
         Texture spriteSheet = new Texture(spriteSheetName);
         spriteTable.padLeft(1);
         spriteTable.padTop(1);
-        for(int y = 0; y < spriteSheet.getHeight(); y += tileSize)
+        int x = 0;
+        int y = 0;
+        for(int i = 0; i < GameAssets.getGameAtlas().getRegions().size; i ++)
         {
-            for(int x = 0; x < spriteSheet.getWidth(); x += tileSize)
-            {
-                TextureRegion spriteRegion = new TextureRegion(spriteSheet, x, y, tileSize, tileSize);
+            TextureRegion spriteRegion = GameAssets.getGameAtlas().getRegions().get(i);
 
-                TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion,x + y, spriteSheet.getWidth() - x, y, toolPane, skin);
-                spriteTable.add(sprite);
-            }
-            spriteTable.row();
+            TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion,0, x, y, toolPane, skin);
+            x += spriteRegion.getRegionWidth();
+            y += spriteRegion.getRegionHeight();
+            spriteTable.add(sprite);
         }
+//        for(int y = 0; y < spriteSheet.getHeight(); y += tileSize)
+//        {
+//            for(int x = 0; x < spriteSheet.getWidth(); x += tileSize)
+//            {
+//                TextureRegion spriteRegion = new TextureRegion(spriteSheet, x, y, tileSize, tileSize);
+//
+//                TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion,x + y, spriteSheet.getWidth() - x, y, toolPane, skin);
+//                spriteTable.add(sprite);
+//            }
+//            spriteTable.row();
+//        }
 
         this.stack.add(this.background);
         this.stack.add(this.tileScrollPane);

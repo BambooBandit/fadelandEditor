@@ -29,7 +29,7 @@ public class TileLayer extends Layer
     {
         for(int i = 0; i < tiles.size; i ++)
             this.tiles.get(i).draw();
-        if(map.selectedLayer == this && layerField.visibleImg.isVisible() && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH)
+        if(map.selectedLayer == this && layerField.visibleImg.isVisible() && editor.getFileTool() != null && editor.getTileTools() != null && editor.getFileTool().tool == Tools.BRUSH)
         {
             for (int i = 0; i < editor.getTileTools().size; i ++)
             {

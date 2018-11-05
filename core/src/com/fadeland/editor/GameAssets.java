@@ -39,7 +39,7 @@ public class GameAssets
             uiSkin = new Skin();
             initFonts();
             loadAssets();
-            GameAssets.gameAssets.setGameAtlas((TextureAtlas) GameAssets.gameAssets.getAssets().get("atlas.atlas"));
+            GameAssets.gameAssets.setGameAtlas(GameAssets.gameAssets.getAssets().get("map.atlas"));
         }
         return gameAssets;
     }
@@ -59,7 +59,7 @@ public class GameAssets
         uiSkin.add("header-font", headerFont);
         uiSkin.add("small-font", smallFont);
         uiSkin.load(Gdx.files.internal("ui/ui.json"));
-        assets.load("atlas.atlas", TextureAtlas.class);
+        assets.load("map.atlas", TextureAtlas.class);
         assets.finishLoading();
     }
 

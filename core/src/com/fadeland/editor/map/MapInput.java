@@ -72,8 +72,7 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
-        editor.stage.unfocus(map.tileMenu.tileScrollPane);
-        editor.stage.unfocus(map.tileMenu.spriteScrollPane);
+        map.stage.unfocusAll();
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         this.dragOrigin.set(coords.x, coords.y);
         if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT && map.selectedLayer instanceof SpriteLayer)
@@ -126,7 +125,7 @@ public class MapInput implements InputProcessor
                 return false;
             }
         }
-        if(map.selectedLayer instanceof TileLayer)
+        if(map.selectedLayer instanceof TileLayer && editor.getTileTools() != null)
         {
             if(editor.getTileTools().size > 0 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.getFileTool().tool == Tools.FILL)
             {
@@ -314,7 +313,7 @@ public class MapInput implements InputProcessor
             map.camera.position.y -= this.pos.y / 15f;
             map.camera.update();
         }
-        if(map.selectedLayer instanceof TileLayer)
+        if(map.selectedLayer instanceof TileLayer && editor.getTileTools() != null)
         {
             if(editor.getTileTools().size > 1 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.fileMenu.toolPane.random.selected)
             {

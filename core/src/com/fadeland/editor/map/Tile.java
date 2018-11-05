@@ -54,6 +54,7 @@ public class Tile
     public void setPosition(float x, float y)
     {
         this.position.set(x, y);
-        this.sprite.setPosition(x, y);
+        if(this.sprite != null)
+            this.sprite.setPosition(x, y);
     }
 }
