@@ -1,9 +1,13 @@
 package com.fadeland.editor.ui.fileMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.map.MapSprite;
+import com.fadeland.editor.map.TileMap;
 
 import static com.fadeland.editor.FadelandEditor.toolHeight;
 
@@ -25,6 +29,10 @@ public class ToolPane extends Group
     public Tool random;
     public Tool lines;
     private Tool selectedTool;
+    private TextButton bringUp;
+    private TextButton bringDown;
+    private TextButton bringTop;
+    private TextButton bringBottom;
 
     public ToolPane(FadelandEditor editor, Skin skin)
     {
@@ -37,6 +45,11 @@ public class ToolPane extends Group
         this.grab = new Tool(Tools.GRAB, this, skin, false);
         this.random = new Tool(Tools.RANDOM, this, skin, true);
         this.lines = new Tool(Tools.LINES, this, skin, true);
+        this.bringUp = new TextButton("^", skin);
+        this.bringDown = new TextButton("v", skin);
+        this.bringTop = new TextButton("^^", skin);
+        this.bringBottom = new TextButton("vv", skin);
+        setUpAndDownListeners();
         this.toolTable.left();
         this.toolTable.add(this.brush).padRight(1);
         this.toolTable.add(this.eraser).padRight(1);
@@ -45,7 +58,11 @@ public class ToolPane extends Group
         this.toolTable.add(this.select).padRight(1);
         this.toolTable.add(this.grab).padRight(1);
         this.toolTable.add(this.random).padRight(1);
-        this.toolTable.add(this.lines);
+        this.toolTable.add(this.lines).padRight(5);
+        this.toolTable.add(this.bringUp).padRight(1);
+        this.toolTable.add(this.bringDown).padRight(1);
+        this.toolTable.add(this.bringTop).padRight(1);
+        this.toolTable.add(this.bringBottom).padRight(1);
 
         this.editor = editor;
         this.skin = skin;
@@ -73,6 +90,10 @@ public class ToolPane extends Group
         this.toolTable.getCell(this.grab).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.random).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.lines).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.bringUp).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.bringDown).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.bringTop).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.bringBottom).size(toolHeight, toolHeight);
         this.toolTable.invalidateHierarchy();
 
         this.pane.invalidateHierarchy();
@@ -94,6 +115,8 @@ public class ToolPane extends Group
             this.selectedTool = selectedTool;
             for (int i = 0; i < this.toolTable.getChildren().size; i++)
             {
+                if(!(this.toolTable.getChildren().get(i) instanceof Tool))
+                    continue;
                 Tool tool = (Tool) this.toolTable.getChildren().get(i);
                 if (tool == selectedTool)
                     tool.select();
@@ -106,5 +129,66 @@ public class ToolPane extends Group
     public Tool getTool()
     {
         return selectedTool;
+    }
+
+    private void setUpAndDownListeners()
+    {
+        this.bringUp.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TileMap map = ((TileMap)editor.getScreen());
+                if(map == null || map.selectedSprites.size != 1)
+                    return;
+                MapSprite selectedSprite = map.selectedSprites.first();
+                int index = map.selectedLayer.tiles.indexOf(selectedSprite, true);
+                if(index < map.selectedLayer.tiles.size - 1)
+                    map.selectedLayer.tiles.swap(index, index + 1);
+            }
+        });
+
+        this.bringDown.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TileMap map = ((TileMap)editor.getScreen());
+                if(map == null || map.selectedSprites.size != 1)
+                    return;
+                MapSprite selectedSprite = map.selectedSprites.first();
+                int index = map.selectedLayer.tiles.indexOf(selectedSprite, true);
+                if(index > 0)
+                    map.selectedLayer.tiles.swap(index, index - 1);
+            }
+        });
+
+        this.bringTop.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TileMap map = ((TileMap)editor.getScreen());
+                if(map == null || map.selectedSprites.size != 1)
+                    return;
+                MapSprite selectedSprite = map.selectedSprites.first();
+                map.selectedLayer.tiles.removeValue(selectedSprite, true);
+                map.selectedLayer.tiles.add(selectedSprite);
+            }
+        });
+
+        this.bringBottom.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TileMap map = ((TileMap)editor.getScreen());
+                if(map == null || map.selectedSprites.size != 1)
+                    return;
+                MapSprite selectedSprite = map.selectedSprites.first();
+                map.selectedLayer.tiles.removeValue(selectedSprite, true);
+                map.selectedLayer.tiles.insert(0, selectedSprite);
+            }
+        });
     }
 }

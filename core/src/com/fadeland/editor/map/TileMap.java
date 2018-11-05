@@ -152,7 +152,7 @@ public class TileMap implements Screen
         {
             Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
             boolean hoverDrawed = false;
-            for (int i = 0; i < selectedLayer.tiles.size; i++)
+            for (int i = selectedLayer.tiles.size - 1; i >= 0; i--)
             {
                 MapSprite mapSprite = ((MapSprite) selectedLayer.tiles.get(i));
                 boolean selected = selectedSprites.contains(mapSprite, true);
@@ -186,7 +186,7 @@ public class TileMap implements Screen
         }
         if(boxSelect.isDragging && selectedLayer != null && selectedLayer instanceof SpriteLayer && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT)
         {
-            for (int i = 0; i < selectedLayer.tiles.size; i++)
+            for (int i = selectedLayer.tiles.size - 1; i >= 0; i--)
             {
                 MapSprite mapSprite = ((MapSprite)selectedLayer.tiles.get(i));
                 if(Intersector.overlapConvexPolygons(mapSprite.polygon.getTransformedVertices(), boxSelect.getVertices(), null))

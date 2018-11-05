@@ -167,7 +167,7 @@ public class MapInput implements InputProcessor
                 if(editor.getFileTool().tool == Tools.SELECT)
                 {
                     this.editor.shapeRenderer.setColor(Color.YELLOW);
-                    for (int i = 0; i < map.selectedLayer.tiles.size; i++)
+                    for (int i = map.selectedLayer.tiles.size - 1; i >= 0; i--)
                     {
                         MapSprite mapSprite = ((MapSprite) map.selectedLayer.tiles.get(i));
                         if (mapSprite.polygon.contains(coords.x, coords.y))
