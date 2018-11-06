@@ -20,7 +20,7 @@ public class TileLayer extends Layer
         for(int y = 0; y < height; y ++)
         {
             for(int x = 0; x < width; x ++)
-                this.tiles.add(new Tile(map, this, x * 64, y * 64));
+                this.tiles.add(new Tile(map, x * 64, y * 64));
         }
     }
 
@@ -54,7 +54,7 @@ public class TileLayer extends Layer
                 for(int i = 0; i < oldHeight; i ++)
                 {
                     for(int k = 0; k < widthIncrease; k ++)
-                        this.tiles.insert(index, new Tile(map, this, 0, 0));
+                        this.tiles.insert(index, new Tile(map, 0, 0));
                     index += widthIncrease + oldWidth;
                 }
             }
@@ -65,7 +65,7 @@ public class TileLayer extends Layer
                 for(int i = 0; i < oldHeight; i ++)
                 {
                     for(int k = 0; k < widthIncrease; k ++)
-                        this.tiles.insert(index, new Tile(map, this, 0, 0));
+                        this.tiles.insert(index, new Tile(map, 0, 0));
                     index += widthIncrease + oldWidth;
                 }
             }
@@ -103,13 +103,13 @@ public class TileLayer extends Layer
             {
                 int heightIncrease = height - oldHeight;
                 for(int i = 0; i < this.width * heightIncrease; i ++)
-                    this.tiles.insert(0, new Tile(map, this, 0, 0));
+                    this.tiles.insert(0, new Tile(map, 0, 0));
             }
             else // grow up
             {
                 int heightIncrease = height - oldHeight;
                 for(int i = 0; i < this.width * heightIncrease; i ++)
-                    this.tiles.add(new Tile(map, this, 0, 0));
+                    this.tiles.add(new Tile(map, 0, 0));
             }
         }
         else // shrink horizontal

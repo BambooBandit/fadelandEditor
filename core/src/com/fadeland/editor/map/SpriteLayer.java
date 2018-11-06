@@ -25,5 +25,4 @@ public class SpriteLayer extends Layer
             editor.getSpriteTool().previewSprite.draw(editor.batch);
         }
     }
-
 }

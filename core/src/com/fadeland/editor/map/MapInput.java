@@ -91,9 +91,18 @@ public class MapInput implements InputProcessor
             isDrawingObjectPolygon = false;
             if(objectVertices.size >= 6) // Polygons can have a minimum of 3 sides
             {
-                MapObject mapObject = new MapObject(map, (ObjectLayer) map.selectedLayer, objectVertices,
-                        objectVerticePosition.x, objectVerticePosition.y);
-                ((ObjectLayer) map.selectedLayer).tiles.add(mapObject);
+                MapObject mapObject;
+                if(map.selectedLayer instanceof ObjectLayer)
+                {
+                    mapObject = new MapObject(map, objectVertices, objectVerticePosition.x, objectVerticePosition.y);
+                    ((ObjectLayer) map.selectedLayer).tiles.add(mapObject);
+                }
+                else
+                {
+                    MapSprite mapSprite = map.selectedSprites.first();
+                    mapObject = new AttachedMapObject(map, objectVertices, objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
+                    mapSprite.addMapObject((AttachedMapObject) mapObject);
+                }
             }
             objectVertices.clear();
             return false;
@@ -103,7 +112,8 @@ public class MapInput implements InputProcessor
             map.boxSelect.startDrag(coords.x, coords.y);
             return false;
         }
-        else if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.DRAWOBJECT && map.selectedLayer instanceof ObjectLayer)
+        else if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.DRAWOBJECT &&
+                (map.selectedLayer instanceof ObjectLayer || map.selectedSprites.size == 1))
         {
             isDrawingObjectPolygon = true;
             if(this.objectVertices.size == 0)
@@ -184,7 +194,8 @@ public class MapInput implements InputProcessor
                 return false;
             }
         }
-        if(map.selectedLayer instanceof ObjectLayer && editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
+        if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT &&
+                (map.selectedLayer instanceof ObjectLayer || (map.selectedSprites.size == 1 && map.selectedSprites.first().tool.mapObjects.size > 1)))
         {
             map.selectedObjects.first().indexOfSelectedVertice = map.selectedObjects.first().indexOfHoveredVertice;
             map.selectedObjects.first().setPosition(map.selectedObjects.first().polygon.getX(), map.selectedObjects.first().polygon.getY()); // Move the movebox to where the selected vertice is
@@ -267,7 +278,7 @@ public class MapInput implements InputProcessor
                 else if(editor.getSpriteTool() != null &&
                         coords.x > 0 && coords.y > 0 && coords.x < map.mapWidth * tileSize && coords.y < map.mapHeight * tileSize)
                 {
-                    MapSprite mapSprite = new MapSprite(map, (SpriteLayer) map.selectedLayer, editor.getSpriteTool(),
+                    MapSprite mapSprite = new MapSprite(map, editor.getSpriteTool(),
                             coords.x - editor.getSpriteTool().textureRegion.getRegionWidth() / 2, coords.y - editor.getSpriteTool().textureRegion.getRegionHeight() / 2);
 
                     PropertyField propertyField = new PropertyField("Rotation", "0", GameAssets.getUISkin(), map.propertyMenu, false);
@@ -309,7 +320,7 @@ public class MapInput implements InputProcessor
                 }
             }
         }
-        else if(map.selectedLayer instanceof ObjectLayer)
+        else if(map.selectedLayer instanceof ObjectLayer || (map.selectedSprites.size == 1 && map.selectedSprites.first().tool.mapObjects.size > 1))
         {
             if(editor.getFileTool() != null)
             {
@@ -382,7 +393,7 @@ public class MapInput implements InputProcessor
                     }
                 }
             }
-            else if(map.selectedLayer instanceof ObjectLayer)
+            else if(map.selectedLayer instanceof ObjectLayer || (map.selectedSprites.size == 1 && map.selectedSprites.first().tool.mapObjects.size > 1))
             {
                 if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                 {
@@ -523,7 +534,8 @@ public class MapInput implements InputProcessor
             if (editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH)
                 editor.getSpriteTool().previewSprite.setPosition(coords.x - editor.getSpriteTool().previewSprite.getWidth() / 2, coords.y - editor.getSpriteTool().previewSprite.getHeight() / 2);
         }
-        else if(map.selectedLayer instanceof ObjectLayer && editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
+        else if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT &&
+        (map.selectedLayer instanceof ObjectLayer || (map.selectedSprites.size == 1 && map.selectedSprites.first().tool.mapObjects.size > 1)))
         {
             for(int i = 0; i < map.selectedObjects.first().polygon.getTransformedVertices().length; i += 2)
             {

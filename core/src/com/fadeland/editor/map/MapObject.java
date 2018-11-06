@@ -21,9 +21,9 @@ public class MapObject extends Tile
     public int indexOfSelectedVertice = -1; // x index. y is + 1
     public int indexOfHoveredVertice = -1; // x index. y is + 1
 
-    public MapObject(TileMap map, ObjectLayer layer, FloatArray vertices, float x, float y)
+    public MapObject(TileMap map, FloatArray vertices, float x, float y)
     {
-        super(map, layer, vertices, x, y);
+        super(map, vertices, x, y);
         this.properties = new Array<>();
         this.polygon = new Polygon(vertices.toArray());
         this.polygon.setPosition(x, y);

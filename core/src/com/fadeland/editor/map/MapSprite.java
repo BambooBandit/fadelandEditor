@@ -20,9 +20,9 @@ public class MapSprite extends Tile
     private boolean selected;
     public Array<PropertyField> lockedProperties; // properties such as rotation. They belong to all sprites
 
-    public MapSprite(TileMap map, SpriteLayer layer, TileTool tool, float x, float y)
+    public MapSprite(TileMap map, TileTool tool, float x, float y)
     {
-        super(map, layer, tool, x, y);
+        super(map, tool, x, y);
         this.lockedProperties = new Array<>();
         this.sprite = new Sprite(tool.textureRegion);
         this.sprite.setPosition(x, y);
@@ -77,6 +77,8 @@ public class MapSprite extends Tile
         this.rotation = degree;
         this.sprite.setRotation(degree);
         this.polygon.setRotation(degree);
+        for(int i = 0; i < tool.mapObjects.size; i ++)
+            tool.mapObjects.get(i).polygon.setRotation(degree);
 
         for(int i = 0; i < lockedProperties.size; i ++)
         {
@@ -96,6 +98,8 @@ public class MapSprite extends Tile
         setPosition(endPos.x, endPos.y);
         this.sprite.rotate(degree);
         this.polygon.rotate(degree);
+        for(int i = 0; i < tool.mapObjects.size; i ++)
+            tool.mapObjects.get(i).polygon.rotate(degree);
 
         for(int i = 0; i < lockedProperties.size; i ++)
         {

@@ -6,14 +6,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.fadeland.editor.map.AttachedMapObject;
+import com.fadeland.editor.map.MapObject;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 
 public class TileTool extends TileMenuTool implements Comparable<TileTool>
 {
 
-//    public TileProperties properties;
     public Array<PropertyField> lockedProperties; // properties such as probability. They belong to all tiles
     public Array<PropertyField> properties;
+
+    public Array<AttachedMapObject> mapObjects; // For Tiles and MapSprites with MapObjects attached to them
 
     public int id, x, y;
 
@@ -26,12 +29,12 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
         super(tool, image, tileMenuToolPane, skin);
         this.textureRegion = textureRegion;
         this.previewSprite = new Sprite(textureRegion);
-//        this.properties = new TileProperties();
         this.lockedProperties = new Array<>();
         this.properties = new Array<>();
         this.id = id;
         this.x = x;
         this.y = y;
+        this.mapObjects = new Array<>();
     }
 
     @Override

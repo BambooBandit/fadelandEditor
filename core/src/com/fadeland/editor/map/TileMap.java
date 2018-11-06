@@ -163,6 +163,8 @@ public class TileMap implements Screen
                 if (this.layers.get(i).layerField.visibleImg.isVisible())
                     this.layers.get(i).draw();
             }
+            else
+                this.layers.get(i).drawAttachedMapObjects();
         }
         this.editor.shapeRenderer.setColor(Color.GRAY);
         int oldIndex = 0;

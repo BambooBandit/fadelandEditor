@@ -3,6 +3,7 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
@@ -11,7 +12,6 @@ import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 public class Tile
 {
     protected TileMap map;
-    protected Layer layer;
     protected Sprite sprite;
     protected float width, height;
     public Vector2 position;
@@ -19,20 +19,18 @@ public class Tile
     public boolean hasBeenPainted = false;
 
     // For Tiles
-    public Tile(TileMap map, TileLayer layer, float x, float y)
+    public Tile(TileMap map, float x, float y)
     {
         this.map = map;
-        this.layer = layer;
         this.position = new Vector2(x, y);
         this.width = tileSize;
         this.height = tileSize;
     }
 
     // For MapSprites
-    public Tile(TileMap map, SpriteLayer layer, TileTool tool, float x, float y)
+    public Tile(TileMap map, TileTool tool, float x, float y)
     {
         this.map = map;
-        this.layer = layer;
         this.sprite = new Sprite(tool.textureRegion);
         this.position = new Vector2(x, y);
         this.width = tileSize;
@@ -41,10 +39,9 @@ public class Tile
     }
 
     // For MapObject
-    public Tile(TileMap map, ObjectLayer layer, FloatArray vertices,float x, float y)
+    public Tile(TileMap map, FloatArray vertices,float x, float y)
     {
         this.map = map;
-        this.layer = layer;
         this.position = new Vector2(x, y);
     }
 
@@ -68,5 +65,10 @@ public class Tile
         this.position.set(x, y);
         if(this.sprite != null)
             this.sprite.setPosition(x, y);
+    }
+
+    public void addMapObject(AttachedMapObject mapObject)
+    {
+        this.tool.mapObjects.add(mapObject);
     }
 }
