@@ -177,8 +177,16 @@ public class MapInput implements InputProcessor
                 this.oldYofDragMap.clear();
                 for(int k = 0; k < map.selectedObjects.size; k ++)
                 {
-                    this.oldXofDragMap.put(map.selectedObjects.get(k), map.selectedObjects.get(k).position.x);
-                    this.oldYofDragMap.put(map.selectedObjects.get(k), map.selectedObjects.get(k).position.y);
+                    if(map.selectedObjects.get(k) instanceof AttachedMapObject)
+                    {
+                        this.oldXofDragMap.put(map.selectedObjects.get(k), ((AttachedMapObject)map.selectedObjects.get(k)).positionOffset.x);
+                        this.oldYofDragMap.put(map.selectedObjects.get(k), ((AttachedMapObject)map.selectedObjects.get(k)).positionOffset.y);
+                    }
+                    else
+                    {
+                        this.oldXofDragMap.put(map.selectedObjects.get(k), map.selectedObjects.get(k).position.x);
+                        this.oldYofDragMap.put(map.selectedObjects.get(k), map.selectedObjects.get(k).position.y);
+                    }
                 }
 
                 float xSum = 0, ySum = 0;
@@ -194,8 +202,7 @@ public class MapInput implements InputProcessor
                 return false;
             }
         }
-        if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT &&
-                (map.selectedLayer instanceof ObjectLayer || (map.selectedSprites.size == 1 && map.selectedSprites.first().tool.mapObjects.size > 1)))
+        if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
         {
             map.selectedObjects.first().indexOfSelectedVertice = map.selectedObjects.first().indexOfHoveredVertice;
             map.selectedObjects.first().setPosition(map.selectedObjects.first().polygon.getX(), map.selectedObjects.first().polygon.getY()); // Move the movebox to where the selected vertice is
@@ -241,9 +248,42 @@ public class MapInput implements InputProcessor
             {
                 if(editor.getFileTool().tool == Tools.SELECT)
                 {
+                    outerloop:
                     for (int i = map.selectedLayer.tiles.size - 1; i >= 0; i--)
                     {
                         MapSprite mapSprite = ((MapSprite) map.selectedLayer.tiles.get(i));
+                        for(int k = 0; k < mapSprite.tool.mapObjects.size; k ++)
+                        {
+                            AttachedMapObject attachedMapObject = mapSprite.tool.mapObjects.get(k);
+                            if (attachedMapObject.polygon.contains(coords.x, coords.y))
+                            {
+                                if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                                {
+                                    if(map.selectedObjects.contains(attachedMapObject, true))
+                                    {
+                                        map.selectedObjects.removeValue(attachedMapObject, true);
+                                        attachedMapObject.unselect();
+                                    }
+                                    else
+                                    {
+                                        map.selectedObjects.add(attachedMapObject);
+                                        attachedMapObject.select();
+                                    }
+                                    map.propertyMenu.rebuild();
+                                }
+                                else
+                                {
+                                    for (int s = 0;s < map.selectedObjects.size; s++)
+                                        map.selectedObjects.get(s).unselect();
+                                    map.selectedObjects.clear();
+                                    map.selectedObjects.add(attachedMapObject);
+                                    attachedMapObject.select();
+                                    map.propertyMenu.rebuild();
+                                }
+                                break outerloop;
+                            }
+                        }
+
                         if (mapSprite.polygon.contains(coords.x, coords.y))
                         {
                             if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
@@ -320,7 +360,7 @@ public class MapInput implements InputProcessor
                 }
             }
         }
-        else if(map.selectedLayer instanceof ObjectLayer || (map.selectedSprites.size == 1 && map.selectedSprites.first().tool.mapObjects.size > 1))
+        else if(map.selectedLayer instanceof ObjectLayer)
         {
             if(editor.getFileTool() != null)
             {
@@ -443,15 +483,24 @@ public class MapInput implements InputProcessor
         else if(draggingMoveBox)
         {
             for(int i = 0; i < map.selectedSprites.size; i ++)
-                map.selectedSprites.get(i).setPosition(this.oldXofDragMap.get(map.selectedSprites.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedSprites.get(i)) + pos.y);
-            if(map.selectedObjects.size == 1 && map.selectedObjects.first().indexOfSelectedVertice != -1)
             {
-                map.selectedObjects.first().moveVertice(coords.x, coords.y);
+                if(!this.oldXofDragMap.containsKey(map.selectedSprites.get(i)))
+                    break;
+                map.selectedSprites.get(i).setPosition(this.oldXofDragMap.get(map.selectedSprites.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedSprites.get(i)) + pos.y);
             }
+            if(map.selectedObjects.size == 1 && map.selectedObjects.first().indexOfSelectedVertice != -1 && editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
+                map.selectedObjects.first().moveVertice(coords.x, coords.y);
             else
             {
                 for (int i = 0; i < map.selectedObjects.size; i++)
-                    map.selectedObjects.get(i).setPosition(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
+                {
+                    if(!this.oldXofDragMap.containsKey(map.selectedObjects.get(i)))
+                        break;
+                    if(map.selectedObjects.get(i) instanceof AttachedMapObject)
+                        ((AttachedMapObject)map.selectedObjects.get(i)).positionOffset.set(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
+                    else
+                        map.selectedObjects.get(i).setPosition(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
+                }
             }
             return false;
         }
@@ -534,13 +583,12 @@ public class MapInput implements InputProcessor
             if (editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH)
                 editor.getSpriteTool().previewSprite.setPosition(coords.x - editor.getSpriteTool().previewSprite.getWidth() / 2, coords.y - editor.getSpriteTool().previewSprite.getHeight() / 2);
         }
-        else if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT &&
-        (map.selectedLayer instanceof ObjectLayer || (map.selectedSprites.size == 1 && map.selectedSprites.first().tool.mapObjects.size > 1)))
+        if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
         {
             for(int i = 0; i < map.selectedObjects.first().polygon.getTransformedVertices().length; i += 2)
             {
                 double distance = Math.sqrt(Math.pow((coords.x - map.selectedObjects.first().polygon.getTransformedVertices()[i]), 2) + Math.pow((coords.y - map.selectedObjects.first().polygon.getTransformedVertices()[i + 1]), 2));
-                if(distance <= 10)
+                if(distance <= 15)
                 {
                     map.selectedObjects.first().indexOfHoveredVertice = i;
                     break;

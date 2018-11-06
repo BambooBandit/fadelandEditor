@@ -228,16 +228,14 @@ public class TileMap implements Screen
                         }
                     }
                 }
-                this.editor.shapeRenderer.setColor(Color.CYAN);
-                editor.shapeRenderer.rect(boxSelect.rectangle.x, boxSelect.rectangle.y, boxSelect.rectangle.width, boxSelect.rectangle.height);
             }
-            else if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT && selectedObjects.size == 1)
-            {
-                this.editor.shapeRenderer.setColor(Color.GRAY);
-                selectedObjects.first().drawHoveredVertices();
-                this.editor.shapeRenderer.setColor(Color.CYAN);
-                selectedObjects.first().drawSelectedVertices();
-            }
+        }
+        if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT && selectedObjects.size == 1)
+        {
+            this.editor.shapeRenderer.setColor(Color.GRAY);
+            selectedObjects.first().drawHoveredVertices();
+            this.editor.shapeRenderer.setColor(Color.CYAN);
+            selectedObjects.first().drawSelectedVertices();
         }
 
         if(selectedLayer != null && selectedLayer instanceof SpriteLayer && editor.getFileTool() != null && (editor.getFileTool().tool == Tools.SELECT || editor.getFileTool().tool == Tools.BOXSELECT))
@@ -247,6 +245,36 @@ public class TileMap implements Screen
             for (int i = selectedLayer.tiles.size - 1; i >= 0; i--)
             {
                 MapSprite mapSprite = ((MapSprite) selectedLayer.tiles.get(i));
+
+                for(int k = 0; k < mapSprite.tool.mapObjects.size; k ++)
+                {
+                    AttachedMapObject mapObject = mapSprite.tool.mapObjects.get(k);
+                    boolean selected = selectedObjects.contains(mapObject, true);
+                    boolean hoveredOver = mapObject.polygon.contains(mouseCoords.x, mouseCoords.y);
+                    if (selected && editor.getFileTool().tool == Tools.BOXSELECT)
+                    {
+                        this.editor.shapeRenderer.setColor(Color.GREEN);
+                        mapObject.draw();
+                    } else if (hoveredOver || selected)
+                    {
+                        if (selected && hoveredOver && !hoverDrawed)
+                        {
+                            this.editor.shapeRenderer.setColor(Color.YELLOW);
+                            hoverDrawed = true;
+                            mapObject.draw();
+                        } else if (selected)
+                        {
+                            this.editor.shapeRenderer.setColor(Color.GREEN);
+                            mapObject.draw();
+                        } else if (hoveredOver && !hoverDrawed)
+                        {
+                            this.editor.shapeRenderer.setColor(Color.ORANGE);
+                            hoverDrawed = true;
+                            mapObject.draw();
+                        }
+                    }
+                }
+
                 boolean selected = selectedSprites.contains(mapSprite, true);
                 boolean hoveredOver = mapSprite.polygon.contains(mouseCoords.x, mouseCoords.y);
                 if(selected && editor.getFileTool().tool == Tools.BOXSELECT)
@@ -281,6 +309,21 @@ public class TileMap implements Screen
             for (int i = selectedLayer.tiles.size - 1; i >= 0; i--)
             {
                 MapSprite mapSprite = ((MapSprite)selectedLayer.tiles.get(i));
+
+                for(int k = 0; k < mapSprite.tool.mapObjects.size; k ++)
+                {
+                    AttachedMapObject mapObject = mapSprite.tool.mapObjects.get(k);
+                    if (Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), boxSelect.getVertices(), null))
+                    {
+                        boolean selected = selectedObjects.contains(mapObject, true);
+                        if (!selected)
+                        {
+                            this.editor.shapeRenderer.setColor(Color.YELLOW);
+                            mapObject.draw();
+                        }
+                    }
+                }
+
                 if(Intersector.overlapConvexPolygons(mapSprite.polygon.getTransformedVertices(), boxSelect.getVertices(), null))
                 {
                     boolean selected = selectedSprites.contains(mapSprite, true);
