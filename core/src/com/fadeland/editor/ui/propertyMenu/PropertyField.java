@@ -141,6 +141,19 @@ public class PropertyField extends Group
                         textFieldActions.add(() -> {finalPropertyField.propertyTextField.setText(property.propertyTextField.getText());} );
                     }
                 }
+                for(int i = 0; i < map.selectedObjects.size; i ++)
+                {
+                    if(map.selectedObjects.get(i).properties.contains(property, true))
+                        continue;
+                    PropertyField propertyField = null;
+                    if(map.selectedObjects.get(i).properties.contains(property, false))
+                        propertyField = map.selectedObjects.get(i).properties.get(map.selectedObjects.get(i).properties.indexOf(property, false));
+                    if(propertyField != null)
+                    {
+                        final PropertyField finalPropertyField = propertyField;
+                        textFieldActions.add(() -> {finalPropertyField.propertyTextField.setText(property.propertyTextField.getText());} );
+                    }
+                }
                 super.keyTyped(event, character);
                 for(int i = 0; i < textFieldActions.size; i ++)
                     textFieldActions.get(i).action();
@@ -161,6 +174,19 @@ public class PropertyField extends Group
                     PropertyField propertyField = null;
                     if(map.tileMenu.selectedTiles.get(i).properties.contains(property, false))
                         propertyField = map.tileMenu.selectedTiles.get(i).properties.get(map.tileMenu.selectedTiles.get(i).properties.indexOf(property, false));
+                    if(propertyField != null)
+                    {
+                        final PropertyField finalPropertyField = propertyField;
+                        textFieldActions.add(() -> {finalPropertyField.value.setText(property.value.getText());} );
+                    }
+                }
+                for(int i = 0; i < map.selectedObjects.size; i ++)
+                {
+                    if(map.selectedObjects.get(i).properties.contains(property, true))
+                        continue;
+                    PropertyField propertyField = null;
+                    if(map.selectedObjects.get(i).properties.contains(property, false))
+                        propertyField = map.selectedObjects.get(i).properties.get(map.selectedObjects.get(i).properties.indexOf(property, false));
                     if(propertyField != null)
                     {
                         final PropertyField finalPropertyField = propertyField;

@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
@@ -26,11 +27,16 @@ public class MapInput implements InputProcessor
 
     private Vector2 dragOrigin;
     private Vector3 pos;
-    private ObjectMap<MapSprite, Float> oldXofDragMap;
-    private ObjectMap<MapSprite, Float> oldYofDragMap;
+    private ObjectMap<Tile, Float> oldXofDragMap;
+    private ObjectMap<Tile, Float> oldYofDragMap;
 
     private boolean draggingRotateBox = false;
     private boolean draggingMoveBox = false;
+
+    public FloatArray objectVertices; // allows for seeing where you are clicking when constructing a new MapObject polygon
+    public Vector2 objectVerticePosition;
+
+    public boolean isDrawingObjectPolygon = false;
 
     public MapInput(FadelandEditor editor, TileMap map)
     {
@@ -40,6 +46,9 @@ public class MapInput implements InputProcessor
         this.pos = new Vector3();
         this.oldXofDragMap = new ObjectMap<>();
         this.oldYofDragMap = new ObjectMap<>();
+
+        this.objectVertices = new FloatArray();
+        this.objectVerticePosition = new Vector2();
     }
 
     @Override
@@ -75,10 +84,30 @@ public class MapInput implements InputProcessor
         map.stage.unfocusAll();
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         this.dragOrigin.set(coords.x, coords.y);
-        if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT && map.selectedLayer instanceof SpriteLayer)
+        if(button == Input.Buttons.RIGHT && isDrawingObjectPolygon)
+        {
+            isDrawingObjectPolygon = false;
+            if(objectVertices.size >= 6) // Polygons can have a minimum of 3 sides
+            {
+                MapObject mapObject = new MapObject(map, (ObjectLayer) map.selectedLayer, objectVertices,
+                        objectVerticePosition.x, objectVerticePosition.y);
+                ((ObjectLayer) map.selectedLayer).tiles.add(mapObject);
+            }
+            objectVertices.clear();
+            return false;
+        }
+        if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT && (map.selectedLayer instanceof SpriteLayer || map.selectedLayer instanceof ObjectLayer))
         {
             map.boxSelect.startDrag(coords.x, coords.y);
             return false;
+        }
+        else if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.DRAWOBJECT && map.selectedLayer instanceof ObjectLayer)
+        {
+            isDrawingObjectPolygon = true;
+            if(this.objectVertices.size == 0)
+                objectVerticePosition.set(coords.x, coords.y);
+            this.objectVertices.add(coords.x - objectVerticePosition.x);
+            this.objectVertices.add(coords.y - objectVerticePosition.y);
         }
         for(int i = 0; i < map.selectedSprites.size; i ++)
         {
@@ -125,6 +154,34 @@ public class MapInput implements InputProcessor
                 return false;
             }
         }
+        for(int i = 0; i < map.selectedObjects.size; i ++)
+        {
+            if(map.selectedObjects.get(i).moveBox.contains(coords.x, coords.y))
+            {
+                // If clicked moveBox with SELECT tool, ignore everything
+                this.draggingMoveBox = true;
+
+                this.oldXofDragMap.clear();
+                this.oldYofDragMap.clear();
+                for(int k = 0; k < map.selectedObjects.size; k ++)
+                {
+                    this.oldXofDragMap.put(map.selectedObjects.get(k), map.selectedObjects.get(k).position.x);
+                    this.oldYofDragMap.put(map.selectedObjects.get(k), map.selectedObjects.get(k).position.y);
+                }
+
+                float xSum = 0, ySum = 0;
+                for(MapObject mapObject : map.selectedObjects)
+                {
+                    xSum += mapObject.position.x;
+                    ySum += mapObject.position.y;
+                }
+                float xAverage = xSum / map.selectedObjects.size;
+                float yAverage = ySum / map.selectedObjects.size;
+                Utils.setCenterOrigin(xAverage, yAverage);
+
+                return false;
+            }
+        }
         if(map.selectedLayer instanceof TileLayer && editor.getTileTools() != null)
         {
             if(editor.getTileTools().size > 0 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.getFileTool().tool == Tools.FILL)
@@ -166,7 +223,6 @@ public class MapInput implements InputProcessor
             {
                 if(editor.getFileTool().tool == Tools.SELECT)
                 {
-                    this.editor.shapeRenderer.setColor(Color.YELLOW);
                     for (int i = map.selectedLayer.tiles.size - 1; i >= 0; i--)
                     {
                         MapSprite mapSprite = ((MapSprite) map.selectedLayer.tiles.get(i));
@@ -246,6 +302,46 @@ public class MapInput implements InputProcessor
                 }
             }
         }
+        else if(map.selectedLayer instanceof ObjectLayer)
+        {
+            if(editor.getFileTool() != null)
+            {
+                if(editor.getFileTool().tool == Tools.SELECT)
+                {
+                    for (int i = map.selectedLayer.tiles.size - 1; i >= 0; i--)
+                    {
+                        MapObject mapObject = ((MapObject) map.selectedLayer.tiles.get(i));
+                        if (mapObject.polygon.contains(coords.x, coords.y))
+                        {
+                            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                            {
+                                if(map.selectedObjects.contains(mapObject, true))
+                                {
+                                    map.selectedObjects.removeValue(mapObject, true);
+                                    mapObject.unselect();
+                                }
+                                else
+                                {
+                                    map.selectedObjects.add(mapObject);
+                                    mapObject.select();
+                                }
+                                map.propertyMenu.rebuild();
+                            }
+                            else
+                            {
+                                for (int k = 0; k < map.selectedObjects.size; k++)
+                                    map.selectedObjects.get(k).unselect();
+                                map.selectedObjects.clear();
+                                map.selectedObjects.add(mapObject);
+                                mapObject.select();
+                                map.propertyMenu.rebuild();
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -254,25 +350,50 @@ public class MapInput implements InputProcessor
     {
         this.draggingRotateBox = false;
         this.draggingMoveBox = false;
-        if(map.boxSelect.isDragging && map.selectedLayer != null && map.selectedLayer instanceof SpriteLayer)
+        if(map.boxSelect.isDragging && map.selectedLayer != null)
         {
-            if(!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+            if(map.selectedLayer instanceof SpriteLayer)
             {
-                for (int k = 0; k < map.selectedSprites.size; k++)
-                    map.selectedSprites.get(k).unselect();
-                map.selectedSprites.clear();
-            }
-            for (int i = 0; i < map.selectedLayer.tiles.size; i++)
-            {
-                MapSprite mapSprite = ((MapSprite) map.selectedLayer.tiles.get(i));
-                if (Intersector.overlapConvexPolygons(mapSprite.polygon.getTransformedVertices(), map.boxSelect.getVertices(), null))
+                if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                 {
-                    boolean selected = map.selectedSprites.contains(mapSprite, true);
-                    if (!selected)
+                    for (int k = 0; k < map.selectedSprites.size; k++)
+                        map.selectedSprites.get(k).unselect();
+                    map.selectedSprites.clear();
+                }
+                for (int i = 0; i < map.selectedLayer.tiles.size; i++)
+                {
+                    MapSprite mapSprite = ((MapSprite) map.selectedLayer.tiles.get(i));
+                    if (Intersector.overlapConvexPolygons(mapSprite.polygon.getTransformedVertices(), map.boxSelect.getVertices(), null))
                     {
-                        map.selectedSprites.add(mapSprite);
-                        mapSprite.select();
-                        map.propertyMenu.spritePropertyPanel.setVisible(true);
+                        boolean selected = map.selectedSprites.contains(mapSprite, true);
+                        if (!selected)
+                        {
+                            map.selectedSprites.add(mapSprite);
+                            mapSprite.select();
+                            map.propertyMenu.spritePropertyPanel.setVisible(true);
+                        }
+                    }
+                }
+            }
+            else if(map.selectedLayer instanceof ObjectLayer)
+            {
+                if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                {
+                    for (int k = 0; k < map.selectedObjects.size; k++)
+                        map.selectedObjects.get(k).unselect();
+                    map.selectedObjects.clear();
+                }
+                for (int i = 0; i < map.selectedLayer.tiles.size; i++)
+                {
+                    MapObject mapObject = ((MapObject) map.selectedLayer.tiles.get(i));
+                    if (Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), map.boxSelect.getVertices(), null))
+                    {
+                        boolean selected = map.selectedObjects.contains(mapObject, true);
+                        if (!selected)
+                        {
+                            map.selectedObjects.add(mapObject);
+                            mapObject.select();
+                        }
                     }
                 }
             }
@@ -305,6 +426,8 @@ public class MapInput implements InputProcessor
         {
             for(int i = 0; i < map.selectedSprites.size; i ++)
                 map.selectedSprites.get(i).setPosition(this.oldXofDragMap.get(map.selectedSprites.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedSprites.get(i)) + pos.y);
+            for(int i = 0; i < map.selectedObjects.size; i ++)
+                map.selectedObjects.get(i).setPosition(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
             return false;
         }
         if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.GRAB)

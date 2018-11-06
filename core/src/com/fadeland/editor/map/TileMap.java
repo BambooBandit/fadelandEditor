@@ -55,6 +55,7 @@ public class TileMap implements Screen
     public LayerMenu layerMenu;
 
     public Array<MapSprite> selectedSprites;
+    public Array<MapObject> selectedObjects;
 
     public BoxSelect boxSelect;
 
@@ -66,6 +67,7 @@ public class TileMap implements Screen
         this.layers = new Array<>();
         this.boxSelect = new BoxSelect(this);
         this.selectedSprites = new Array<>();
+        this.selectedObjects = new Array<>();
 
         this.input = new MapInput(editor, this);
 
@@ -123,14 +125,19 @@ public class TileMap implements Screen
         this.editor.batch.begin();
         for(int i = 0; i < this.layers.size; i ++)
         {
-            if(this.layers.get(i).layerField.visibleImg.isVisible())
-                this.layers.get(i).draw();
+            if(!(this.layers.get(i) instanceof ObjectLayer))
+            {
+                if (this.layers.get(i).layerField.visibleImg.isVisible())
+                    this.layers.get(i).draw();
+            }
         }
         for(int i = 0; i < this.selectedSprites.size; i ++)
         {
             this.selectedSprites.get(i).drawRotationBox();
             this.selectedSprites.get(i).drawMoveBox();
         }
+        for(int i = 0; i < this.selectedObjects.size; i ++)
+            this.selectedObjects.get(i).drawMoveBox();
         this.editor.batch.end();
 
         this.editor.shapeRenderer.setColor(Color.BLACK);
@@ -146,6 +153,82 @@ public class TileMap implements Screen
                 this.editor.shapeRenderer.line(0, y * tileSize, mapWidth * tileSize, y * tileSize);
             for (int x = 1; x < mapWidth; x++)
                 this.editor.shapeRenderer.line(x * tileSize, 0, x * tileSize, mapHeight * tileSize);
+        }
+
+        this.editor.shapeRenderer.setColor(Color.CYAN);
+        for(int i = 0; i < this.layers.size; i ++)
+        {
+            if(this.layers.get(i) instanceof ObjectLayer)
+            {
+                if (this.layers.get(i).layerField.visibleImg.isVisible())
+                    this.layers.get(i).draw();
+            }
+        }
+        this.editor.shapeRenderer.setColor(Color.GRAY);
+        int oldIndex = 0;
+        if(input.objectVertices.size >= 2)
+        {
+            this.editor.shapeRenderer.circle(input.objectVertices.get(0) + input.objectVerticePosition.x, input.objectVertices.get(1) + input.objectVerticePosition.y, 3);
+            for (int i = 2; i < input.objectVertices.size; i += 2)
+            {
+                this.editor.shapeRenderer.line(input.objectVertices.get(oldIndex) + input.objectVerticePosition.x, input.objectVertices.get(oldIndex + 1) + input.objectVerticePosition.y, input.objectVertices.get(i) + input.objectVerticePosition.x, input.objectVertices.get(i + 1) + input.objectVerticePosition.y);
+                oldIndex += 2;
+            }
+        }
+
+        if(selectedLayer != null && selectedLayer instanceof ObjectLayer)
+        {
+            if (editor.getFileTool() != null && (editor.getFileTool().tool == Tools.SELECT || editor.getFileTool().tool == Tools.BOXSELECT))
+            {
+                Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
+                boolean hoverDrawed = false;
+                for (int i = selectedLayer.tiles.size - 1; i >= 0; i--)
+                {
+                    MapObject mapObject = ((MapObject) selectedLayer.tiles.get(i));
+                    boolean selected = selectedObjects.contains(mapObject, true);
+                    boolean hoveredOver = mapObject.polygon.contains(mouseCoords.x, mouseCoords.y);
+                    if (selected && editor.getFileTool().tool == Tools.BOXSELECT)
+                    {
+                        this.editor.shapeRenderer.setColor(Color.GREEN);
+                        mapObject.draw();
+                    } else if (hoveredOver || selected)
+                    {
+                        if (selected && hoveredOver && !hoverDrawed)
+                        {
+                            this.editor.shapeRenderer.setColor(Color.YELLOW);
+                            hoverDrawed = true;
+                            mapObject.draw();
+                        } else if (selected)
+                        {
+                            this.editor.shapeRenderer.setColor(Color.GREEN);
+                            mapObject.draw();
+                        } else if (hoveredOver && !hoverDrawed)
+                        {
+                            this.editor.shapeRenderer.setColor(Color.ORANGE);
+                            hoverDrawed = true;
+                            mapObject.draw();
+                        }
+                    }
+                }
+            }
+            if (boxSelect.isDragging && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT)
+            {
+                for (int i = selectedLayer.tiles.size - 1; i >= 0; i--)
+                {
+                    MapObject mapObject = ((MapObject) selectedLayer.tiles.get(i));
+                    if (Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), boxSelect.getVertices(), null))
+                    {
+                        boolean selected = selectedObjects.contains(mapObject, true);
+                        if (!selected)
+                        {
+                            this.editor.shapeRenderer.setColor(Color.YELLOW);
+                            mapObject.draw();
+                        }
+                    }
+                }
+                this.editor.shapeRenderer.setColor(Color.CYAN);
+                editor.shapeRenderer.rect(boxSelect.rectangle.x, boxSelect.rectangle.y, boxSelect.rectangle.width, boxSelect.rectangle.height);
+            }
         }
 
         if(selectedLayer != null && selectedLayer instanceof SpriteLayer && editor.getFileTool() != null && (editor.getFileTool().tool == Tools.SELECT || editor.getFileTool().tool == Tools.BOXSELECT))

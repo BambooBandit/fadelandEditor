@@ -96,7 +96,7 @@ public class PropertyMenu extends Group
 
     public void newProperty()
     {
-        if(map.tileMenu.selectedTiles.size > 0)
+        if(map.tileMenu.selectedTiles.size > 0 || map.selectedObjects.size > 0)
         {
             this.propertyPanel.newProperty();
 

@@ -161,7 +161,10 @@ public class LayerMenu extends Group
     {
         for(int i = 0; i < map.selectedSprites.size; i ++)
             map.selectedSprites.get(i).unselect();
+        for(int i = 0; i < map.selectedObjects.size; i ++)
+            map.selectedObjects.get(i).unselect();
         map.selectedSprites.clear();
+        map.selectedObjects.clear();
         for(int i = 0; i < this.layers.size; i ++)
             this.layers.get(i).unselect();
         this.map.selectedLayer = null;

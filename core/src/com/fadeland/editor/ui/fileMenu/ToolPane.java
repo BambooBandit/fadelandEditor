@@ -23,6 +23,8 @@ public class ToolPane extends Group
     private Tool brush;
     private Tool eraser;
     private Tool fill;
+    private Tool drawObject;
+    private Tool objectVerticeSelect;
     private Tool boxSelect;
     private Tool select;
     private Tool grab;
@@ -40,6 +42,8 @@ public class ToolPane extends Group
         this.brush = new Tool(Tools.BRUSH, this, skin, false);
         this.eraser = new Tool(Tools.ERASER, this, skin, false);
         this.fill = new Tool(Tools.FILL, this, skin, false);
+        this.drawObject = new Tool(Tools.DRAWOBJECT, this, skin, false);
+        this.objectVerticeSelect = new Tool(Tools.OBJECTVERTICESELECT, this, skin, false);
         this.boxSelect = new Tool(Tools.BOXSELECT, this, skin, false);
         this.select = new Tool(Tools.SELECT, this, skin, false);
         this.grab = new Tool(Tools.GRAB, this, skin, false);
@@ -54,6 +58,8 @@ public class ToolPane extends Group
         this.toolTable.add(this.brush).padRight(1);
         this.toolTable.add(this.eraser).padRight(1);
         this.toolTable.add(this.fill).padRight(1);
+        this.toolTable.add(this.drawObject).padRight(1);
+        this.toolTable.add(this.objectVerticeSelect).padRight(1);
         this.toolTable.add(this.boxSelect).padRight(1);
         this.toolTable.add(this.select).padRight(1);
         this.toolTable.add(this.grab).padRight(1);
@@ -85,6 +91,8 @@ public class ToolPane extends Group
         this.toolTable.getCell(this.brush).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.eraser).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.fill).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.drawObject).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.objectVerticeSelect).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.boxSelect).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.select).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.grab).size(toolHeight, toolHeight);

@@ -9,12 +9,12 @@ public class MoveBox
     public Sprite sprite;
     private Rectangle rectangle;
     private TileMap map;
-    private MapSprite mapSprite;
-    public MoveBox(MapSprite mapSprite, TileMap Map)
+    private Tile tile;
+    public MoveBox(Tile tile, TileMap Map)
     {
         int width = 25;
         int height = 25;
-        this.mapSprite = mapSprite;
+        this.tile = tile;
         this.map = map;
         this.sprite = new Sprite(new Texture("ui/move.png")); // TODO pack this
         this.sprite.setSize(width, height);

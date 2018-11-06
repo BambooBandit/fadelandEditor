@@ -18,10 +18,7 @@ public class MapSprite extends Tile
     public RotationBox rotationBox;
     public MoveBox moveBox;
     private boolean selected;
-    public Array<PropertyField> lockedProperties; // properties such as probability and rotation. They belong to all tiles and sprites
-
-
-    EditorSprite editorSprite;
+    public Array<PropertyField> lockedProperties; // properties such as rotation. They belong to all sprites
 
     public MapSprite(TileMap map, SpriteLayer layer, TileTool tool, float x, float y)
     {
@@ -31,7 +28,6 @@ public class MapSprite extends Tile
         this.sprite.setPosition(x, y);
         this.width = this.sprite.getWidth();
         this.height = this.sprite.getHeight();
-        this.editorSprite = new EditorSprite(sprite);
         this.tool = tool;
         float[] vertices = {0, 0, this.width, 0, this.width, this.height, 0, this.height};
         this.polygon = new Polygon(vertices);
@@ -53,7 +49,6 @@ public class MapSprite extends Tile
         this.polygon.setPosition(x, y);
         this.rotationBox.setPosition(x + this.width, y + this.height);
         this.moveBox.setPosition(x + this.width, y + this.height - 25);
-        editorSprite.setPosition(x, y);
     }
 
     public void draw()
@@ -82,7 +77,6 @@ public class MapSprite extends Tile
         this.rotation = degree;
         this.sprite.setRotation(degree);
         this.polygon.setRotation(degree);
-        editorSprite.setRotation(degree);
 
         for(int i = 0; i < lockedProperties.size; i ++)
         {
@@ -102,7 +96,6 @@ public class MapSprite extends Tile
         setPosition(endPos.x, endPos.y);
         this.sprite.rotate(degree);
         this.polygon.rotate(degree);
-        editorSprite.rotate(degree);
 
         for(int i = 0; i < lockedProperties.size; i ++)
         {
@@ -129,13 +122,11 @@ public class MapSprite extends Tile
         {
             this.sprite.setOrigin(x + width / 2, y + height / 2);
             this.polygon.setOrigin(x + width / 2, y + height / 2);
-            editorSprite.setOrigin(x + width / 2, y + height / 2);
         }
         else
         {
             this.sprite.setOrigin(x, y);
             this.polygon.setOrigin(x, y);
-            editorSprite.setOrigin(x, y);
         }
     }
 }

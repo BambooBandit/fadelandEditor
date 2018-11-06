@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.map.MapObject;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.tileMenu.TileMenuTools;
 import com.fadeland.editor.ui.tileMenu.TileTool;
@@ -68,10 +69,16 @@ public class PropertyPanel extends Group
 
     public void newProperty()
     {
-        final PropertyField property = new PropertyField("Property", "Value", this.skin, menu, true);
-
-        for(int i = 0; i < map.tileMenu.selectedTiles.size; i ++)
-            this.map.tileMenu.selectedTiles.get(i).properties.add(property);
+        if(map.selectedObjects.size > 0)
+        {
+            for (int i = 0; i < map.selectedObjects.size; i++)
+                this.map.selectedObjects.get(i).properties.add(new PropertyField("Property", "Value", this.skin, menu, true));
+        }
+        else
+        {
+            for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField("Property", "Value", this.skin, menu, true));
+        }
     }
 
     /** Remove all properties with the property value of the string.
@@ -119,7 +126,7 @@ public class PropertyPanel extends Group
             for (int i = 0; i < properties.size; i++)
                 this.table.add(properties.get(i)).padBottom(1).row();
         }
-        else if(map.tileMenu.selectedTiles.size > 1) // Only add properties
+        else if(map.tileMenu.selectedTiles.size > 1) // Only add common properties
         {
             TileTool firstTool = map.tileMenu.selectedTiles.first();
             for(int i = 0; i < firstTool.properties.size; i ++)
@@ -135,6 +142,30 @@ public class PropertyPanel extends Group
                 }
                 if(commonProperty)
                     this.table.add(firstTool.properties.get(i)).padBottom(1).row();
+            }
+        }
+        else if(map.selectedObjects.size == 1)
+        {
+            Array<PropertyField> properties = map.selectedObjects.first().properties;
+            for (int i = 0; i < properties.size; i++)
+                this.table.add(properties.get(i)).padBottom(1).row();
+        }
+        else if(map.selectedObjects.size > 1) // Only add common properties
+        {
+            MapObject mapObject = map.selectedObjects.first();
+            for(int i = 0; i < mapObject.properties.size; i ++)
+            {
+                boolean commonProperty = true;
+                for(int k = 1; k < map.selectedObjects.size; k ++)
+                {
+                    if(!map.selectedObjects.get(k).properties.contains(mapObject.properties.get(i), false))
+                    {
+                        commonProperty = false;
+                        break;
+                    }
+                }
+                if(commonProperty)
+                    this.table.add(mapObject.properties.get(i)).padBottom(1).row();
             }
         }
         setSize(getWidth(), getHeight()); // Resize to fit the fields
