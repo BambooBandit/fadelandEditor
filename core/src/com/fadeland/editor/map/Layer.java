@@ -26,11 +26,14 @@ public abstract class Layer
     {
         for(int i = 0; i < this.tiles.size; i ++)
         {
-            for(int k = 0; k < this.tiles.get(i).tool.mapObjects.size; k ++)
+            if(this.tiles.get(i).tool != null)
             {
-                AttachedMapObject mapObject = this.tiles.get(i).tool.mapObjects.get(k);
-                mapObject.setPosition(this.tiles.get(i).position.x + mapObject.positionOffset.x, this.tiles.get(i).position.y + mapObject.positionOffset.y);
-                mapObject.draw();
+                for (int k = 0; k < this.tiles.get(i).tool.mapObjects.size; k++)
+                {
+                    AttachedMapObject mapObject = this.tiles.get(i).tool.mapObjects.get(k);
+                    mapObject.setPosition(this.tiles.get(i).position.x + mapObject.positionOffset.x, this.tiles.get(i).position.y + mapObject.positionOffset.y);
+                    mapObject.draw();
+                }
             }
         }
     }

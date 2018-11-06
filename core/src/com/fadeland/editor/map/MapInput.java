@@ -227,11 +227,22 @@ public class MapInput implements InputProcessor
             }
             else
             {
+                if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                {
+                    map.selectedTile = null;
+                    return false;
+                }
                 for (int i = 0; i < editor.getTileTools().size; i++)
                 {
                     int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
                     int yOffset = editor.getTileTools().first().y - editor.getTileTools().get(i).y;
                     Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
+                    if(editor.getTileTools().size == 1 && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT)
+                    {
+                        if(clickedTile != null)
+                            map.selectedTile = clickedTile;
+                        break;
+                    }
                     if (editor.getFileTool() != null && clickedTile != null)
                     {
                         if (editor.getFileTool().tool == Tools.BRUSH)

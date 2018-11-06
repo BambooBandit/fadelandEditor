@@ -56,6 +56,7 @@ public class TileMap implements Screen
 
     public Array<MapSprite> selectedSprites;
     public Array<MapObject> selectedObjects;
+    public Tile selectedTile; // Not an array because you need one tile selected to attach a MapObject to it
 
     public BoxSelect boxSelect;
 
@@ -237,7 +238,35 @@ public class TileMap implements Screen
             this.editor.shapeRenderer.setColor(Color.CYAN);
             selectedObjects.first().drawSelectedVertices();
         }
-
+        if(selectedLayer != null && selectedLayer instanceof TileLayer && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT)
+        {
+            Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
+            Tile tile = getTile(mouseCoords.x, mouseCoords.y - tileSize);
+            boolean selected = selectedTile == tile;
+            boolean hoveredOver = (tile != null && mouseCoords.x >= tile.position.x && mouseCoords.x <= tile.width + tile.position.x &&
+                    mouseCoords.y >= tile.position.y && mouseCoords.y <= tile.height + tile.position.y);
+            if (selectedTile != null)
+            {
+                this.editor.shapeRenderer.setColor(Color.GREEN);
+                this.editor.shapeRenderer.rect(selectedTile.position.x, selectedTile.position.y, selectedTile.width, selectedTile.height);
+            }
+            if (tile != null && (hoveredOver || selected))
+            {
+                if (selected && hoveredOver)
+                {
+                    this.editor.shapeRenderer.setColor(Color.YELLOW);
+                    this.editor.shapeRenderer.rect(tile.position.x, tile.position.y, tile.width, tile.height);
+                } else if (selected)
+                {
+                    this.editor.shapeRenderer.setColor(Color.GREEN);
+                    this.editor.shapeRenderer.rect(tile.position.x, tile.position.y, tile.width, tile.height);
+                } else if (hoveredOver)
+                {
+                    this.editor.shapeRenderer.setColor(Color.ORANGE);
+                    this.editor.shapeRenderer.rect(tile.position.x, tile.position.y, tile.width, tile.height);
+                }
+            }
+        }
         if(selectedLayer != null && selectedLayer instanceof SpriteLayer && editor.getFileTool() != null && (editor.getFileTool().tool == Tools.SELECT || editor.getFileTool().tool == Tools.BOXSELECT))
         {
             Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
@@ -255,7 +284,8 @@ public class TileMap implements Screen
                     {
                         this.editor.shapeRenderer.setColor(Color.GREEN);
                         mapObject.draw();
-                    } else if (hoveredOver || selected)
+                    }
+                    else if (hoveredOver || selected)
                     {
                         if (selected && hoveredOver && !hoverDrawed)
                         {
