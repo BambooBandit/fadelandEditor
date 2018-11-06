@@ -44,7 +44,7 @@ public class TileMap implements Screen
     public int mapWidth;
     public int mapHeight;
 
-    private MapInput input;
+    public MapInput input;
 
     public Array<Layer> layers;
     public Layer selectedLayer;
@@ -228,6 +228,13 @@ public class TileMap implements Screen
                 }
                 this.editor.shapeRenderer.setColor(Color.CYAN);
                 editor.shapeRenderer.rect(boxSelect.rectangle.x, boxSelect.rectangle.y, boxSelect.rectangle.width, boxSelect.rectangle.height);
+            }
+            else if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT && selectedObjects.size == 1)
+            {
+                this.editor.shapeRenderer.setColor(Color.GRAY);
+                selectedObjects.first().drawHoveredVertices();
+                this.editor.shapeRenderer.setColor(Color.CYAN);
+                selectedObjects.first().drawSelectedVertices();
             }
         }
 

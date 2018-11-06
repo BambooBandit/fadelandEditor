@@ -59,7 +59,9 @@ public class MapInput implements InputProcessor
             if(map.selectedLayer != null)
             {
                 map.selectedLayer.tiles.removeAll(map.selectedSprites, true);
+                map.selectedLayer.tiles.removeAll(map.selectedObjects, true);
                 map.selectedSprites.clear();
+                map.selectedObjects.clear();
                 map.propertyMenu.rebuild();
             }
         }
@@ -181,6 +183,11 @@ public class MapInput implements InputProcessor
 
                 return false;
             }
+        }
+        if(map.selectedLayer instanceof ObjectLayer && editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
+        {
+            map.selectedObjects.first().indexOfSelectedVertice = map.selectedObjects.first().indexOfHoveredVertice;
+            map.selectedObjects.first().setPosition(map.selectedObjects.first().polygon.getX(), map.selectedObjects.first().polygon.getY()); // Move the movebox to where the selected vertice is
         }
         if(map.selectedLayer instanceof TileLayer && editor.getTileTools() != null)
         {
@@ -426,8 +433,15 @@ public class MapInput implements InputProcessor
         {
             for(int i = 0; i < map.selectedSprites.size; i ++)
                 map.selectedSprites.get(i).setPosition(this.oldXofDragMap.get(map.selectedSprites.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedSprites.get(i)) + pos.y);
-            for(int i = 0; i < map.selectedObjects.size; i ++)
-                map.selectedObjects.get(i).setPosition(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
+            if(map.selectedObjects.size == 1 && map.selectedObjects.first().indexOfSelectedVertice != -1)
+            {
+                map.selectedObjects.first().moveVertice(coords.x, coords.y);
+            }
+            else
+            {
+                for (int i = 0; i < map.selectedObjects.size; i++)
+                    map.selectedObjects.get(i).setPosition(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
+            }
             return false;
         }
         if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.GRAB)
@@ -508,6 +522,20 @@ public class MapInput implements InputProcessor
         {
             if (editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH)
                 editor.getSpriteTool().previewSprite.setPosition(coords.x - editor.getSpriteTool().previewSprite.getWidth() / 2, coords.y - editor.getSpriteTool().previewSprite.getHeight() / 2);
+        }
+        else if(map.selectedLayer instanceof ObjectLayer && editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
+        {
+            for(int i = 0; i < map.selectedObjects.first().polygon.getTransformedVertices().length; i += 2)
+            {
+                double distance = Math.sqrt(Math.pow((coords.x - map.selectedObjects.first().polygon.getTransformedVertices()[i]), 2) + Math.pow((coords.y - map.selectedObjects.first().polygon.getTransformedVertices()[i + 1]), 2));
+                if(distance <= 10)
+                {
+                    map.selectedObjects.first().indexOfHoveredVertice = i;
+                    break;
+                }
+                else
+                    map.selectedObjects.first().indexOfHoveredVertice = -1;
+            }
         }
         return false;
     }

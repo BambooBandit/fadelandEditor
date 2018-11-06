@@ -18,6 +18,9 @@ public class MapObject extends Tile
     private boolean selected;
     public Array<PropertyField> properties; // properties such as probability and rotation. They belong to all tiles and sprites
 
+    public int indexOfSelectedVertice = -1; // x index. y is + 1
+    public int indexOfHoveredVertice = -1; // x index. y is + 1
+
     public MapObject(TileMap map, ObjectLayer layer, FloatArray vertices, float x, float y)
     {
         super(map, layer, vertices, x, y);
@@ -37,12 +40,36 @@ public class MapObject extends Tile
     {
         super.setPosition(x, y);
         this.polygon.setPosition(x, y);
-        this.moveBox.setPosition(x, y);
+        if(indexOfSelectedVertice != -1)
+            this.moveBox.setPosition(polygon.getTransformedVertices()[indexOfSelectedVertice], polygon.getTransformedVertices()[indexOfSelectedVertice + 1]);
+        else
+            this.moveBox.setPosition(x, y);
+    }
+
+    public void moveVertice(float x, float y)
+    {
+        float[] vertices = this.polygon.getVertices();
+        vertices[indexOfSelectedVertice] = x - this.polygon.getX();
+        vertices[indexOfSelectedVertice + 1] = y - this.polygon.getY();
+        this.polygon.setVertices(vertices);
+        setPosition(polygon.getX(), polygon.getY());
     }
 
     public void draw()
     {
         map.editor.shapeRenderer.polygon(this.polygon.getTransformedVertices());
+    }
+
+    public void drawSelectedVertices()
+    {
+        if(indexOfSelectedVertice != -1)
+            map.editor.shapeRenderer.circle(polygon.getTransformedVertices()[indexOfSelectedVertice], polygon.getTransformedVertices()[indexOfSelectedVertice + 1], 5);
+    }
+
+    public void drawHoveredVertices()
+    {
+        if(indexOfHoveredVertice != -1)
+            map.editor.shapeRenderer.circle(polygon.getTransformedVertices()[indexOfHoveredVertice], polygon.getTransformedVertices()[indexOfHoveredVertice + 1], 5);
     }
 
     public void drawMoveBox()
