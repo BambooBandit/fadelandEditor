@@ -108,8 +108,8 @@ public class PropertyMenu extends Group
     {
         for(int i = 0; i < map.tileMenu.tileTable.getChildren().size; i ++)
         {
-            PropertyField propertyField = new PropertyField("Probability", "1.0", skin, this, false);
-            propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter()
+            PropertyField probability = new PropertyField("Probability", "1.0", skin, this, false);
+            probability.value.setTextFieldFilter(new TextField.TextFieldFilter()
             {
                 @Override
                 public boolean acceptChar(TextField textField, char c)
@@ -117,7 +117,9 @@ public class PropertyMenu extends Group
                     return c == '.' || Character.isDigit(c);
                 }
             });
-            ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(propertyField);
+            PropertyField type = new PropertyField("Type", "", skin, this, false);
+            ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(probability);
+            ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(type);
         }
     }
 
