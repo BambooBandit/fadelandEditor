@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.fadeland.editor.FadelandEditor;
@@ -58,6 +59,26 @@ public class MapInput implements InputProcessor
         {
             if(map.selectedLayer != null)
             {
+                if(map.selectedLayer != null && (map.selectedLayer instanceof SpriteLayer || map.selectedLayer instanceof TileLayer))
+                {
+                    for (int i = 0; i < map.selectedLayer.tiles.size; i++)
+                    {
+                        if(map.selectedLayer.tiles.get(i).tool != null)
+                        {
+                            for (int s = 0; s < map.selectedLayer.tiles.get(i).tool.mapObjects.size; s++)
+                            {
+                                for (int k = 0; k < map.selectedObjects.size; k++)
+                                {
+                                    if (map.selectedLayer.tiles.get(i).tool.mapObjects.get(s) == map.selectedObjects.get(k))
+                                    {
+                                        map.selectedLayer.tiles.get(i).tool.mapObjects.removeIndex(s);
+                                        s--;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 map.selectedLayer.tiles.removeAll(map.selectedSprites, true);
                 map.selectedLayer.tiles.removeAll(map.selectedObjects, true);
                 map.selectedSprites.clear();
