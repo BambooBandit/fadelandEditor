@@ -97,11 +97,17 @@ public class MapInput implements InputProcessor
                     mapObject = new MapObject(map, objectVertices, objectVerticePosition.x, objectVerticePosition.y);
                     ((ObjectLayer) map.selectedLayer).tiles.add(mapObject);
                 }
-                else
+                else if(map.selectedLayer instanceof SpriteLayer)
                 {
                     MapSprite mapSprite = map.selectedSprites.first();
                     mapObject = new AttachedMapObject(map, objectVertices, objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     mapSprite.addMapObject((AttachedMapObject) mapObject);
+                }
+                else if(map.selectedLayer instanceof TileLayer)
+                {
+                    Tile selectedTile = map.selectedTile;
+                    mapObject = new AttachedMapObject(map, objectVertices, objectVerticePosition.x - selectedTile.position.x, objectVerticePosition.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
+                    selectedTile.addMapObject((AttachedMapObject) mapObject);
                 }
             }
             objectVertices.clear();
@@ -113,7 +119,7 @@ public class MapInput implements InputProcessor
             return false;
         }
         else if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.DRAWOBJECT &&
-                (map.selectedLayer instanceof ObjectLayer || map.selectedSprites.size == 1))
+                (map.selectedLayer instanceof ObjectLayer || map.selectedSprites.size == 1 || map.selectedTile != null))
         {
             isDrawingObjectPolygon = true;
             if(this.objectVertices.size == 0)
@@ -227,6 +233,40 @@ public class MapInput implements InputProcessor
             }
             else
             {
+                if(map.selectedTile != null)
+                {
+                    for(int k = 0; k < map.selectedTile.tool.mapObjects.size; k ++)
+                    {
+                        AttachedMapObject attachedMapObject = map.selectedTile.tool.mapObjects.get(k);
+                        if (attachedMapObject.polygon.contains(coords.x, coords.y))
+                        {
+                            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                            {
+                                if(map.selectedObjects.contains(attachedMapObject, true))
+                                {
+                                    map.selectedObjects.removeValue(attachedMapObject, true);
+                                    attachedMapObject.unselect();
+                                }
+                                else
+                                {
+                                    map.selectedObjects.add(attachedMapObject);
+                                    attachedMapObject.select();
+                                }
+                                map.propertyMenu.rebuild();
+                            }
+                            else
+                            {
+                                for (int s = 0; s < map.selectedObjects.size; s++)
+                                    map.selectedObjects.get(s).unselect();
+                                map.selectedObjects.clear();
+                                map.selectedObjects.add(attachedMapObject);
+                                attachedMapObject.select();
+                                map.propertyMenu.rebuild();
+                            }
+                            return false;
+                        }
+                    }
+                }
                 if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                 {
                     map.selectedTile = null;
@@ -239,7 +279,7 @@ public class MapInput implements InputProcessor
                     Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
                     if(editor.getTileTools().size == 1 && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT)
                     {
-                        if(clickedTile != null)
+                        if(clickedTile != null && clickedTile.tool != null)
                             map.selectedTile = clickedTile;
                         break;
                     }
@@ -284,7 +324,7 @@ public class MapInput implements InputProcessor
                                 }
                                 else
                                 {
-                                    for (int s = 0;s < map.selectedObjects.size; s++)
+                                    for (int s = 0; s < map.selectedObjects.size; s++)
                                         map.selectedObjects.get(s).unselect();
                                     map.selectedObjects.clear();
                                     map.selectedObjects.add(attachedMapObject);

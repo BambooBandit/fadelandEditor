@@ -238,6 +238,35 @@ public class TileMap implements Screen
             this.editor.shapeRenderer.setColor(Color.CYAN);
             selectedObjects.first().drawSelectedVertices();
         }
+        if(selectedTile != null && selectedLayer != null && selectedLayer instanceof TileLayer && selectedLayer.tiles.contains(selectedTile, true))
+        {
+            this.editor.shapeRenderer.setColor(Color.GREEN);
+            this.editor.shapeRenderer.rect(selectedTile.position.x, selectedTile.position.y, selectedTile.width, selectedTile.height);
+
+            Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
+            for(int k = 0; k < selectedTile.tool.mapObjects.size; k ++)
+            {
+                AttachedMapObject mapObject = selectedTile.tool.mapObjects.get(k);
+                boolean selected = selectedObjects.contains(mapObject, true);
+                boolean hoveredOver = mapObject.polygon.contains(mouseCoords.x, mouseCoords.y);
+                if (hoveredOver || selected)
+                {
+                    if (selected && hoveredOver)
+                    {
+                        this.editor.shapeRenderer.setColor(Color.YELLOW);
+                        mapObject.draw();
+                    } else if (selected)
+                    {
+                        this.editor.shapeRenderer.setColor(Color.GREEN);
+                        mapObject.draw();
+                    } else if (hoveredOver)
+                    {
+                        this.editor.shapeRenderer.setColor(Color.ORANGE);
+                        mapObject.draw();
+                    }
+                }
+            }
+        }
         if(selectedLayer != null && selectedLayer instanceof TileLayer && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT)
         {
             Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
@@ -245,11 +274,6 @@ public class TileMap implements Screen
             boolean selected = selectedTile == tile;
             boolean hoveredOver = (tile != null && mouseCoords.x >= tile.position.x && mouseCoords.x <= tile.width + tile.position.x &&
                     mouseCoords.y >= tile.position.y && mouseCoords.y <= tile.height + tile.position.y);
-            if (selectedTile != null)
-            {
-                this.editor.shapeRenderer.setColor(Color.GREEN);
-                this.editor.shapeRenderer.rect(selectedTile.position.x, selectedTile.position.y, selectedTile.width, selectedTile.height);
-            }
             if (tile != null && (hoveredOver || selected))
             {
                 if (selected && hoveredOver)
