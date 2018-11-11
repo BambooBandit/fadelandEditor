@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -146,7 +147,10 @@ public class TileMap implements Screen
         this.editor.batch.end();
 
         this.editor.shapeRenderer.setColor(Color.BLACK);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         this.editor.shapeRenderer.begin();
+        this.editor.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         this.editor.shapeRenderer.line(0, 0, 0, mapHeight * tileSize);
         this.editor.shapeRenderer.line(0, 0, mapWidth * tileSize, 0);
         this.editor.shapeRenderer.line(0, mapHeight * tileSize, mapWidth * tileSize, mapHeight * tileSize);
@@ -407,11 +411,9 @@ public class TileMap implements Screen
                 fillPreview(mouseCoords.x, mouseCoords.y, clickedTile.tool);
         }
         else if(selectedLayer != null && selectedLayer instanceof TileLayer && editor.getFileTool() != null && (editor.getFileTool().tool == Tools.BIND || editor.getFileTool().tool == Tools.STAMP))
-        {
-            this.editor.shapeRenderer.setColor(Color.RED);
             ((TileLayer)this.selectedLayer).drawPossibleTileGroups();
-        }
         this.editor.shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
 
         this.stage.act();
         this.stage.draw();

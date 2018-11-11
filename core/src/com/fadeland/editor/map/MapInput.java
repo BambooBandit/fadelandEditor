@@ -3,7 +3,6 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -242,7 +241,10 @@ public class MapInput implements InputProcessor
                     map.selectedLayer.tiles.get(i).hasBeenPainted = false;
                 Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
                 if(clickedTile != null)
+                {
                     fill(coords.x, coords.y, clickedTile.tool);
+                    map.findAllTilesToBeGrouped();
+                }
             }
             else if(editor.getTileTools().size > 1 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.fileMenu.toolPane.random.selected)
             {
@@ -251,6 +253,7 @@ public class MapInput implements InputProcessor
                 TileTool randomTile = randomTile();
                 if(randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
                     clickedTile.setTool(randomTile);
+                map.findAllTilesToBeGrouped();
             }
             else
             {
@@ -310,12 +313,26 @@ public class MapInput implements InputProcessor
                             clickedTile.setTool(editor.getTileTools().get(i));
                         else if (editor.getFileTool().tool == Tools.ERASER)
                             clickedTile.setTool(null);
+                        map.findAllTilesToBeGrouped();
                     }
                 }
                 if (editor.getTileTools() != null && editor.getTileTools().size > 1 && editor.getFileTool().tool == Tools.BIND)
                 {
                     map.tileGroups.add(new TileGroup(coords.x, coords.y, editor.getTileTools(), map));
                     map.findAllTilesToBeGrouped();
+                }
+                else if (editor.getFileTool().tool == Tools.STAMP)
+                {
+                    Array<PossibleTileGroup> possibleTileGroups = ((TileLayer) map.selectedLayer).possibleTileGroups;
+                    for(int i = 0; i < possibleTileGroups.size; i ++)
+                    {
+                        if(possibleTileGroups.get(i).clickedGroup(coords.x, coords.y))
+                        {
+                            possibleTileGroups.get(i).stamp();
+                            map.findAllTilesToBeGrouped();
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -615,7 +632,10 @@ public class MapInput implements InputProcessor
                     }
                 }
                 if(clickedTile != null && randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
+                {
                     clickedTile.setTool(randomTile);
+                    map.findAllTilesToBeGrouped();
+                }
             }
             else
             {
@@ -630,6 +650,7 @@ public class MapInput implements InputProcessor
                             clickedTile.setTool(editor.getTileTools().get(i));
                         else if (editor.getFileTool().tool == Tools.ERASER)
                             clickedTile.setTool(null);
+                        map.findAllTilesToBeGrouped();
                     }
                 }
             }

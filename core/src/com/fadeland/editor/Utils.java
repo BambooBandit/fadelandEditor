@@ -107,4 +107,9 @@ public class Utils
         centerOrigin.set(x, y);
         return centerOrigin;
     }
+
+    public static boolean coordInRect(float x, float y, float rectX, float rectY, int rectWidth, int rectHeight)
+    {
+        return x >= rectX && x <= rectX + rectWidth && y >= rectY && y <= rectY + rectHeight;
+    }
 }

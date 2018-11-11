@@ -218,7 +218,7 @@ public class TileLayer extends Layer
                 return;
             }
         }
-        possibleTileGroups.add(new PossibleTileGroup(editor, tile.position));
+        possibleTileGroups.add(new PossibleTileGroup(editor, this, tile.position));
         possibleTileGroups.get(possibleTileGroups.size - 1).tileGroups.add(group);
     }
 }
