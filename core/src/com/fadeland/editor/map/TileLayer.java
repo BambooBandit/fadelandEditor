@@ -10,12 +10,16 @@ public class TileLayer extends Layer
 
     private int width, height;
 
+    public Array<PossibleTileGroup> possibleTileGroups;
+
     public TileLayer(FadelandEditor editor, TileMap map, LayerField layerField)
     {
         super(editor, map, layerField);
 
         this.width = map.mapWidth;
         this.height = map.mapHeight;
+
+        this.possibleTileGroups = new Array<>();
 
         for(int y = 0; y < height; y ++)
         {
@@ -29,7 +33,7 @@ public class TileLayer extends Layer
     {
         for(int i = 0; i < tiles.size; i ++)
             this.tiles.get(i).draw();
-        if(map.selectedLayer == this && layerField.visibleImg.isVisible() && editor.getFileTool() != null && editor.getTileTools() != null && editor.getFileTool().tool == Tools.BRUSH)
+        if(map.selectedLayer == this && layerField.visibleImg.isVisible() && editor.getFileTool() != null && editor.getTileTools() != null && (editor.getFileTool().tool == Tools.BRUSH || editor.getFileTool().tool == Tools.BIND))
         {
             for (int i = 0; i < editor.getTileTools().size; i ++)
             {
@@ -141,5 +145,80 @@ public class TileLayer extends Layer
                 index ++;
             }
         }
+    }
+
+    public void drawPossibleTileGroups()
+    {
+        for(int i = 0; i < possibleTileGroups.size; i ++)
+            possibleTileGroups.get(i).draw();
+    }
+
+
+    // All the below methods are for grouped tiles
+
+    public void findAllTilesToBeGrouped()
+    {
+        this.possibleTileGroups.clear();
+
+        for(int i = 0; i < tiles.size; i ++)
+        {
+            for(int k = 0; k < map.tileGroups.size; k ++)
+            {
+                if(doesThisPartOfTheMapMatchWithThisGroup(i, map.tileGroups.get(k)))
+                    addToPossibleTileGroups(tiles.get(i), map.tileGroups.get(k));
+            }
+        }
+    }
+
+    private boolean doesThisPartOfTheMapMatchWithThisGroup(int index, TileGroup group)
+    {
+        int groupWidth = group.width;
+        int right = 0;
+        int down = group.height - 1;
+        for(int i = 0; i < group.types.size; i ++)
+        {
+            Tile tile = getTileFrom(index, right, down);
+            if(tile == null)
+                return false;
+            if(tile.tool == null || group.types.get(i) == null){}
+            else if(tile.tool != null && group.types.get(i) != null && group.types.get(i).equals(tile.tool.getPropertyField("Type").value.getText())){}
+            else
+                return false;
+            right ++;
+            if(right >= groupWidth)
+            {
+                right = 0;
+                down --;
+            }
+        }
+        return true;
+    }
+
+    private Tile getTileFrom(int index, int amountRight, int amountDown)
+    {
+        int fromIndex = index;
+        int rowOld = (int) Math.floor(fromIndex / width);
+        fromIndex += amountRight;
+        int rowNew = (int) Math.floor(fromIndex / width);
+        if(rowNew != rowOld)
+            return null;
+        fromIndex += amountDown * width;
+        if(fromIndex >= tiles.size)
+            return null;
+        return tiles.get(fromIndex);
+    }
+
+    private void addToPossibleTileGroups(Tile tile, TileGroup group)
+    {
+        for(int i = 0; i < possibleTileGroups.size; i ++)
+        {
+            if(possibleTileGroups.get(i).position.x == tile.position.x && possibleTileGroups.get(i).position.y == tile.position.y)
+            {
+                possibleTileGroups.get(i).tileGroups.add(group);
+                return;
+            }
+        }
+        possibleTileGroups.add(new PossibleTileGroup(editor, tile.position));
+        possibleTileGroups.get(possibleTileGroups.size - 1).tileGroups.add(group);
     }
 }

@@ -1,6 +1,7 @@
 package com.fadeland.editor.map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -60,6 +61,8 @@ public class TileMap implements Screen
 
     public BoxSelect boxSelect;
 
+    public Array<TileGroup> tileGroups;
+
     public TileMap(FadelandEditor editor, String name)
     {
         this.editor = editor;
@@ -69,6 +72,7 @@ public class TileMap implements Screen
         this.boxSelect = new BoxSelect(this);
         this.selectedSprites = new Array<>();
         this.selectedObjects = new Array<>();
+        this.tileGroups = new Array<>();
 
         this.input = new MapInput(editor, this);
 
@@ -402,7 +406,11 @@ public class TileMap implements Screen
             if(clickedTile != null)
                 fillPreview(mouseCoords.x, mouseCoords.y, clickedTile.tool);
         }
-
+        else if(selectedLayer != null && selectedLayer instanceof TileLayer && editor.getFileTool() != null && (editor.getFileTool().tool == Tools.BIND || editor.getFileTool().tool == Tools.STAMP))
+        {
+            this.editor.shapeRenderer.setColor(Color.RED);
+            ((TileLayer)this.selectedLayer).drawPossibleTileGroups();
+        }
         this.editor.shapeRenderer.end();
 
         this.stage.act();
@@ -508,17 +516,31 @@ public class TileMap implements Screen
         Tile tileToPaint = getTile(x, y - tileSize);
         if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
         {
-            TileTool tile = editor.getTileTools().first();
-            if(tile != null)
+            if(editor.getTileTools().size > 0)
             {
-                tileToPaint.hasBeenPainted = true;
-                editor.shapeRenderer.setColor(.2f, .85f, 1f, .5f);
-                editor.shapeRenderer.rect(tileToPaint.position.x, tileToPaint.position.y, tileSize, tileSize);
-                fillPreview(x + 64, y, tool);
-                fillPreview(x - 64, y, tool);
-                fillPreview(x, y + 64, tool);
-                fillPreview(x, y - 64, tool);
+                TileTool tile = editor.getTileTools().first();
+                if (tile != null)
+                {
+                    tileToPaint.hasBeenPainted = true;
+                    editor.shapeRenderer.setColor(.2f, .85f, 1f, .5f);
+                    editor.shapeRenderer.rect(tileToPaint.position.x, tileToPaint.position.y, tileSize, tileSize);
+                    fillPreview(x + 64, y, tool);
+                    fillPreview(x - 64, y, tool);
+                    fillPreview(x, y + 64, tool);
+                    fillPreview(x, y - 64, tool);
+                }
             }
+        }
+    }
+
+    /** Searches for all occurrences of tile groups in all the tiles of each layer.
+     * Allows for easy outlining of possible groups of tiles to stamp, and stamping groups of tiles.*/
+    public void findAllTilesToBeGrouped()
+    {
+        for(int i = 0; i < layers.size; i ++)
+        {
+            if(layers.get(i) instanceof TileLayer)
+                ((TileLayer) layers.get(i)).findAllTilesToBeGrouped();
         }
     }
 }

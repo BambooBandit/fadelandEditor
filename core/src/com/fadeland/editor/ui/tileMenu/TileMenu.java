@@ -12,6 +12,8 @@ import com.fadeland.editor.map.TileMap;
 public class TileMenu extends Group
 {
     public static int tileSize = 64;
+    public static int tileSheetWidth;
+    public static int tileSheetHeight;
     public static int tilePadding = 2; // Bleeding area in pixels
     public static int toolHeight = 35;
     public static String tileSheetName = "tiles.png";
@@ -51,15 +53,19 @@ public class TileMenu extends Group
 
         // Add all the tiles to the tileTable as Images
         Texture tileSheet = new Texture(tileSheetName);
+        tileSheetWidth = tileSheet.getWidth();
+        tileSheetHeight = tileSheet.getHeight();
         tileTable.padLeft(1);
         tileTable.padTop(1);
+        int id = 0;
         for(int y = 0; y < tileSheet.getHeight(); y += tileSize)
         {
             for(int x = 0; x < tileSheet.getWidth(); x += tileSize)
             {
                 TextureRegion tileRegion = new TextureRegion(tileSheet, x, y, tileSize, tileSize);
 
-                TileTool tile = new TileTool(TileMenuTools.TILE, new Image(tileRegion), tileRegion, x + y, tileSheet.getWidth() - x, y, toolPane, skin);
+                TileTool tile = new TileTool(TileMenuTools.TILE, new Image(tileRegion), tileRegion, id, tileSheet.getWidth() - x - tileSize, y, toolPane, skin);
+                id ++;
                 tileTable.add(tile);
             }
             tileTable.row();

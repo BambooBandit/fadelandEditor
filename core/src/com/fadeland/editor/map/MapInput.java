@@ -312,6 +312,11 @@ public class MapInput implements InputProcessor
                             clickedTile.setTool(null);
                     }
                 }
+                if (editor.getTileTools() != null && editor.getTileTools().size > 1 && editor.getFileTool().tool == Tools.BIND)
+                {
+                    map.tileGroups.add(new TileGroup(coords.x, coords.y, editor.getTileTools(), map));
+                    map.findAllTilesToBeGrouped();
+                }
             }
         }
         else if(map.selectedLayer instanceof SpriteLayer)
@@ -646,7 +651,7 @@ public class MapInput implements InputProcessor
                 int yOffset = editor.getTileTools().first().y - editor.getTileTools().get(i).y;
                 Tile hoverTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
 
-                if (editor.getFileTool() != null && hoverTile != null && editor.getFileTool().tool == Tools.BRUSH)
+                if (editor.getFileTool() != null && hoverTile != null && (editor.getFileTool().tool == Tools.BRUSH || editor.getFileTool().tool == Tools.BIND))
                     editor.getTileTools().get(i).previewSprite.setPosition(hoverTile.position.x, hoverTile.position.y);
             }
         }
