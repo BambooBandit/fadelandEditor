@@ -17,6 +17,10 @@ public class PossibleTileGroup
 
     public Vector2 position; // The upper left of this possible group
 
+    public float r = Utils.randomFloat(0, 1);
+    public float g = Utils.randomFloat(0, 1);
+    public float b = Utils.randomFloat(0, 1);
+
     public PossibleTileGroup(FadelandEditor editor, TileLayer layer, Vector2 position)
     {
         this.tileGroups = new Array<>();
@@ -36,10 +40,10 @@ public class PossibleTileGroup
         {
             if(tileGroups.get(0).types.get(i) != null)
             {
-                this.editor.shapeRenderer.setColor(Color.RED);
+                this.editor.shapeRenderer.setColor(r, g, b, 1);
                 this.editor.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
                 editor.shapeRenderer.rect(position.x + (right * tileSize), position.y - tileSize + (down * tileSize), tileSize, tileSize);
-                this.editor.shapeRenderer.setColor(1,0,0,.075f);
+                this.editor.shapeRenderer.setColor(r, g, b,.075f);
                 this.editor.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
                 editor.shapeRenderer.rect(position.x + (right * tileSize), position.y - tileSize + (down * tileSize), tileSize, tileSize);
             }
