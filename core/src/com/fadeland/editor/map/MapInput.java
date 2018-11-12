@@ -318,8 +318,24 @@ public class MapInput implements InputProcessor
                 }
                 if (editor.getTileTools() != null && editor.getTileTools().size > 1 && editor.getFileTool().tool == Tools.BIND)
                 {
-                    map.tileGroups.add(new TileGroup(coords.x, coords.y, editor.getTileTools(), map));
-                    map.findAllTilesToBeGrouped();
+                    if(button == Input.Buttons.LEFT) // bind
+                    {
+                        map.tileGroups.add(new TileGroup(coords.x, coords.y, editor.getTileTools(), map));
+                        map.findAllTilesToBeGrouped();
+                    }
+                    else if(button == Input.Buttons.RIGHT) // unbind
+                    {
+                        Array<PossibleTileGroup> possibleTileGroups = ((TileLayer) map.selectedLayer).possibleTileGroups;
+                        for(int i = 0; i < possibleTileGroups.size; i ++)
+                        {
+                            if(possibleTileGroups.get(i).clickedGroup(coords.x, coords.y))
+                            {
+                                map.tileGroups.removeAll(possibleTileGroups.get(i).tileGroups, true);
+                                map.findAllTilesToBeGrouped();
+                                break;
+                            }
+                        }
+                    }
                 }
                 else if (editor.getFileTool().tool == Tools.STAMP)
                 {
