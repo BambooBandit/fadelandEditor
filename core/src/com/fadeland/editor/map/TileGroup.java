@@ -3,9 +3,7 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
-import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSheetHeight;
-import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSheetWidth;
-import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
+import static com.fadeland.editor.ui.tileMenu.TileMenu.*;
 
 public class TileGroup
 {

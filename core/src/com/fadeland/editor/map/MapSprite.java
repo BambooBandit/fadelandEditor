@@ -2,14 +2,11 @@ package com.fadeland.editor.map;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
-
-import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 
 public class MapSprite extends Tile
 {

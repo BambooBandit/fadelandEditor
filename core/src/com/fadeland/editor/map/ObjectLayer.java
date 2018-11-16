@@ -1,7 +1,6 @@
 package com.fadeland.editor.map;
 
 import com.fadeland.editor.FadelandEditor;
-import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.layerMenu.LayerField;
 import com.fadeland.editor.ui.layerMenu.LayerTypes;
 

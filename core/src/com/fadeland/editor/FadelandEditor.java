@@ -13,10 +13,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.fileMenu.FileMenu;
 import com.fadeland.editor.ui.fileMenu.Tool;
-import com.fadeland.editor.ui.layerMenu.LayerMenu;
-import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
-import com.fadeland.editor.ui.tileMenu.TileMenuTool;
 import com.fadeland.editor.ui.tileMenu.TileMenuTools;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 

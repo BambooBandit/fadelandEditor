@@ -9,8 +9,7 @@ import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.Layer;
 import com.fadeland.editor.map.TileMap;
-import com.fadeland.editor.ui.propertyMenu.PropertyField;
-import com.fadeland.editor.undoredo.CreateLayer;
+import com.fadeland.editor.undoredo.CreateOrRemoveLayer;
 
 public class LayerMenu extends Group
 {
@@ -84,7 +83,7 @@ public class LayerMenu extends Group
     {
         final TileMap selectedMap = this.map;
         final LayerField layer = new LayerField(type.name, type, editor, map, skin, this);
-        map.performAction(new CreateLayer(layer.mapLayer));
+        map.performAction(new CreateOrRemoveLayer(layer.mapLayer, true));
         this.table.add(layer).padBottom(1).row();
         this.layers.add(layer);
         selectedMap.layers.add(layer.mapLayer);

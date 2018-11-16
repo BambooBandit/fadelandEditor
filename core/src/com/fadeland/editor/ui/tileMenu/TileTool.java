@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.map.AttachedMapObject;
-import com.fadeland.editor.map.MapObject;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 
 public class TileTool extends TileMenuTool implements Comparable<TileTool>

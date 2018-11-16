@@ -1,7 +1,5 @@
 package com.fadeland.editor.ui.propertyMenu;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -9,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
-import com.fadeland.editor.ui.tileMenu.TileMenu;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.toolHeight;
 

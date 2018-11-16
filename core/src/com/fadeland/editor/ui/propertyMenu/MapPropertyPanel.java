@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
-import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class MapPropertyPanel extends Group
 {

@@ -1,15 +1,12 @@
 package com.fadeland.editor.ui.propertyMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.MapObject;
 import com.fadeland.editor.map.TileMap;
-import com.fadeland.editor.ui.tileMenu.TileMenuTools;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class PropertyPanel extends Group

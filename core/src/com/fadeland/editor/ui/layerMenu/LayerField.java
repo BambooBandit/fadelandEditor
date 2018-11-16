@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.map.*;
+import com.fadeland.editor.undoredo.CreateOrRemoveLayer;
 
 public class LayerField extends Group
 {
@@ -99,6 +100,7 @@ public class LayerField extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                map.performAction(new CreateOrRemoveLayer(layer.mapLayer, false));
                 menu.removeLayer(layer);
             }
         });

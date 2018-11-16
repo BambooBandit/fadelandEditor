@@ -1,12 +1,9 @@
 package com.fadeland.editor.map;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
-import com.fadeland.editor.FadelandEditor;
-import com.fadeland.editor.ui.layerMenu.LayerField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;

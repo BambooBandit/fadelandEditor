@@ -1,8 +1,6 @@
 package com.fadeland.editor.map;
 
 import com.badlogic.gdx.utils.Array;
-import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
-import com.fadeland.editor.ui.tileMenu.TileMenu;
 
 public class TileMapData
 {
