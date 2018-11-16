@@ -10,6 +10,7 @@ import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.Layer;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.undoredo.CreateOrRemoveLayer;
+import com.fadeland.editor.undoredo.MoveLayer;
 
 public class LayerMenu extends Group
 {
@@ -120,6 +121,8 @@ public class LayerMenu extends Group
 
     public void moveLayerUp(LayerField layer)
     {
+        MoveLayer moveLayer = new MoveLayer(this.layers);
+        map.performAction(moveLayer);
         int index = this.layers.indexOf(layer, false);
         index --;
         if(index < 0)
@@ -129,10 +132,13 @@ public class LayerMenu extends Group
 
         rearrangeLayers();
         rebuild();
+        moveLayer.addNewLayers();
     }
 
     public void moveLayerDown(LayerField layer)
     {
+        MoveLayer moveLayer = new MoveLayer(this.layers);
+        map.performAction(moveLayer);
         int index = this.layers.indexOf(layer, false);
         index ++;
         if(index >= this.layers.size)
@@ -142,6 +148,7 @@ public class LayerMenu extends Group
 
         rearrangeLayers();
         rebuild();
+        moveLayer.addNewLayers();
     }
 
     public void removeLayer(LayerField layerField)
@@ -155,7 +162,7 @@ public class LayerMenu extends Group
     }
 
     /** Fixes the TileMap array to draw in the correct order. */
-    private void rearrangeLayers()
+    public void rearrangeLayers()
     {
         this.map.layers.clear();
         for(int i = this.layers.size - 1; i >= 0; i --)
@@ -163,7 +170,7 @@ public class LayerMenu extends Group
     }
 
     /** Rebuilds the table to remove gaps when removing properties. */
-    private void rebuild()
+    public void rebuild()
     {
         this.table.clearChildren();
         for(int i = 0; i < this.layers.size; i ++)

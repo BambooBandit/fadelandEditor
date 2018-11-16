@@ -362,7 +362,7 @@ public class MapInput implements InputProcessor
                         }
                     }
                 }
-                else if (editor.getFileTool().tool == Tools.STAMP)
+                else if (editor.getFileTool() != null && editor.getFileTool().tool == Tools.STAMP)
                 {
                     Array<PossibleTileGroup> possibleTileGroups = ((TileLayer) map.selectedLayer).possibleTileGroups;
                     for(int i = 0; i < possibleTileGroups.size; i ++)
