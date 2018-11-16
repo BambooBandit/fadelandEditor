@@ -562,7 +562,6 @@ public class TileMap implements Screen
     {
         if(undo.size() == 0)
             return;
-        System.out.println("undo");
 
         Action action = this.undo.pop();
         action.undo();
@@ -573,7 +572,6 @@ public class TileMap implements Screen
     {
         if(redo.size() == 0)
             return;
-        System.out.println("redo");
 
         Action action = this.redo.pop();
         action.redo();

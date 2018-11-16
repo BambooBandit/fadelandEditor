@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.undoredo.ResizeMap;
 
 public class MapPropertyPanel extends Group
 {
@@ -62,7 +63,10 @@ public class MapPropertyPanel extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                ResizeMap resizeMap = new ResizeMap(menu.map, mapWidth, mapHeight);
                 menu.map.resizeMap(Integer.parseInt(mapWidthProperty.value.getText()), Integer.parseInt(mapHeightProperty.value.getText()));
+                resizeMap.addNew(mapWidth, mapHeight);
+                menu.map.performAction(resizeMap);
             }
         });
 
