@@ -8,6 +8,7 @@ import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.MapObject;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.tileMenu.TileTool;
+import com.fadeland.editor.undoredo.AddProperty;
 
 public class PropertyPanel extends Group
 {
@@ -66,6 +67,10 @@ public class PropertyPanel extends Group
 
     public void newProperty()
     {
+        AddProperty addProperty = new AddProperty(map, map.selectedObjects, map.tileMenu.selectedTiles);
+        addProperty.addProperty(new PropertyField("Property", "Value", this.skin, menu, true));
+        map.performAction(addProperty);
+
         if(map.selectedObjects.size > 0)
         {
             for (int i = 0; i < map.selectedObjects.size; i++)
