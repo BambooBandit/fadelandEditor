@@ -28,6 +28,8 @@ import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
+import java.util.Stack;
+
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 
 public class TileMap implements Screen
@@ -64,10 +66,16 @@ public class TileMap implements Screen
 
     public Array<TileGroup> tileGroups;
 
+    public Stack<TileMapData> undo;
+    public Stack<TileMapData> redo;
+
     public TileMap(FadelandEditor editor, String name)
     {
         this.editor = editor;
         this.name = name;
+
+        this.undo = new Stack<>();
+        this.redo = new Stack<>();
 
         this.layers = new Array<>();
         this.boxSelect = new BoxSelect(this);
@@ -544,5 +552,45 @@ public class TileMap implements Screen
             if(layers.get(i) instanceof TileLayer)
                 ((TileLayer) layers.get(i)).findAllTilesToBeGrouped();
         }
+    }
+
+    /** Must be called before anything in the map changes. */
+    public void performAction()
+    {
+        // Copies the current state of the map
+        TileMapData data = new TileMapData();
+        data.setData(this);
+
+        this.undo.push(data);
+        this.redo.clear();
+
+    }
+
+    public void undo()
+    {
+        if(undo.size() == 0)
+            return;
+        System.out.println("undo");
+
+        TileMapData redoData = new TileMapData();
+        redoData.setData(this);
+        this.redo.push(redoData);
+
+        TileMapData undoData = this.undo.pop();
+        undoData.setMapToOtherMap(this);
+    }
+
+    public void redo()
+    {
+        if(redo.size() == 0)
+            return;
+        System.out.println("redo");
+
+        TileMapData undoData = new TileMapData();
+        undoData.setData(this);
+        this.undo.push(undoData);
+
+        TileMapData redoData = this.redo.pop();
+        redoData.setMapToOtherMap(this);
     }
 }

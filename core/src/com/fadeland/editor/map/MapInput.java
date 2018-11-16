@@ -103,6 +103,7 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
+        map.performAction();
         map.stage.unfocusAll();
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         this.dragOrigin.set(coords.x, coords.y);

@@ -82,6 +82,11 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                if(editor.getScreen() != null)
+                {
+                    TileMap tileMap = (TileMap) editor.getScreen();
+                    tileMap.undo();
+                }
             }
         });
         this.redoButton.addListener(new ClickListener()
@@ -89,6 +94,11 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                if(editor.getScreen() != null)
+                {
+                    TileMap tileMap = (TileMap) editor.getScreen();
+                    tileMap.redo();
+                }
             }
         });
 
