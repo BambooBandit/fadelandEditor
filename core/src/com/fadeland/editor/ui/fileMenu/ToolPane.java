@@ -8,6 +8,7 @@ import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.MapSprite;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.undoredo.BringSpriteUpOrDown;
 
 import static com.fadeland.editor.FadelandEditor.toolHeight;
 
@@ -157,10 +158,13 @@ public class ToolPane extends Group
                 TileMap map = ((TileMap)editor.getScreen());
                 if(map == null || map.selectedSprites.size != 1)
                     return;
+                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map.selectedLayer.tiles);
                 MapSprite selectedSprite = map.selectedSprites.first();
                 int index = map.selectedLayer.tiles.indexOf(selectedSprite, true);
                 if(index < map.selectedLayer.tiles.size - 1)
                     map.selectedLayer.tiles.swap(index, index + 1);
+                bringSpriteUpOrDown.addNew();
+                map.performAction(bringSpriteUpOrDown);
             }
         });
 
@@ -172,10 +176,13 @@ public class ToolPane extends Group
                 TileMap map = ((TileMap)editor.getScreen());
                 if(map == null || map.selectedSprites.size != 1)
                     return;
+                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map.selectedLayer.tiles);
                 MapSprite selectedSprite = map.selectedSprites.first();
                 int index = map.selectedLayer.tiles.indexOf(selectedSprite, true);
                 if(index > 0)
                     map.selectedLayer.tiles.swap(index, index - 1);
+                bringSpriteUpOrDown.addNew();
+                map.performAction(bringSpriteUpOrDown);
             }
         });
 
@@ -187,9 +194,12 @@ public class ToolPane extends Group
                 TileMap map = ((TileMap)editor.getScreen());
                 if(map == null || map.selectedSprites.size != 1)
                     return;
+                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map.selectedLayer.tiles);
                 MapSprite selectedSprite = map.selectedSprites.first();
                 map.selectedLayer.tiles.removeValue(selectedSprite, true);
                 map.selectedLayer.tiles.add(selectedSprite);
+                bringSpriteUpOrDown.addNew();
+                map.performAction(bringSpriteUpOrDown);
             }
         });
 
@@ -201,9 +211,12 @@ public class ToolPane extends Group
                 TileMap map = ((TileMap)editor.getScreen());
                 if(map == null || map.selectedSprites.size != 1)
                     return;
+                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map.selectedLayer.tiles);
                 MapSprite selectedSprite = map.selectedSprites.first();
                 map.selectedLayer.tiles.removeValue(selectedSprite, true);
                 map.selectedLayer.tiles.insert(0, selectedSprite);
+                bringSpriteUpOrDown.addNew();
+                map.performAction(bringSpriteUpOrDown);
             }
         });
     }
