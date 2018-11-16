@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.undoredo.SelectTileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.toolHeight;
 
@@ -74,6 +75,7 @@ public class TileMenuToolPane extends Group
     /** Tool was clicked on. If it's a tile, see if CONTROL was being held down to handle selecting or removing multiple tiles. */
     public void selectTool(TileMenuTool selectedTool)
     {
+        SelectTileTool selectTileTool = new SelectTileTool(this.menu.selectedTiles);
         if(selectedTool.tool == TileMenuTools.LINES)
         {
             if (selectedTool.isSelected)
@@ -176,6 +178,8 @@ public class TileMenuToolPane extends Group
             }
         }
         this.menu.selectedTiles.sort();
+        selectTileTool.addSelectedTiles();
+        map.performAction(selectTileTool);
     }
 
     /** Used to select all the selected tiles/sprites when switching from tiles to sprites panels*/
