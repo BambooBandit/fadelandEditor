@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.layerMenu.LayerField;
+import com.fadeland.editor.ui.layerMenu.LayerTypes;
 
 public class TileLayer extends Layer
 {
@@ -12,9 +13,9 @@ public class TileLayer extends Layer
 
     public Array<PossibleTileGroup> possibleTileGroups;
 
-    public TileLayer(FadelandEditor editor, TileMap map, LayerField layerField)
+    public TileLayer(FadelandEditor editor, TileMap map, LayerTypes type, LayerField layerField)
     {
-        super(editor, map, layerField);
+        super(editor, map, type, layerField);
 
         this.width = map.mapWidth;
         this.height = map.mapHeight;

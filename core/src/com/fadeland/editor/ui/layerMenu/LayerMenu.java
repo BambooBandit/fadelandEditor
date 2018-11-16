@@ -7,8 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.map.Layer;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
+import com.fadeland.editor.undoredo.CreateLayer;
 
 public class LayerMenu extends Group
 {
@@ -78,10 +80,11 @@ public class LayerMenu extends Group
         super.setSize(width, height);
     }
 
-    public void newLayer(LayerTypes type)
+    public Layer newLayer(LayerTypes type)
     {
         final TileMap selectedMap = this.map;
         final LayerField layer = new LayerField(type.name, type, editor, map, skin, this);
+        map.performAction(new CreateLayer(layer.mapLayer));
         this.table.add(layer).padBottom(1).row();
         this.layers.add(layer);
         selectedMap.layers.add(layer.mapLayer);
@@ -98,6 +101,18 @@ public class LayerMenu extends Group
         };
         layer.layerName.addListener(listener);
         layer.typeImage.addListener(listener);
+
+        rearrangeLayers();
+
+        setSize(getWidth(), getHeight()); // Resize to fit the new field
+        return layer.mapLayer;
+    }
+
+    public void addLayer(Layer layer)
+    {
+        this.table.add(layer.layerField).padBottom(1).row();
+        this.layers.add(layer.layerField);
+        this.map.layers.add(layer);
 
         rearrangeLayers();
 

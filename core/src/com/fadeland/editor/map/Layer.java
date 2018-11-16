@@ -3,20 +3,23 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.ui.layerMenu.LayerField;
+import com.fadeland.editor.ui.layerMenu.LayerTypes;
 
 public abstract class Layer
 {
     public Array<Tile> tiles;
 
     protected FadelandEditor editor;
-    protected TileMap map;
-    protected LayerField layerField;
+    public TileMap map;
+    public LayerField layerField;
+    public LayerTypes type;
 
-    public Layer(FadelandEditor editor, TileMap map, LayerField layerField)
+    public Layer(FadelandEditor editor, TileMap map, LayerTypes type, LayerField layerField)
     {
         this.tiles = new Array<>();
         this.editor = editor;
         this.map = map;
+        this.type = type;
         this.layerField = layerField;
     }
 
@@ -48,11 +51,11 @@ public abstract class Layer
             TileMap map = toBeCopied.first().map;
             LayerField layerField = toBeCopied.first().layerField;
             if(toBeCopied.first() instanceof TileLayer)
-                newLayer = new TileLayer(editor, map, layerField);
+                newLayer = new TileLayer(editor, map, layerField.mapLayer.type, layerField);
             else if(toBeCopied.first() instanceof SpriteLayer)
-                newLayer = new SpriteLayer(editor, map, layerField);
+                newLayer = new SpriteLayer(editor, map, layerField.mapLayer.type, layerField);
             else if(toBeCopied.first() instanceof ObjectLayer)
-                newLayer = new ObjectLayer(editor, map, layerField);
+                newLayer = new ObjectLayer(editor, map, layerField.mapLayer.type, layerField);
 
             newLayer.tiles = Tile.copyTiles(toBeCopied.get(i).tiles);
             System.out.println(newLayer.tiles.size);

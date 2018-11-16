@@ -3,13 +3,14 @@ package com.fadeland.editor.map;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.layerMenu.LayerField;
+import com.fadeland.editor.ui.layerMenu.LayerTypes;
 
 public class ObjectLayer extends Layer
 {
 
-    public ObjectLayer(FadelandEditor editor, TileMap map, LayerField layerField)
+    public ObjectLayer(FadelandEditor editor, TileMap map, LayerTypes type, LayerField layerField)
     {
-        super(editor, map, layerField);
+        super(editor, map, type, layerField);
     }
 
     @Override

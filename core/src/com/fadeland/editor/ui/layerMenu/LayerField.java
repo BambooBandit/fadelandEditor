@@ -19,7 +19,7 @@ public class LayerField extends Group
     private Stack visibilityStack;
     public Image visibleImg;
     public Image notVisibleImg;
-    private TextButton remove;
+    public TextButton remove;
     private Table table;
 
     public Layer mapLayer;
@@ -32,11 +32,11 @@ public class LayerField extends Group
         this.type = type;
 
         if(type == LayerTypes.TILE)
-            this.mapLayer = new TileLayer(editor, map, this);
+            this.mapLayer = new TileLayer(editor, map, type, this);
         else if(type == LayerTypes.SPRITE)
-            this.mapLayer = new SpriteLayer(editor, map, this);
+            this.mapLayer = new SpriteLayer(editor, map, type, this);
         else if(type == LayerTypes.OBJECT)
-            this.mapLayer = new ObjectLayer(editor, map, this);
+            this.mapLayer = new ObjectLayer(editor, map, type, this);
 
         this.layerName = new TextField(name, skin);
         this.table = new Table();
