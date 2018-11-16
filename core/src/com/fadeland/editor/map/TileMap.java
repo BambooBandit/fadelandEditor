@@ -558,11 +558,9 @@ public class TileMap implements Screen
     /** Must be called before anything in the map changes. */
     public void performAction(Action action)
     {
-        // Copies the current state of the map
-//        TileMapData data = new TileMapData();
-//        data.setData(this);
-
         this.undo.push(action);
+        if(this.undo.size() > 75)
+            this.undo.remove(0);
         this.redo.clear();
 
     }
