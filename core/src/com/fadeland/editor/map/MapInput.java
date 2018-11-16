@@ -17,6 +17,8 @@ import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
+import com.fadeland.editor.undoredo.Action;
+import com.fadeland.editor.undoredo.PlaceTile;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 
@@ -103,7 +105,6 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
-        map.performAction();
         map.stage.unfocusAll();
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         this.dragOrigin.set(coords.x, coords.y);
@@ -243,6 +244,7 @@ public class MapInput implements InputProcessor
                 Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
                 if(clickedTile != null)
                 {
+                    map.performAction(new PlaceTile());
                     fill(coords.x, coords.y, clickedTile.tool);
                     map.findAllTilesToBeGrouped();
                 }
@@ -253,7 +255,11 @@ public class MapInput implements InputProcessor
                 Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
                 TileTool randomTile = randomTile();
                 if(randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
+                {
+                    if(clickedTile.tool != randomTile)
+                        map.performAction(new PlaceTile(clickedTile, clickedTile.tool, randomTile));
                     clickedTile.setTool(randomTile);
+                }
                 map.findAllTilesToBeGrouped();
             }
             else
@@ -297,6 +303,8 @@ public class MapInput implements InputProcessor
                     map.selectedTile = null;
                     return false;
                 }
+                if(editor.getTileTools().size > 1)
+                    map.performAction(new PlaceTile());
                 for (int i = 0; i < editor.getTileTools().size; i++)
                 {
                     int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
@@ -311,9 +319,26 @@ public class MapInput implements InputProcessor
                     if (editor.getFileTool() != null && clickedTile != null)
                     {
                         if (editor.getFileTool().tool == Tools.BRUSH)
+                        {
+                            if(editor.getTileTools().size > 1)
+                            {
+                                PlaceTile placeTile = (PlaceTile) map.undo.pop();
+                                placeTile.addTile(clickedTile, clickedTile.tool, editor.getTileTools().get(i));
+                                map.undo.push(placeTile);
+                            }
+                            else
+                            {
+                                if (clickedTile.tool != editor.getTileTools().get(i))
+                                    map.performAction(new PlaceTile(clickedTile, clickedTile.tool, editor.getTileTools().get(i)));
+                            }
                             clickedTile.setTool(editor.getTileTools().get(i));
+                        }
                         else if (editor.getFileTool().tool == Tools.ERASER)
+                        {
+                            if(clickedTile.tool != null)
+                                map.performAction(new PlaceTile(clickedTile, clickedTile.tool, null));
                             clickedTile.setTool(null);
+                        }
                         map.findAllTilesToBeGrouped();
                     }
                 }
@@ -650,6 +675,8 @@ public class MapInput implements InputProcessor
                 }
                 if(clickedTile != null && randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
                 {
+                    if(clickedTile.tool != randomTile)
+                        map.performAction(new PlaceTile(clickedTile, clickedTile.tool, randomTile));
                     clickedTile.setTool(randomTile);
                     map.findAllTilesToBeGrouped();
                 }
@@ -663,10 +690,19 @@ public class MapInput implements InputProcessor
                     Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
                     if (editor.getFileTool() != null && clickedTile != null)
                     {
+
                         if (editor.getFileTool().tool == Tools.BRUSH)
+                        {
+                            if(clickedTile.tool != editor.getTileTools().get(i))
+                                map.performAction(new PlaceTile(clickedTile, clickedTile.tool, editor.getTileTools().get(i)));
                             clickedTile.setTool(editor.getTileTools().get(i));
+                        }
                         else if (editor.getFileTool().tool == Tools.ERASER)
+                        {
+                            if(clickedTile.tool != null)
+                                map.performAction(new PlaceTile(clickedTile, clickedTile.tool, null));
                             clickedTile.setTool(null);
+                        }
                         map.findAllTilesToBeGrouped();
                     }
                 }
@@ -773,6 +809,9 @@ public class MapInput implements InputProcessor
             if(tile != null)
             {
                 tileToPaint.hasBeenPainted = true;
+                PlaceTile placeTile = (PlaceTile) map.undo.pop();
+                placeTile.addTile(tileToPaint, tileToPaint.tool, tile);
+                map.undo.push(placeTile);
                 tileToPaint.setTool(tile);
                 fill(x + 64, y, tool);
                 fill(x - 64, y, tool);

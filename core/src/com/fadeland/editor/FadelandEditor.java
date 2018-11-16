@@ -61,6 +61,11 @@ public class FadelandEditor extends Game
 	@Override
 	public void render ()
 	{
+		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+			undo();
+		else if(Gdx.input.isKeyJustPressed(Input.Keys.R) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+			redo();
+
 		if(activeMap == null)
 		{
 			// The map clears the screen, but no map is active so manually clear the screen here
@@ -133,5 +138,23 @@ public class FadelandEditor extends Game
 		if(tileMenu.selectedTiles.first().tool != TileMenuTools.SPRITE)
 			return  null;
 		return tileMenu.selectedTiles.first();
+	}
+
+	public void undo()
+	{
+		if(getScreen() != null)
+		{
+			TileMap tileMap = (TileMap) getScreen();
+			tileMap.undo();
+		}
+	}
+
+	public void redo()
+	{
+		if(getScreen() != null)
+		{
+			TileMap tileMap = (TileMap) getScreen();
+			tileMap.redo();
+		}
 	}
 }

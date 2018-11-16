@@ -27,6 +27,7 @@ import com.fadeland.editor.ui.propertyMenu.MapPropertyPanel;
 import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
 import com.fadeland.editor.ui.tileMenu.TileTool;
+import com.fadeland.editor.undoredo.Action;
 
 import java.util.Stack;
 
@@ -66,8 +67,8 @@ public class TileMap implements Screen
 
     public Array<TileGroup> tileGroups;
 
-    public Stack<TileMapData> undo;
-    public Stack<TileMapData> redo;
+    public Stack<Action> undo;
+    public Stack<Action> redo;
 
     public TileMap(FadelandEditor editor, String name)
     {
@@ -555,13 +556,13 @@ public class TileMap implements Screen
     }
 
     /** Must be called before anything in the map changes. */
-    public void performAction()
+    public void performAction(Action action)
     {
         // Copies the current state of the map
-        TileMapData data = new TileMapData();
-        data.setData(this);
+//        TileMapData data = new TileMapData();
+//        data.setData(this);
 
-        this.undo.push(data);
+        this.undo.push(action);
         this.redo.clear();
 
     }
@@ -572,12 +573,9 @@ public class TileMap implements Screen
             return;
         System.out.println("undo");
 
-        TileMapData redoData = new TileMapData();
-        redoData.setData(this);
-        this.redo.push(redoData);
-
-        TileMapData undoData = this.undo.pop();
-        undoData.setMapToOtherMap(this);
+        Action action = this.undo.pop();
+        action.undo();
+        this.redo.push(action);
     }
 
     public void redo()
@@ -586,11 +584,8 @@ public class TileMap implements Screen
             return;
         System.out.println("redo");
 
-        TileMapData undoData = new TileMapData();
-        undoData.setData(this);
-        this.undo.push(undoData);
-
-        TileMapData redoData = this.redo.pop();
-        redoData.setMapToOtherMap(this);
+        Action action = this.redo.pop();
+        action.redo();
+        this.undo.push(action);
     }
 }
