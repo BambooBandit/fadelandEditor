@@ -21,13 +21,15 @@ public class CreateOrRemoveObject implements Action
         this.mapObjects = mapObjects;
         this.selection = selection;
         this.oldObjects = new Array<>(mapObjects);
-        this.oldSelection = new Array<>(selection);
+        if(this.selection != null)
+            this.oldSelection = new Array<>(selection);
     }
 
     public void addObjects()
     {
         this.newObjects = new Array<>(mapObjects);
-        this.newSelection = new Array<>(selection);
+        if(this.selection != null)
+            this.newSelection = new Array<>(selection);
     }
 
     @Override
@@ -35,8 +37,11 @@ public class CreateOrRemoveObject implements Action
     {
         this.mapObjects.clear();
         this.mapObjects.addAll(oldObjects);
-        this.selection.clear();
-        this.selection.addAll(oldSelection);
+        if(this.selection != null)
+        {
+            this.selection.clear();
+            this.selection.addAll(oldSelection);
+        }
         map.propertyMenu.rebuild();
     }
 
@@ -45,8 +50,11 @@ public class CreateOrRemoveObject implements Action
     {
         this.mapObjects.clear();
         this.mapObjects.addAll(newObjects);
-        this.selection.clear();
-        this.selection.addAll(newSelection);
+        if (this.selection != null)
+        {
+            this.selection.clear();
+            this.selection.addAll(newSelection);
+        }
         map.propertyMenu.rebuild();
     }
 }

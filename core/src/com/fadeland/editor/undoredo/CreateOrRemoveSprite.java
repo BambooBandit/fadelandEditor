@@ -21,13 +21,15 @@ public class CreateOrRemoveSprite implements Action
         this.mapSprites = mapSprites;
         this.selection = selection;
         this.oldSprites = new Array<>(mapSprites);
-        this.oldSelection = new Array<>(selection);
+        if(selection != null)
+            this.oldSelection = new Array<>(selection);
     }
 
     public void addSprites()
     {
         this.newSprites = new Array<>(mapSprites);
-        this.newSelection = new Array<>(selection);
+        if(this.selection != null)
+            this.newSelection = new Array<>(selection);
     }
 
     @Override
@@ -35,9 +37,12 @@ public class CreateOrRemoveSprite implements Action
     {
         this.mapSprites.clear();
         this.mapSprites.addAll(oldSprites);
-        this.selection.clear();
-        this.selection.addAll(oldSelection);
-        map.propertyMenu.rebuild();
+        if(this.selection != null)
+        {
+            this.selection.clear();
+            this.selection.addAll(oldSelection);
+        }
+        this.map.propertyMenu.rebuild();
     }
 
     @Override
@@ -45,8 +50,11 @@ public class CreateOrRemoveSprite implements Action
     {
         this.mapSprites.clear();
         this.mapSprites.addAll(newSprites);
-        this.selection.clear();
-        this.selection.addAll(newSelection);
-        map.propertyMenu.rebuild();
+        if(this.selection != null)
+        {
+            this.selection.clear();
+            this.selection.addAll(newSelection);
+        }
+        this.map.propertyMenu.rebuild();
     }
 }

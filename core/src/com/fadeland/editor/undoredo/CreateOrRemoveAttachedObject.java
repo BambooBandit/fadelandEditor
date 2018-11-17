@@ -21,7 +21,8 @@ public class CreateOrRemoveAttachedObject implements Action
         this.map = map;
         this.mapParents = mapParents;
         this.selection = selection;
-        this.oldSelection = new Array<>(selection);
+        if(selection != null)
+            this.oldSelection = new Array<>(selection);
 
         this.oldParents = new Array<>(mapParents.size);
         for(int i = 0; i < mapParents.size; i ++)
@@ -30,7 +31,8 @@ public class CreateOrRemoveAttachedObject implements Action
 
     public void addAttachedObjects()
     {
-        this.newSelection = new Array<>(selection);
+        if(this.selection != null)
+            this.newSelection = new Array<>(selection);
 
         this.newParents = new Array<>(mapParents.size);
         for(int i = 0; i < mapParents.size; i ++)
@@ -45,8 +47,11 @@ public class CreateOrRemoveAttachedObject implements Action
             mapParents.get(i).tool.mapObjects.clear();
             mapParents.get(i).tool.mapObjects.addAll(oldParents.get(i));
         }
-        this.selection.clear();
-        this.selection.addAll(oldSelection);
+        if(this.selection != null)
+        {
+            this.selection.clear();
+            this.selection.addAll(oldSelection);
+        }
         map.propertyMenu.rebuild();
     }
 
@@ -58,8 +63,11 @@ public class CreateOrRemoveAttachedObject implements Action
             mapParents.get(i).tool.mapObjects.clear();
             mapParents.get(i).tool.mapObjects.addAll(newParents.get(i));
         }
-        this.selection.clear();
-        this.selection.addAll(newSelection);
+        if(this.selection != null)
+        {
+            this.selection.clear();
+            this.selection.addAll(newSelection);
+        }
         map.propertyMenu.rebuild();
     }
 }

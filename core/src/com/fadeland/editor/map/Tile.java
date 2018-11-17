@@ -2,7 +2,6 @@ package com.fadeland.editor.map;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
@@ -69,24 +68,5 @@ public class Tile
     public void addMapObject(AttachedMapObject mapObject)
     {
         this.tool.mapObjects.add(mapObject);
-    }
-
-    public static Array<Tile> copyTiles(Array<Tile> toBeCopied)
-    {
-        Array<Tile> tiles = new Array<>();
-        for(int i = 0; i < toBeCopied.size; i ++)
-        {
-            Tile newTile = null;
-            TileMap map = toBeCopied.first().map;
-            if(toBeCopied.first() instanceof MapSprite)
-                newTile = new MapSprite(map, toBeCopied.get(i).tool, toBeCopied.get(i).position.x, toBeCopied.get(i).position.y);
-            else if(toBeCopied.first() instanceof MapObject)
-                newTile = new MapObject(map, ((MapObject)toBeCopied.get(i)).vertices, toBeCopied.get(i).position.x, toBeCopied.get(i).position.y);
-            else
-                newTile = new Tile(map, toBeCopied.get(i).position.x, toBeCopied.get(i).position.y);
-
-            tiles.add(newTile);
-        }
-        return tiles;
     }
 }

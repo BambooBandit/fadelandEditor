@@ -40,27 +40,4 @@ public abstract class Layer
             }
         }
     }
-
-    public static Array<Layer> copyLayers(Array<Layer> toBeCopied)
-    {
-        Array<Layer> layers = new Array<>();
-        for(int i = 0; i < toBeCopied.size; i ++)
-        {
-            Layer newLayer = null;
-            FadelandEditor editor = toBeCopied.first().editor;
-            TileMap map = toBeCopied.first().map;
-            LayerField layerField = toBeCopied.first().layerField;
-            if(toBeCopied.first() instanceof TileLayer)
-                newLayer = new TileLayer(editor, map, layerField.mapLayer.type, layerField);
-            else if(toBeCopied.first() instanceof SpriteLayer)
-                newLayer = new SpriteLayer(editor, map, layerField.mapLayer.type, layerField);
-            else if(toBeCopied.first() instanceof ObjectLayer)
-                newLayer = new ObjectLayer(editor, map, layerField.mapLayer.type, layerField);
-
-            newLayer.tiles = Tile.copyTiles(toBeCopied.get(i).tiles);
-            System.out.println(newLayer.tiles.size);
-            layers.add(newLayer);
-        }
-        return layers;
-    }
 }

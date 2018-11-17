@@ -132,20 +132,29 @@ public class MapInput implements InputProcessor
                 MapObject mapObject;
                 if(map.selectedLayer instanceof ObjectLayer)
                 {
+                    CreateOrRemoveObject createOrRemoveObject = new CreateOrRemoveObject(map, map.selectedLayer.tiles, null);
                     mapObject = new MapObject(map, objectVertices, objectVerticePosition.x, objectVerticePosition.y);
                     ((ObjectLayer) map.selectedLayer).tiles.add(mapObject);
+                    createOrRemoveObject.addObjects();
+                    map.performAction(createOrRemoveObject);
                 }
                 else if(map.selectedLayer instanceof SpriteLayer)
                 {
+                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                     MapSprite mapSprite = map.selectedSprites.first();
                     mapObject = new AttachedMapObject(map, objectVertices, objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     mapSprite.addMapObject((AttachedMapObject) mapObject);
+                    createOrRemoveAttachedObject.addAttachedObjects();
+                    map.performAction(createOrRemoveAttachedObject);
                 }
                 else if(map.selectedLayer instanceof TileLayer)
                 {
+                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                     Tile selectedTile = map.selectedTile;
                     mapObject = new AttachedMapObject(map, objectVertices, objectVerticePosition.x - selectedTile.position.x, objectVerticePosition.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     selectedTile.addMapObject((AttachedMapObject) mapObject);
+                    createOrRemoveAttachedObject.addAttachedObjects();
+                    map.performAction(createOrRemoveAttachedObject);
                 }
             }
             objectVertices.clear();
@@ -476,6 +485,7 @@ public class MapInput implements InputProcessor
                 else if(editor.getSpriteTool() != null &&
                         coords.x > 0 && coords.y > 0 && coords.x < map.mapWidth * tileSize && coords.y < map.mapHeight * tileSize)
                 {
+                    CreateOrRemoveSprite createOrRemoveSprite = new CreateOrRemoveSprite(map, ((SpriteLayer) map.selectedLayer).tiles, null);
                     MapSprite mapSprite = new MapSprite(map, editor.getSpriteTool(),
                             coords.x - editor.getSpriteTool().textureRegion.getRegionWidth() / 2, coords.y - editor.getSpriteTool().textureRegion.getRegionHeight() / 2);
 
@@ -513,6 +523,8 @@ public class MapInput implements InputProcessor
 
                     if (editor.getFileTool().tool == Tools.BRUSH)
                         ((SpriteLayer) map.selectedLayer).tiles.add(mapSprite);
+                    createOrRemoveSprite.addSprites();
+                    map.performAction(createOrRemoveSprite);
 //                else if (editor.getFileTool().tool == Tools.ERASER)
 //                    clickedTile.setTool(null);
                 }
