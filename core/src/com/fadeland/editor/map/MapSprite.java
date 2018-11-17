@@ -14,7 +14,7 @@ public class MapSprite extends Tile
     public Polygon polygon;
     public RotationBox rotationBox;
     public MoveBox moveBox;
-    private boolean selected;
+    public boolean selected;
     public Array<PropertyField> lockedProperties; // properties such as rotation. They belong to all sprites
 
     public MapSprite(TileMap map, TileTool tool, float x, float y)

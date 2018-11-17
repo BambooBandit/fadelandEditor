@@ -1,17 +1,19 @@
 package com.fadeland.editor.undoredo;
 
 import com.badlogic.gdx.utils.Array;
+import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class SelectTileTool implements Action
 {
-
+    public TileMap map;
     public Array<TileTool> selectedTiles;
     public Array<TileTool> oldSelection;
     public Array<TileTool> newSelection;
 
-    public SelectTileTool(Array<TileTool> selectedTiles)
+    public SelectTileTool(TileMap map, Array<TileTool> selectedTiles)
     {
+        this.map = map;
         this.selectedTiles = selectedTiles;
         this.oldSelection = new Array<>(selectedTiles);
     }
@@ -30,6 +32,7 @@ public class SelectTileTool implements Action
         selectedTiles.addAll(oldSelection);
         for(int i = 0; i < selectedTiles.size; i ++)
             selectedTiles.get(i).select();
+        this.map.propertyMenu.rebuild();
     }
 
     @Override
@@ -41,5 +44,6 @@ public class SelectTileTool implements Action
         selectedTiles.addAll(newSelection);
         for(int i = 0; i < selectedTiles.size; i ++)
             selectedTiles.get(i).select();
+        this.map.propertyMenu.rebuild();
     }
 }

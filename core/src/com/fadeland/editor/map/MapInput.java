@@ -17,7 +17,7 @@ import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
-import com.fadeland.editor.undoredo.PlaceTile;
+import com.fadeland.editor.undoredo.*;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 
@@ -59,31 +59,48 @@ public class MapInput implements InputProcessor
         {
             if(map.selectedLayer != null)
             {
+                boolean deletedAttached = false;
                 if(map.selectedLayer != null && (map.selectedLayer instanceof SpriteLayer || map.selectedLayer instanceof TileLayer))
                 {
+                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, map.selectedObjects);
                     for (int i = 0; i < map.selectedLayer.tiles.size; i++)
                     {
                         if(map.selectedLayer.tiles.get(i).tool != null)
                         {
+                            midLoop:
                             for (int s = 0; s < map.selectedLayer.tiles.get(i).tool.mapObjects.size; s++)
                             {
                                 for (int k = 0; k < map.selectedObjects.size; k++)
                                 {
                                     if (map.selectedLayer.tiles.get(i).tool.mapObjects.get(s) == map.selectedObjects.get(k))
                                     {
+                                        deletedAttached = true;
+                                        map.selectedObjects.removeValue(map.selectedLayer.tiles.get(i).tool.mapObjects.get(s), true);
                                         map.selectedLayer.tiles.get(i).tool.mapObjects.removeIndex(s);
                                         s--;
+                                        if(s < 0)
+                                            break midLoop;
                                     }
                                 }
                             }
                         }
                     }
+                    createOrRemoveAttachedObject.addAttachedObjects();
+                    map.performAction(createOrRemoveAttachedObject);
                 }
+                if(deletedAttached)
+                    return false;
+                CreateOrRemoveSprite createOrRemoveSprite = new CreateOrRemoveSprite(map, map.selectedLayer.tiles, map.selectedSprites);
+                CreateOrRemoveObject createOrRemoveObject = new CreateOrRemoveObject(map, map.selectedLayer.tiles, map.selectedObjects);
                 map.selectedLayer.tiles.removeAll(map.selectedSprites, true);
                 map.selectedLayer.tiles.removeAll(map.selectedObjects, true);
                 map.selectedSprites.clear();
                 map.selectedObjects.clear();
                 map.propertyMenu.rebuild();
+                createOrRemoveSprite.addSprites();
+                map.performAction(createOrRemoveSprite);
+                createOrRemoveObject.addObjects();
+                map.performAction(createOrRemoveObject);
             }
         }
         return false;
@@ -392,6 +409,7 @@ public class MapInput implements InputProcessor
                             AttachedMapObject attachedMapObject = mapSprite.tool.mapObjects.get(k);
                             if (attachedMapObject.polygon.contains(coords.x, coords.y))
                             {
+                                SelectObject selectObject = new SelectObject(map, map.selectedObjects);
                                 if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                                 {
                                     if(map.selectedObjects.contains(attachedMapObject, true))
@@ -415,12 +433,15 @@ public class MapInput implements InputProcessor
                                     attachedMapObject.select();
                                     map.propertyMenu.rebuild();
                                 }
+                                selectObject.addSelected();
+                                map.performAction(selectObject);
                                 break outerloop;
                             }
                         }
 
                         if (mapSprite.polygon.contains(coords.x, coords.y))
                         {
+                            SelectSprite selectSprite = new SelectSprite(map, map.selectedSprites);
                             if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                             {
                                 if(map.selectedSprites.contains(mapSprite, true))
@@ -446,6 +467,8 @@ public class MapInput implements InputProcessor
                                 mapSprite.select();
                                 map.propertyMenu.rebuild();
                             }
+                            selectSprite.addSelected();
+                            map.performAction(selectSprite);
                             break;
                         }
                     }
@@ -547,6 +570,7 @@ public class MapInput implements InputProcessor
         {
             if(map.selectedLayer instanceof SpriteLayer)
             {
+                SelectSprite selectSprite = new SelectSprite(map, map.selectedSprites);
                 if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                 {
                     for (int k = 0; k < map.selectedSprites.size; k++)
@@ -567,9 +591,12 @@ public class MapInput implements InputProcessor
                         }
                     }
                 }
+                selectSprite.addSelected();
+                map.performAction(selectSprite);
             }
             else if(map.selectedLayer instanceof ObjectLayer || (map.selectedSprites.size == 1 && map.selectedSprites.first().tool.mapObjects.size > 1))
             {
+                SelectObject selectObject = new SelectObject(map, map.selectedObjects);
                 if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                 {
                     for (int k = 0; k < map.selectedObjects.size; k++)
@@ -589,6 +616,8 @@ public class MapInput implements InputProcessor
                         }
                     }
                 }
+                selectObject.addSelected();
+                map.performAction(selectObject);
             }
             map.propertyMenu.rebuild();
             map.boxSelect.isDragging = false;

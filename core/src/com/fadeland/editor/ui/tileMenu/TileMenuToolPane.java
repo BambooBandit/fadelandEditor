@@ -75,7 +75,7 @@ public class TileMenuToolPane extends Group
     /** Tool was clicked on. If it's a tile, see if CONTROL was being held down to handle selecting or removing multiple tiles. */
     public void selectTool(TileMenuTool selectedTool)
     {
-        SelectTileTool selectTileTool = new SelectTileTool(this.menu.selectedTiles);
+        SelectTileTool selectTileTool = new SelectTileTool(map, this.menu.selectedTiles);
         if(selectedTool.tool == TileMenuTools.LINES)
         {
             if (selectedTool.isSelected)
