@@ -11,6 +11,7 @@ import com.fadeland.editor.map.Layer;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.undoredo.CreateOrRemoveLayer;
 import com.fadeland.editor.undoredo.MoveLayer;
+import com.fadeland.editor.undoredo.SelectLayer;
 
 public class LayerMenu extends Group
 {
@@ -94,6 +95,8 @@ public class LayerMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                SelectLayer selectLayer = new SelectLayer(selectedMap, selectedMap.selectedLayer, layer.mapLayer);
+                selectedMap.performAction(selectLayer);
                 unselectAll();
                 layer.select();
                 selectedMap.selectedLayer = layer.mapLayer;
