@@ -174,6 +174,40 @@ public class MapInput implements InputProcessor
             this.objectVertices.add(coords.x - objectVerticePosition.x);
             this.objectVertices.add(coords.y - objectVerticePosition.y);
         }
+
+        MoveSprite moveSprite = null;
+        for (int i = 0; i < map.selectedSprites.size; i++)
+        {
+            if (map.selectedSprites.get(i).moveBox.contains(coords.x, coords.y))
+            {
+                moveSprite = new MoveSprite(oldXofDragMap, oldYofDragMap);
+                break;
+            }
+        }
+        if (moveSprite != null)
+        {
+            for (int i = 0; i < map.selectedSprites.size; i++)
+                moveSprite.addSprite(map.selectedSprites.get(i));
+            map.performAction(moveSprite);
+        }
+        else // rotate
+        {
+            RotateSprite rotateSprite = null;
+            for (int i = 0; i < map.selectedSprites.size; i++)
+            {
+                if (map.selectedSprites.get(i).rotationBox.contains(coords.x, coords.y))
+                {
+                    rotateSprite = new RotateSprite(map);
+                    break;
+                }
+            }
+            if (rotateSprite != null)
+            {
+                for (int i = 0; i < map.selectedSprites.size; i++)
+                    rotateSprite.addSprite(map.selectedSprites.get(i));
+                map.performAction(rotateSprite);
+            }
+        }
         for(int i = 0; i < map.selectedSprites.size; i ++)
         {
             if(map.selectedSprites.get(i).rotationBox.contains(coords.x, coords.y))
@@ -706,6 +740,18 @@ public class MapInput implements InputProcessor
                     map.undo.push(moveObject);
                 }
             }
+        }
+        if(map.undo.peek() instanceof MoveSprite)
+        {
+            MoveSprite moveSprite = (MoveSprite) map.undo.pop();
+            moveSprite.addNewPosition();
+            map.undo.push(moveSprite);
+        }
+        else if(map.undo.peek() instanceof RotateSprite)
+        {
+            RotateSprite rotateSprite = (RotateSprite) map.undo.pop();
+            rotateSprite.addNewRotation();
+            map.undo.push(rotateSprite);
         }
         this.draggingRotateBox = false;
         this.draggingMoveBox = false;

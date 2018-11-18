@@ -10,7 +10,7 @@ import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class MapSprite extends Tile
 {
-    protected float rotation;
+    public float rotation;
     public Polygon polygon;
     public RotationBox rotationBox;
     public MoveBox moveBox;
