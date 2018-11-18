@@ -219,12 +219,55 @@ public class MapInput implements InputProcessor
                 return false;
             }
         }
+        if(map.selectedObjects.size > 0 && map.selectedObjects.first() instanceof AttachedMapObject)
+        {
+            MoveAttachedObject moveObject = null;
+            for (int i = 0; i < map.selectedObjects.size; i++)
+            {
+                if (map.selectedObjects.get(i).moveBox.contains(coords.x, coords.y))
+                {
+                    moveObject = new MoveAttachedObject(oldXofDragMap, oldYofDragMap);
+                    break;
+                }
+            }
+            if (moveObject != null)
+            {
+                for (int i = 0; i < map.selectedObjects.size; i++)
+                    moveObject.addObject((AttachedMapObject) map.selectedObjects.get(i));
+                map.performAction(moveObject);
+            }
+        }
+        else if(map.selectedObjects.size > 0 && map.selectedObjects.first() instanceof MapObject)
+        {
+            MoveObject moveObject = null;
+            for (int i = 0; i < map.selectedObjects.size; i++)
+            {
+                if (map.selectedObjects.get(i).moveBox.contains(coords.x, coords.y))
+                {
+                    moveObject = new MoveObject(oldXofDragMap, oldYofDragMap);
+                    break;
+                }
+            }
+            if (moveObject != null)
+            {
+                for (int i = 0; i < map.selectedObjects.size; i++)
+                    moveObject.addObject(map.selectedObjects.get(i));
+                map.performAction(moveObject);
+            }
+        }
         for(int i = 0; i < map.selectedObjects.size; i ++)
         {
             if(map.selectedObjects.get(i).moveBox.contains(coords.x, coords.y))
             {
                 // If clicked moveBox with SELECT tool, ignore everything
                 this.draggingMoveBox = true;
+
+                if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
+                {
+                    MapObject mapObject = map.selectedObjects.get(i);
+                    MoveVertice moveVertice = new MoveVertice(mapObject, mapObject.getVerticeX(), mapObject.getVerticeY());
+                    map.performAction(moveVertice);
+                }
 
                 this.oldXofDragMap.clear();
                 this.oldYofDragMap.clear();
@@ -257,6 +300,8 @@ public class MapInput implements InputProcessor
         }
         if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
         {
+            SelectVertice selectVertice = new SelectVertice(map.selectedObjects.first(), map.selectedObjects.first().indexOfSelectedVertice, map.selectedObjects.first().indexOfHoveredVertice);
+            map.performAction(selectVertice);
             map.selectedObjects.first().indexOfSelectedVertice = map.selectedObjects.first().indexOfHoveredVertice;
             map.selectedObjects.first().setPosition(map.selectedObjects.first().polygon.getX(), map.selectedObjects.first().polygon.getY()); // Move the movebox to where the selected vertice is
         }
@@ -541,6 +586,7 @@ public class MapInput implements InputProcessor
                         MapObject mapObject = ((MapObject) map.selectedLayer.tiles.get(i));
                         if (mapObject.polygon.contains(coords.x, coords.y))
                         {
+                            SelectObject selectObject = new SelectObject(map, map.selectedObjects);
                             if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                             {
                                 if(map.selectedObjects.contains(mapObject, true))
@@ -564,6 +610,8 @@ public class MapInput implements InputProcessor
                                 mapObject.select();
                                 map.propertyMenu.rebuild();
                             }
+                            selectObject.addSelected();
+                            map.performAction(selectObject);
                             break;
                         }
                     }
@@ -576,8 +624,6 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
-        this.draggingRotateBox = false;
-        this.draggingMoveBox = false;
         if(map.boxSelect.isDragging && map.selectedLayer != null)
         {
             if(map.selectedLayer instanceof SpriteLayer)
@@ -634,6 +680,35 @@ public class MapInput implements InputProcessor
             map.propertyMenu.rebuild();
             map.boxSelect.isDragging = false;
         }
+        else if(draggingMoveBox && editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT && map.selectedObjects.size == 1)
+        {
+            MoveVertice moveVertice = (MoveVertice) map.undo.pop();
+            moveVertice.addNewVertices(map.selectedObjects.first().getVerticeX(), map.selectedObjects.first().getVerticeY());
+            map.undo.push(moveVertice);
+        }
+        else if(draggingMoveBox && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT && map.selectedObjects.size > 0)
+        {
+            if(map.selectedObjects.first() instanceof AttachedMapObject)
+            {
+                if(map.undo.peek() instanceof MoveAttachedObject)
+                {
+                    MoveAttachedObject moveObject = (MoveAttachedObject) map.undo.pop();
+                    moveObject.addNewPosition();
+                    map.undo.push(moveObject);
+                }
+            }
+            else if(map.selectedObjects.first() instanceof MapObject)
+            {
+                if(map.undo.peek() instanceof MoveObject)
+                {
+                    MoveObject moveObject = (MoveObject) map.undo.pop();
+                    moveObject.addNewPosition();
+                    map.undo.push(moveObject);
+                }
+            }
+        }
+        this.draggingRotateBox = false;
+        this.draggingMoveBox = false;
         return false;
     }
 
@@ -665,7 +740,10 @@ public class MapInput implements InputProcessor
                 map.selectedSprites.get(i).setPosition(this.oldXofDragMap.get(map.selectedSprites.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedSprites.get(i)) + pos.y);
             }
             if(map.selectedObjects.size == 1 && map.selectedObjects.first().indexOfSelectedVertice != -1 && editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
-                map.selectedObjects.first().moveVertice(coords.x, coords.y);
+            {
+                MapObject mapObject = map.selectedObjects.first();
+                mapObject.moveVertice(coords.x, coords.y);
+            }
             else
             {
                 for (int i = 0; i < map.selectedObjects.size; i++)

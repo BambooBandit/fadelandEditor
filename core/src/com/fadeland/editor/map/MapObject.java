@@ -55,6 +55,18 @@ public class MapObject extends Tile
         setPosition(polygon.getX(), polygon.getY());
     }
 
+    public float getVerticeX()
+    {
+        float[] vertices = this.polygon.getVertices();
+        return vertices[indexOfSelectedVertice] + this.polygon.getX();
+    }
+
+    public float getVerticeY()
+    {
+        float[] vertices = this.polygon.getVertices();
+        return vertices[indexOfSelectedVertice + 1] + this.polygon.getY();
+    }
+
     public void draw()
     {
         map.editor.shapeRenderer.polygon(this.polygon.getTransformedVertices());
