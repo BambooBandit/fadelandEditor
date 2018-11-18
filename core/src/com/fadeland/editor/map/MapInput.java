@@ -348,7 +348,7 @@ public class MapInput implements InputProcessor
                 Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
                 if(clickedTile != null)
                 {
-                    map.performAction(new PlaceTile());
+                    map.performAction(new PlaceTile(map));
                     fill(coords.x, coords.y, clickedTile.tool);
                     map.findAllTilesToBeGrouped();
                 }
@@ -361,7 +361,7 @@ public class MapInput implements InputProcessor
                 if(randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
                 {
                     if(clickedTile.tool != randomTile)
-                        map.performAction(new PlaceTile(clickedTile, clickedTile.tool, randomTile));
+                        map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, randomTile));
                     clickedTile.setTool(randomTile);
                 }
                 map.findAllTilesToBeGrouped();
@@ -407,8 +407,8 @@ public class MapInput implements InputProcessor
                     map.selectedTile = null;
                     return false;
                 }
-                if(editor.getTileTools().size > 1)
-                    map.performAction(new PlaceTile());
+                if(editor.getTileTools().size > 1 && editor.getFileTool().tool == Tools.BRUSH)
+                    map.performAction(new PlaceTile(map));
                 for (int i = 0; i < editor.getTileTools().size; i++)
                 {
                     int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
@@ -433,14 +433,14 @@ public class MapInput implements InputProcessor
                             else
                             {
                                 if (clickedTile.tool != editor.getTileTools().get(i))
-                                    map.performAction(new PlaceTile(clickedTile, clickedTile.tool, editor.getTileTools().get(i)));
+                                    map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, editor.getTileTools().get(i)));
                             }
                             clickedTile.setTool(editor.getTileTools().get(i));
                         }
                         else if (editor.getFileTool().tool == Tools.ERASER)
                         {
                             if(clickedTile.tool != null)
-                                map.performAction(new PlaceTile(clickedTile, clickedTile.tool, null));
+                                map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, null));
                             clickedTile.setTool(null);
                         }
                         map.findAllTilesToBeGrouped();
@@ -450,7 +450,9 @@ public class MapInput implements InputProcessor
                 {
                     if(button == Input.Buttons.LEFT) // bind
                     {
-                        map.tileGroups.add(new TileGroup(coords.x, coords.y, editor.getTileTools(), map));
+                        TileGroup tileGroup = new TileGroup(coords.x, coords.y, editor.getTileTools(), map);
+                        map.performAction(new AddOrRemoveTileGroup(map, map.tileGroups, tileGroup, true));
+                        map.tileGroups.add(tileGroup);
                         map.findAllTilesToBeGrouped();
                     }
                     else if(button == Input.Buttons.RIGHT) // unbind
@@ -460,6 +462,8 @@ public class MapInput implements InputProcessor
                         {
                             if(possibleTileGroups.get(i).clickedGroup(coords.x, coords.y))
                             {
+                                for(int k = 0; k < possibleTileGroups.get(i).tileGroups.size; k ++)
+                                    map.performAction(new AddOrRemoveTileGroup(map, map.tileGroups, possibleTileGroups.get(i).tileGroups.get(k), false));
                                 map.tileGroups.removeAll(possibleTileGroups.get(i).tileGroups, true);
                                 map.findAllTilesToBeGrouped();
                                 break;

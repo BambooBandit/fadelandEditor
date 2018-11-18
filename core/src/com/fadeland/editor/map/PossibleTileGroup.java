@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.Utils;
+import com.fadeland.editor.undoredo.PlaceTile;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
 
@@ -92,11 +93,14 @@ public class PossibleTileGroup
         int right = 0;
         int down = tileGroup.height;
 
+        PlaceTile placeTile = new PlaceTile(layer.map);
+
         for(int i = 0; i < tileGroup.boundGroup.size; i ++)
         {
             if(tileGroup.types.get(i) != null)
             {
                 Tile tile = layer.map.getTile(position.x + 1 + (right * tileSize), position.y + - tileSize + (down * tileSize));
+                placeTile.addTile(tile, tile.tool, tileGroup.boundGroup.get(i));
                 tile.setTool(tileGroup.boundGroup.get(i));
             }
             right ++;
@@ -106,5 +110,7 @@ public class PossibleTileGroup
                 down --;
             }
         }
+
+        layer.map.performAction(placeTile);
     }
 }
