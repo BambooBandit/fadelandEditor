@@ -115,6 +115,11 @@ public class PropertyPanel extends Group
             Array<PropertyField> properties = map.tileMenu.selectedTiles.get(i).properties;
             properties.removeValue(propertyField, false);
         }
+        for(int i = 0; i < map.selectedObjects.size; i ++)
+        {
+            Array<PropertyField> properties = map.selectedObjects.get(i).properties;
+            properties.removeValue(propertyField, false);
+        }
     }
 
     /** Rebuilds the table to remove gaps when removing properties. */
