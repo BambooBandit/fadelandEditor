@@ -360,8 +360,7 @@ public class MapInput implements InputProcessor
                 TileTool randomTile = randomTile();
                 if(randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
                 {
-                    if(clickedTile.tool != randomTile)
-                        map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, randomTile));
+                    map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, randomTile));
                     clickedTile.setTool(randomTile);
                 }
                 map.findAllTilesToBeGrouped();
@@ -431,16 +430,12 @@ public class MapInput implements InputProcessor
                                 map.undo.push(placeTile);
                             }
                             else
-                            {
-                                if (clickedTile.tool != editor.getTileTools().get(i))
-                                    map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, editor.getTileTools().get(i)));
-                            }
+                                map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, editor.getTileTools().get(i)));
                             clickedTile.setTool(editor.getTileTools().get(i));
                         }
                         else if (editor.getFileTool().tool == Tools.ERASER)
                         {
-                            if(clickedTile.tool != null)
-                                map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, null));
+                            map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, null));
                             clickedTile.setTool(null);
                         }
                         map.findAllTilesToBeGrouped();
@@ -756,6 +751,12 @@ public class MapInput implements InputProcessor
             RotateSprite rotateSprite = (RotateSprite) map.undo.pop();
             rotateSprite.addNewRotation();
             map.undo.push(rotateSprite);
+        }
+        if(map.undo.peek() instanceof PlaceTile)
+        {
+            PlaceTile placeTile = (PlaceTile) map.undo.pop();
+            if(placeTile.changed())
+                map.undo.push(placeTile);
         }
         this.draggingRotateBox = false;
         this.draggingMoveBox = false;

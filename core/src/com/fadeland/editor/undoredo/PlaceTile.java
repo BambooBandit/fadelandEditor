@@ -76,4 +76,22 @@ public class PlaceTile implements Action
             this.tile.setTool(newTileTool);
         this.tileMap.findAllTilesToBeGrouped();
     }
+
+    public boolean changed()
+    {
+        if(tile != null)
+        {
+            if (oldTileTool != newTileTool)
+                return true;
+        }
+        else
+        {
+            for (int i = 0; i < tiles.size; i++)
+            {
+                if (oldTileTools.get(i) != newTileTools.get(i))
+                    return true;
+            }
+        }
+        return false;
+    }
 }
