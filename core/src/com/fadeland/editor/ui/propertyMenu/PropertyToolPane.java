@@ -1,12 +1,12 @@
 package com.fadeland.editor.ui.propertyMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.toolHeight;
 
@@ -19,6 +19,7 @@ public class PropertyToolPane extends Group
     private FadelandEditor editor;
 
     private PropertyTool newProperty;
+    private TextButton apply;
 
     public PropertyMenu menu;
 
@@ -27,8 +28,11 @@ public class PropertyToolPane extends Group
         this.menu = menu;
         this.toolTable = new Table();
         this.newProperty = new PropertyTool(PropertyTools.NEW, this, skin);
+        this.apply = new TextButton("Apply", skin);
+        setApplyListener();
         this.toolTable.left();
         this.toolTable.add(this.newProperty).padRight(1);
+        this.toolTable.add(this.apply);
 
         this.editor = editor;
         this.skin = skin;
@@ -49,10 +53,46 @@ public class PropertyToolPane extends Group
 
         // Resize all buttons in the pane
         this.toolTable.getCell(this.newProperty).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.apply).size(toolHeight * 2, toolHeight);
         this.toolTable.invalidateHierarchy();
 
         this.pane.invalidateHierarchy();
 
         super.setSize(width, height);
+    }
+
+    public void setApplyListener()
+    {
+        this.apply.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                for(int i = 0; i < menu.map.tileMenu.tileTable.getChildren().size; i ++)
+                {
+                    TileTool tileTool = (TileTool) menu.map.tileMenu.tileTable.getChildren().get(i);
+                    PropertyField propertyField = tileTool.getPropertyField("top");
+                    if(propertyField == null)
+                    {
+                        tileTool.setTopSprite("");
+                        continue;
+                    }
+                    String topValue = propertyField.value.getText();
+                    tileTool.setTopSprite(topValue);
+                }
+                for(int i = 0; i < menu.map.tileMenu.spriteTable.getChildren().size; i ++)
+                {
+                    TileTool tileTool = (TileTool) menu.map.tileMenu.spriteTable.getChildren().get(i);
+                    PropertyField propertyField = tileTool.getPropertyField("top");
+                    if(propertyField == null)
+                    {
+                        tileTool.setTopSprite("");
+                        continue;
+                    }
+                    String topValue = propertyField.value.getText();
+                    tileTool.setTopSprite(topValue);
+                }
+            }
+        });
     }
 }

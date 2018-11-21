@@ -51,6 +51,12 @@ public class MapSprite extends Tile
     public void draw()
     {
         sprite.draw(map.editor.batch);
+        if(tool.topSprite != null)
+        {
+            tool.topSprite.setPosition(sprite.getX(), sprite.getY());
+            tool.topSprite.setRotation(sprite.getRotation());
+            tool.topSprite.draw(map.editor.batch);
+        }
     }
 
     public void drawRotationBox()
@@ -74,6 +80,8 @@ public class MapSprite extends Tile
         this.rotation = degree;
         this.sprite.setRotation(degree);
         this.polygon.setRotation(degree);
+        if(this.tool.topSprite != null)
+            this.tool.topSprite.setRotation(degree);
         for(int i = 0; i < tool.mapObjects.size; i ++)
             tool.mapObjects.get(i).polygon.setRotation(degree);
 
@@ -95,6 +103,8 @@ public class MapSprite extends Tile
         setPosition(endPos.x, endPos.y);
         this.sprite.rotate(degree);
         this.polygon.rotate(degree);
+        if(this.tool.topSprite != null)
+            this.tool.topSprite.rotate(degree);
         for(int i = 0; i < tool.mapObjects.size; i ++)
             tool.mapObjects.get(i).polygon.rotate(degree);
 

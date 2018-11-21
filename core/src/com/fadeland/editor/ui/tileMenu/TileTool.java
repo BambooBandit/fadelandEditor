@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.AttachedMapObject;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 
@@ -22,6 +23,7 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
     public TextureRegion textureRegion;
 
     public Sprite previewSprite;
+    public Sprite topSprite;
 
     public TileTool(TileMenuTools tool, Image image, TextureRegion textureRegion, int id, int x, int y, TileMenuToolPane tileMenuToolPane, Skin skin)
     {
@@ -82,5 +84,21 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
                 return this.properties.get(i);
         }
         return null;
+    }
+
+    public void setTopSprite(String topSpriteName)
+    {
+        // TODO set this once with an apply button, not per type
+        TextureRegion textureRegion = GameAssets.getTextureRegion(topSpriteName);
+        if(textureRegion == null)
+        {
+            this.topSprite = null;
+            return;
+        }
+        if(this.topSprite == null)
+            this.topSprite = new Sprite(textureRegion);
+        else
+            this.topSprite.setRegion(textureRegion);
+        System.out.println("yay");
     }
 }

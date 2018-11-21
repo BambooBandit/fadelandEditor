@@ -1,34 +1,48 @@
 
 map.png
-size: 1024,512
+size: 2048,512
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 boulder
   rotate: false
-  xy: 563, 282
-  size: 215, 183
+  xy: 606, 2
+  size: 300, 300
   orig: 300, 300
-  offset: 37, 42
+  offset: 0, 0
   index: -1
 grass
   rotate: false
-  xy: 2, 181
-  size: 278, 284
+  xy: 908, 2
+  size: 300, 300
   orig: 300, 300
-  offset: 7, 2
+  offset: 0, 0
   index: -1
 log
   rotate: false
   xy: 2, 2
-  size: 272, 177
+  size: 300, 300
   orig: 300, 300
-  offset: 19, 42
+  offset: 0, 0
   index: -1
 puddle
   rotate: false
-  xy: 282, 224
-  size: 279, 241
+  xy: 1512, 2
+  size: 300, 300
   orig: 300, 300
-  offset: 17, 31
+  offset: 0, 0
+  index: -1
+tree
+  rotate: false
+  xy: 304, 2
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+treetop
+  rotate: false
+  xy: 1210, 2
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
   index: -1
