@@ -88,7 +88,6 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
 
     public void setTopSprite(String topSpriteName)
     {
-        // TODO set this once with an apply button, not per type
         TextureRegion textureRegion = GameAssets.getTextureRegion(topSpriteName);
         if(textureRegion == null)
         {
@@ -99,6 +98,5 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
             this.topSprite = new Sprite(textureRegion);
         else
             this.topSprite.setRegion(textureRegion);
-        System.out.println("yay");
     }
 }
