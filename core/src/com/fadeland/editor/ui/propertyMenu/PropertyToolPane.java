@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.map.MapObject;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.toolHeight;
@@ -68,29 +69,49 @@ public class PropertyToolPane extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                // map tiles
                 for(int i = 0; i < menu.map.tileMenu.tileTable.getChildren().size; i ++)
                 {
                     TileTool tileTool = (TileTool) menu.map.tileMenu.tileTable.getChildren().get(i);
-                    PropertyField propertyField = tileTool.getPropertyField("top");
-                    if(propertyField == null)
+                    // top
+                    PropertyField topProperty = tileTool.getPropertyField("top");
+                    if(topProperty == null)
                     {
                         tileTool.setTopSprite("");
                         continue;
                     }
-                    String topValue = propertyField.value.getText();
+                    String topValue = topProperty.value.getText();
                     tileTool.setTopSprite(topValue);
                 }
+                // map sprites
                 for(int i = 0; i < menu.map.tileMenu.spriteTable.getChildren().size; i ++)
                 {
                     TileTool tileTool = (TileTool) menu.map.tileMenu.spriteTable.getChildren().get(i);
-                    PropertyField propertyField = tileTool.getPropertyField("top");
-                    if(propertyField == null)
+                    // top
+                    PropertyField topProperty = tileTool.getPropertyField("top");
+                    if(topProperty == null)
                     {
                         tileTool.setTopSprite("");
                         continue;
                     }
-                    String topValue = propertyField.value.getText();
+                    String topValue = topProperty.value.getText();
                     tileTool.setTopSprite(topValue);
+                }
+                // map objects
+                for(int i = 0; i < menu.map.layers.size; i ++)
+                {
+                    for(int k = 0; k < menu.map.layers.get(i).tiles.size; k ++)
+                    {
+                        MapObject mapObject = (MapObject) menu.map.layers.get(i).tiles.get(k);
+                        // blocked
+                        PropertyField blockedProperty = mapObject.getPropertyField("blocked");
+                        if(blockedProperty == null)
+                        {
+                            mapObject.removeBody();
+                            continue;
+                        }
+                        mapObject.createBody();
+                    }
                 }
             }
         });

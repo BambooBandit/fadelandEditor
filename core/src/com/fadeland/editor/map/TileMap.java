@@ -7,7 +7,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -63,6 +66,9 @@ public class TileMap implements Screen
     public Stack<Action> undo;
     public Stack<Action> redo;
 
+    public World world;
+    public Box2DDebugRenderer b2dr;
+
     public TileMap(FadelandEditor editor, String name)
     {
         this.editor = editor;
@@ -105,6 +111,7 @@ public class TileMap implements Screen
         this.mapWidth = propertyMenu.mapPropertyPanel.mapWidth;
         this.mapHeight = propertyMenu.mapPropertyPanel.mapHeight;
 
+        this.world = new World(new Vector2(0, 0), false);
     }
 
     @Override
@@ -122,6 +129,9 @@ public class TileMap implements Screen
     {
         Gdx.gl.glClearColor(r, g, b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        this.world.step(delta, 1, 1);
+        b2dr = new Box2DDebugRenderer();
 
         this.camera.update();
         this.editor.batch.setProjectionMatrix(camera.combined);
@@ -437,6 +447,7 @@ public class TileMap implements Screen
                 mapObject.setPosition(selectedSprites.first().position.x + mapObject.positionOffset.x, selectedSprites.first().position.y + mapObject.positionOffset.y);
             }
         }
+        b2dr.render(this.world, camera.combined);
     }
 
     @Override

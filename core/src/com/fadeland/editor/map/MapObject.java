@@ -1,6 +1,10 @@
 package com.fadeland.editor.map;
 
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
@@ -17,6 +21,8 @@ public class MapObject extends Tile
 
     public int indexOfSelectedVertice = -1; // x index. y is + 1
     public int indexOfHoveredVertice = -1; // x index. y is + 1
+
+    public Body body = null;
 
     public FloatArray vertices;
 
@@ -40,6 +46,8 @@ public class MapObject extends Tile
     {
         super.setPosition(x, y);
         this.polygon.setPosition(x, y);
+        if(this.body != null)
+            this.body.setTransform(this.position, 0);
         if(indexOfSelectedVertice != -1)
             this.moveBox.setPosition(polygon.getTransformedVertices()[indexOfSelectedVertice], polygon.getTransformedVertices()[indexOfSelectedVertice + 1]);
         else
@@ -51,6 +59,11 @@ public class MapObject extends Tile
         float[] vertices = this.polygon.getVertices();
         vertices[indexOfSelectedVertice] = x - this.polygon.getX();
         vertices[indexOfSelectedVertice + 1] = y - this.polygon.getY();
+        if(this.body != null)
+        {
+            removeBody();
+            createBody();
+        }
         this.polygon.setVertices(vertices);
         setPosition(polygon.getX(), polygon.getY());
     }
@@ -88,6 +101,16 @@ public class MapObject extends Tile
     {
         if(selected)
             moveBox.sprite.draw(map.editor.batch);
+    }
+
+    public PropertyField getPropertyField(String propertyName)
+    {
+        for(int i = 0; i < this.properties.size; i ++)
+        {
+            if(this.properties.get(i).getProperty().equals(propertyName))
+                return this.properties.get(i);
+        }
+        return null;
     }
 
 //    public void setRotation(float degree)
@@ -132,5 +155,33 @@ public class MapObject extends Tile
     public void unselect()
     {
         this.selected = false;
+    }
+
+    public void removeBody()
+    {
+        if(this.body != null)
+        {
+            this.map.world.destroyBody(this.body);
+            this.body = null;
+        }
+    }
+
+    public void createBody()
+    {
+        if(this.body == null)
+        {
+            BodyDef bodyDef = new BodyDef();
+            bodyDef.position.set(this.position);
+            PolygonShape shape = new PolygonShape();
+            float[] vertices = this.polygon.getVertices();
+            shape.set(vertices);
+            FixtureDef fixtureDef = new FixtureDef();
+            fixtureDef.shape = shape;
+            fixtureDef.friction = 0;
+            fixtureDef.filter.categoryBits = PhysicsBits.WORLD_PHYSICS;
+            fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
+            this.body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
+            this.body.setTransform(this.position, 0);
+        }
     }
 }
