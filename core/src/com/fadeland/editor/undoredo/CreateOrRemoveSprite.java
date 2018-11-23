@@ -44,7 +44,6 @@ public class CreateOrRemoveSprite implements Action
             this.selection.addAll(oldSelection);
         }
         this.map.propertyMenu.rebuild();
-        System.out.println("undo");
         PropertyToolPane.updateLightsAndBlocked(map);
     }
 
@@ -59,7 +58,6 @@ public class CreateOrRemoveSprite implements Action
             this.selection.addAll(newSelection);
         }
         this.map.propertyMenu.rebuild();
-        System.out.println("redo");
         PropertyToolPane.updateLightsAndBlocked(map);
     }
 }
