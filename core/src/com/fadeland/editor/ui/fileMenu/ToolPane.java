@@ -26,6 +26,7 @@ public class ToolPane extends Group
     private Tool fill;
     private Tool bind;
     private Tool stamp;
+    private Tool drawPoint;
     private Tool drawObject;
     private Tool objectVerticeSelect;
     private Tool boxSelect;
@@ -47,6 +48,7 @@ public class ToolPane extends Group
         this.fill = new Tool(Tools.FILL, this, skin, false);
         this.bind = new Tool(Tools.BIND, this, skin, false);
         this.stamp = new Tool(Tools.STAMP, this, skin, false);
+        this.drawPoint = new Tool(Tools.DRAWPOINT, this, skin, false);
         this.drawObject = new Tool(Tools.DRAWOBJECT, this, skin, false);
         this.objectVerticeSelect = new Tool(Tools.OBJECTVERTICESELECT, this, skin, false);
         this.boxSelect = new Tool(Tools.BOXSELECT, this, skin, false);
@@ -65,6 +67,7 @@ public class ToolPane extends Group
         this.toolTable.add(this.fill).padRight(1);
         this.toolTable.add(this.bind).padRight(1);
         this.toolTable.add(this.stamp).padRight(1);
+        this.toolTable.add(this.drawPoint).padRight(1);
         this.toolTable.add(this.drawObject).padRight(1);
         this.toolTable.add(this.objectVerticeSelect).padRight(1);
         this.toolTable.add(this.boxSelect).padRight(1);
@@ -100,6 +103,7 @@ public class ToolPane extends Group
         this.toolTable.getCell(this.fill).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.bind).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.stamp).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.drawPoint).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.drawObject).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.objectVerticeSelect).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.boxSelect).size(toolHeight, toolHeight);

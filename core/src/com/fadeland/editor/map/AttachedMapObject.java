@@ -12,4 +12,10 @@ public class AttachedMapObject extends MapObject
         polygon.setOrigin((-xOffset) + width / 2, (-yOffset) + height / 2);
         this.positionOffset = new Vector2(xOffset, yOffset);
     }
+
+    public AttachedMapObject(TileMap map, float xOffset, float yOffset, float width, float height, float x, float y)
+    {
+        super(map, x, y);
+        this.positionOffset = new Vector2(xOffset, yOffset);
+    }
 }

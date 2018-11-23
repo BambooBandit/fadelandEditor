@@ -209,7 +209,7 @@ public class TileMap implements Screen
                 {
                     MapObject mapObject = ((MapObject) selectedLayer.tiles.get(i));
                     boolean selected = selectedObjects.contains(mapObject, true);
-                    boolean hoveredOver = mapObject.polygon.contains(mouseCoords.x, mouseCoords.y);
+                    boolean hoveredOver = mapObject.isHoveredOver(mouseCoords.x, mouseCoords.y);
                     if (selected && editor.getFileTool().tool == Tools.BOXSELECT)
                     {
                         this.editor.shapeRenderer.setColor(Color.GREEN);
@@ -269,7 +269,7 @@ public class TileMap implements Screen
                 AttachedMapObject mapObject = selectedTile.tool.mapObjects.get(k);
                 boolean selected = selectedObjects.contains(mapObject, true);
                 mapObject.setPosition(selectedTile.position.x + mapObject.positionOffset.x, selectedTile.position.y + mapObject.positionOffset.y);
-                boolean hoveredOver = mapObject.polygon.contains(mouseCoords.x, mouseCoords.y);
+                boolean hoveredOver = mapObject.isHoveredOver(mouseCoords.x, mouseCoords.y);
                 if (hoveredOver || selected)
                 {
                     if (selected && hoveredOver)

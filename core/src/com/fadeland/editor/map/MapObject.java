@@ -14,6 +14,7 @@ public class MapObject extends Tile
 {
 //    protected float rotation;
     public Polygon polygon;
+    public static float[] pointShape = new float[10];
 //    public RotationBox rotationBox;
     public MoveBox moveBox;
     private boolean selected;
@@ -26,9 +27,12 @@ public class MapObject extends Tile
 
     public FloatArray vertices;
 
+    public boolean isPoint;
+
+    // Polygon
     public MapObject(TileMap map, FloatArray vertices, float x, float y)
     {
-        super(map, vertices, x, y);
+        super(map, x, y);
         this.vertices = vertices;
         this.properties = new Array<>();
         this.polygon = new Polygon(vertices.toArray());
@@ -36,6 +40,18 @@ public class MapObject extends Tile
         this.position.set(x, y);
         this.moveBox = new MoveBox(this, map);
         this.moveBox.setPosition(x, y);
+        this.isPoint = false;
+    }
+
+    // Point
+    public MapObject(TileMap map, float x, float y)
+    {
+        super(map, x, y);
+        this.properties = new Array<>();
+        this.position.set(x, y);
+        this.moveBox = new MoveBox(this, map);
+        this.moveBox.setPosition(x, y);
+        this.isPoint = true;
     }
 
     @Override
@@ -45,9 +61,12 @@ public class MapObject extends Tile
     public void setPosition(float x, float y)
     {
         super.setPosition(x, y);
-        this.polygon.setPosition(x, y);
-        if(this.body != null)
-            this.body.setTransform(this.position, 0);
+        if(!isPoint)
+        {
+            this.polygon.setPosition(x, y);
+            if (this.body != null)
+                this.body.setTransform(this.position, 0);
+        }
         if(indexOfSelectedVertice != -1)
             this.moveBox.setPosition(polygon.getTransformedVertices()[indexOfSelectedVertice], polygon.getTransformedVertices()[indexOfSelectedVertice + 1]);
         else
@@ -82,7 +101,22 @@ public class MapObject extends Tile
 
     public void draw()
     {
-        map.editor.shapeRenderer.polygon(this.polygon.getTransformedVertices());
+        if(isPoint)
+        {
+            pointShape[0] = position.x + 0;
+            pointShape[1] = position.y + 0;
+            pointShape[2] = position.x - 4;
+            pointShape[3] = position.y + 8;
+            pointShape[4] = position.x - 1;
+            pointShape[5] = position.y + 11;
+            pointShape[6] = position.x + 1;
+            pointShape[7] = position.y + 11;
+            pointShape[8] = position.x + 4;
+            pointShape[9] = position.y + 8;
+            map.editor.shapeRenderer.polygon(pointShape);
+        }
+        else
+            map.editor.shapeRenderer.polygon(this.polygon.getTransformedVertices());
     }
 
     public void drawSelectedVertices()
@@ -182,6 +216,18 @@ public class MapObject extends Tile
             fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
             this.body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
             this.body.setTransform(this.position, 0);
+            shape.dispose();
         }
+    }
+
+    public boolean isHoveredOver(float x, float y)
+    {
+        if(isPoint)
+        {
+            double distance = Math.sqrt(Math.pow((x - position.x), 2) + Math.pow((y - position.y), 2));
+            return distance <= 15;
+        }
+        else
+            return this.polygon.contains(x, y);
     }
 }

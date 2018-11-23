@@ -160,6 +160,36 @@ public class MapInput implements InputProcessor
             objectVertices.clear();
             return false;
         }
+        else if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.DRAWPOINT)
+        {
+            MapObject mapObject;
+            if(map.selectedLayer instanceof ObjectLayer)
+            {
+                CreateOrRemoveObject createOrRemoveObject = new CreateOrRemoveObject(map, map.selectedLayer.tiles, null);
+                mapObject = new MapObject(map, coords.x, coords.y);
+                ((ObjectLayer) map.selectedLayer).tiles.add(mapObject);
+                createOrRemoveObject.addObjects();
+                map.performAction(createOrRemoveObject);
+            }
+            else if(map.selectedLayer instanceof SpriteLayer)
+            {
+                CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
+                MapSprite mapSprite = map.selectedSprites.first();
+                mapObject = new AttachedMapObject(map, coords.x - mapSprite.position.x, coords.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), coords.x, coords.y);
+                mapSprite.addMapObject((AttachedMapObject) mapObject);
+                createOrRemoveAttachedObject.addAttachedObjects();
+                map.performAction(createOrRemoveAttachedObject);
+            }
+            else if(map.selectedLayer instanceof TileLayer)
+            {
+                CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
+                Tile selectedTile = map.selectedTile;
+                mapObject = new AttachedMapObject(map, coords.x - selectedTile.position.x, coords.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), coords.x, coords.y);
+                selectedTile.addMapObject((AttachedMapObject) mapObject);
+                createOrRemoveAttachedObject.addAttachedObjects();
+                map.performAction(createOrRemoveAttachedObject);
+            }
+        }
         if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT && (map.selectedLayer instanceof SpriteLayer || map.selectedLayer instanceof ObjectLayer))
         {
             map.boxSelect.startDrag(coords.x, coords.y);
@@ -335,7 +365,7 @@ public class MapInput implements InputProcessor
                 return false;
             }
         }
-        if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
+        if(editor.getFileTool() != null && map.selectedObjects.size == 1 && !map.selectedObjects.first().isPoint && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
         {
             SelectVertice selectVertice = new SelectVertice(map.selectedObjects.first(), map.selectedObjects.first().indexOfSelectedVertice, map.selectedObjects.first().indexOfHoveredVertice);
             map.performAction(selectVertice);
@@ -375,7 +405,7 @@ public class MapInput implements InputProcessor
                     for(int k = 0; k < map.selectedTile.tool.mapObjects.size; k ++)
                     {
                         AttachedMapObject attachedMapObject = map.selectedTile.tool.mapObjects.get(k);
-                        if (attachedMapObject.polygon.contains(coords.x, coords.y))
+                        if (attachedMapObject.isHoveredOver(coords.x, coords.y))
                         {
                             if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                             {
@@ -406,6 +436,8 @@ public class MapInput implements InputProcessor
                 }
                 if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                 {
+                    if(map.selectedTile != null)
+                        map.performAction(new SelectTile(map, map.selectedTile, null));
                     map.selectedTile = null;
                     return false;
                 }
@@ -419,7 +451,11 @@ public class MapInput implements InputProcessor
                     if(editor.getTileTools().size == 1 && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT)
                     {
                         if(clickedTile != null && clickedTile.tool != null)
+                        {
+                            if(map.selectedTile != clickedTile)
+                                map.performAction(new SelectTile(map, map.selectedTile, clickedTile));
                             map.selectedTile = clickedTile;
+                        }
                         break;
                     }
                     if (editor.getFileTool() != null && clickedTile != null)
@@ -620,7 +656,7 @@ public class MapInput implements InputProcessor
                     for (int i = map.selectedLayer.tiles.size - 1; i >= 0; i--)
                     {
                         MapObject mapObject = ((MapObject) map.selectedLayer.tiles.get(i));
-                        if (mapObject.polygon.contains(coords.x, coords.y))
+                        if (mapObject.isHoveredOver(coords.x, coords.y))
                         {
                             SelectObject selectObject = new SelectObject(map, map.selectedObjects);
                             if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
@@ -920,16 +956,18 @@ public class MapInput implements InputProcessor
         }
         if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
         {
-            for(int i = 0; i < map.selectedObjects.first().polygon.getTransformedVertices().length; i += 2)
+            if(!map.selectedObjects.first().isPoint)
             {
-                double distance = Math.sqrt(Math.pow((coords.x - map.selectedObjects.first().polygon.getTransformedVertices()[i]), 2) + Math.pow((coords.y - map.selectedObjects.first().polygon.getTransformedVertices()[i + 1]), 2));
-                if(distance <= 15)
+                for (int i = 0; i < map.selectedObjects.first().polygon.getTransformedVertices().length; i += 2)
                 {
-                    map.selectedObjects.first().indexOfHoveredVertice = i;
-                    break;
+                    double distance = Math.sqrt(Math.pow((coords.x - map.selectedObjects.first().polygon.getTransformedVertices()[i]), 2) + Math.pow((coords.y - map.selectedObjects.first().polygon.getTransformedVertices()[i + 1]), 2));
+                    if (distance <= 15)
+                    {
+                        map.selectedObjects.first().indexOfHoveredVertice = i;
+                        break;
+                    } else
+                        map.selectedObjects.first().indexOfHoveredVertice = -1;
                 }
-                else
-                    map.selectedObjects.first().indexOfHoveredVertice = -1;
             }
         }
         return false;

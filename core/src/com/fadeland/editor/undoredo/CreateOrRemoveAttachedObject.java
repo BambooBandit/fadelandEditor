@@ -26,7 +26,12 @@ public class CreateOrRemoveAttachedObject implements Action
 
         this.oldParents = new Array<>(mapParents.size);
         for(int i = 0; i < mapParents.size; i ++)
-            oldParents.add(new Array<>(mapParents.get(i).tool.mapObjects));
+        {
+            if(mapParents.get(i).tool != null)
+                oldParents.add(new Array<>(mapParents.get(i).tool.mapObjects));
+            else
+                oldParents.add(null);
+        }
     }
 
     public void addAttachedObjects()
@@ -36,7 +41,12 @@ public class CreateOrRemoveAttachedObject implements Action
 
         this.newParents = new Array<>(mapParents.size);
         for(int i = 0; i < mapParents.size; i ++)
-            newParents.add(new Array<>(mapParents.get(i).tool.mapObjects));
+        {
+            if(mapParents.get(i).tool != null)
+                newParents.add(new Array<>(mapParents.get(i).tool.mapObjects));
+            else
+                newParents.add(null);
+        }
     }
 
     @Override
@@ -44,8 +54,11 @@ public class CreateOrRemoveAttachedObject implements Action
     {
         for(int i = 0; i < mapParents.size; i ++)
         {
-            mapParents.get(i).tool.mapObjects.clear();
-            mapParents.get(i).tool.mapObjects.addAll(oldParents.get(i));
+            if(mapParents.get(i).tool != null)
+            {
+                mapParents.get(i).tool.mapObjects.clear();
+                mapParents.get(i).tool.mapObjects.addAll(oldParents.get(i));
+            }
         }
         if(this.selection != null)
         {
@@ -60,8 +73,11 @@ public class CreateOrRemoveAttachedObject implements Action
     {
         for(int i = 0; i < mapParents.size; i ++)
         {
-            mapParents.get(i).tool.mapObjects.clear();
-            mapParents.get(i).tool.mapObjects.addAll(newParents.get(i));
+            if(mapParents.get(i).tool != null)
+            {
+                mapParents.get(i).tool.mapObjects.clear();
+                mapParents.get(i).tool.mapObjects.addAll(newParents.get(i));
+            }
         }
         if(this.selection != null)
         {
