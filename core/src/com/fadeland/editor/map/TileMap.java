@@ -1,5 +1,6 @@
 package com.fadeland.editor.map;
 
+import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -68,6 +69,7 @@ public class TileMap implements Screen
 
     public World world;
     public Box2DDebugRenderer b2dr;
+    public RayHandler rayHandler;
 
     public TileMap(FadelandEditor editor, String name)
     {
@@ -112,6 +114,8 @@ public class TileMap implements Screen
         this.mapHeight = propertyMenu.mapPropertyPanel.mapHeight;
 
         this.world = new World(new Vector2(0, 0), false);
+        this.rayHandler = new RayHandler(this.world);
+        this.rayHandler.setAmbientLight(.9f);
     }
 
     @Override
@@ -149,6 +153,10 @@ public class TileMap implements Screen
                     this.layers.get(i).draw();
             }
         }
+        this.editor.batch.end();
+        this.rayHandler.setCombinedMatrix(camera);
+        this.rayHandler.updateAndRender();
+        this.editor.batch.begin();
         for(int i = 0; i < this.selectedSprites.size; i ++)
         {
             this.selectedSprites.get(i).drawRotationBox();
@@ -325,7 +333,7 @@ public class TileMap implements Screen
                     AttachedMapObject mapObject = mapSprite.tool.mapObjects.get(k);
                     boolean selected = selectedObjects.contains(mapObject, true);
                     mapObject.setPosition(mapSprite.position.x + mapObject.positionOffset.x, mapSprite.position.y + mapObject.positionOffset.y);
-                    boolean hoveredOver = mapObject.polygon.contains(mouseCoords.x, mouseCoords.y);
+                    boolean hoveredOver = mapObject.isHoveredOver(mouseCoords.x, mouseCoords.y);
                     if (selected && editor.getFileTool().tool == Tools.BOXSELECT)
                     {
                         this.editor.shapeRenderer.setColor(Color.GREEN);

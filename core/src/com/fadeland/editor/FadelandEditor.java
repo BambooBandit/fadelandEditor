@@ -72,9 +72,6 @@ public class FadelandEditor extends Game
 		else // Render the active map
 			super.render();
 
-		this.batch.begin();
-		this.batch.end();
-
 		stage.act();
         stage.draw();
 	}

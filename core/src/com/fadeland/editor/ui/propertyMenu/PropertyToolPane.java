@@ -9,6 +9,7 @@ import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.AttachedMapObject;
 import com.fadeland.editor.map.MapObject;
 import com.fadeland.editor.map.ObjectLayer;
+import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.toolHeight;
@@ -84,20 +85,6 @@ public class PropertyToolPane extends Group
                         String topValue = topProperty.value.getText();
                         tileTool.setTopSprite(topValue);
                     }
-
-                    // attached map objects
-                    for(int k = 0; k < tileTool.mapObjects.size; k ++)
-                    {
-                        AttachedMapObject attachedMapObject = tileTool.mapObjects.get(k);
-                        // blocked
-                        PropertyField blockedProperty = attachedMapObject.getPropertyField("blocked");
-                        if (blockedProperty == null)
-                        {
-                            attachedMapObject.removeBody();
-                            continue;
-                        }
-                        attachedMapObject.createBody();
-                    }
                 }
                 // map sprites
                 for(int i = 0; i < menu.map.tileMenu.spriteTable.getChildren().size; i ++)
@@ -112,41 +99,112 @@ public class PropertyToolPane extends Group
                         String topValue = topProperty.value.getText();
                         tileTool.setTopSprite(topValue);
                     }
+                }
+                updateLightsAndBlocked(menu.map);
+            }
+        });
+    }
 
-                    // attached map objects
-                    for(int k = 0; k < tileTool.mapObjects.size; k ++)
+    public static void updateLightsAndBlocked(TileMap map)
+    {
+        // map tiles
+        for(int i = 0; i < map.tileMenu.tileTable.getChildren().size; i ++)
+        {
+            TileTool tileTool = (TileTool) map.tileMenu.tileTable.getChildren().get(i);
+
+            // attached map objects
+            for(int k = 0; k < tileTool.mapObjects.size; k ++)
+            {
+                AttachedMapObject attachedMapObject = tileTool.mapObjects.get(k);
+                if(!attachedMapObject.isPoint)
+                {
+                    // blocked
+                    PropertyField blockedProperty = attachedMapObject.getPropertyField("blocked");
+                    if (blockedProperty == null)
                     {
-                        AttachedMapObject attachedMapObject = tileTool.mapObjects.get(k);
+                        attachedMapObject.removeBody();
+                        continue;
+                    }
+                    attachedMapObject.createBody();
+                }
+                else
+                {
+                    // light
+                    PropertyField lightProperty = attachedMapObject.getPropertyField("light");
+                    if (lightProperty == null)
+                    {
+                        attachedMapObject.removeLight();
+                        continue;
+                    }
+                    attachedMapObject.createLight();
+                }
+            }
+        }
+        // map sprites
+        for(int i = 0; i < map.tileMenu.spriteTable.getChildren().size; i ++)
+        {
+            TileTool tileTool = (TileTool) map.tileMenu.spriteTable.getChildren().get(i);
+
+            // attached map objects
+            for(int k = 0; k < tileTool.mapObjects.size; k ++)
+            {
+                AttachedMapObject attachedMapObject = tileTool.mapObjects.get(k);
+                if(!attachedMapObject.isPoint)
+                {
+                    // blocked
+                    PropertyField blockedProperty = attachedMapObject.getPropertyField("blocked");
+                    if (blockedProperty == null)
+                    {
+                        attachedMapObject.removeBody();
+                        continue;
+                    }
+                    attachedMapObject.createBody();
+                }
+                else
+                {
+                    // light
+                    PropertyField lightProperty = attachedMapObject.getPropertyField("light");
+                    if (lightProperty == null)
+                    {
+                        attachedMapObject.removeLight();
+                        continue;
+                    }
+                    attachedMapObject.createLight();
+                }
+            }
+        }
+        // map objects
+        for(int i = 0; i < map.layers.size; i ++)
+        {
+            if(map.layers.get(i) instanceof ObjectLayer)
+            {
+                for (int k = 0; k < map.layers.get(i).tiles.size; k++)
+                {
+                    MapObject mapObject = (MapObject) map.layers.get(i).tiles.get(k);
+                    if(!mapObject.isPoint)
+                    {
                         // blocked
-                        PropertyField blockedProperty = attachedMapObject.getPropertyField("blocked");
+                        PropertyField blockedProperty = mapObject.getPropertyField("blocked");
                         if (blockedProperty == null)
                         {
-                            attachedMapObject.removeBody();
+                            mapObject.removeBody();
                             continue;
                         }
-                        attachedMapObject.createBody();
+                        mapObject.createBody();
                     }
-                }
-                // map objects
-                for(int i = 0; i < menu.map.layers.size; i ++)
-                {
-                    if(menu.map.layers.get(i) instanceof ObjectLayer)
+                    else
                     {
-                        for (int k = 0; k < menu.map.layers.get(i).tiles.size; k++)
+                        // light
+                        PropertyField lightProperty = mapObject.getPropertyField("light");
+                        if (lightProperty == null)
                         {
-                            MapObject mapObject = (MapObject) menu.map.layers.get(i).tiles.get(k);
-                            // blocked
-                            PropertyField blockedProperty = mapObject.getPropertyField("blocked");
-                            if (blockedProperty == null)
-                            {
-                                mapObject.removeBody();
-                                continue;
-                            }
-                            mapObject.createBody();
+                            mapObject.removeLight();
+                            continue;
                         }
+                        mapObject.createLight();
                     }
                 }
             }
-        });
+        }
     }
 }

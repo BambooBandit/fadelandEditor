@@ -5,6 +5,7 @@ import com.fadeland.editor.map.AttachedMapObject;
 import com.fadeland.editor.map.MapObject;
 import com.fadeland.editor.map.Tile;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.propertyMenu.PropertyToolPane;
 
 public class CreateOrRemoveAttachedObject implements Action
 {
@@ -58,6 +59,7 @@ public class CreateOrRemoveAttachedObject implements Action
             {
                 mapParents.get(i).tool.mapObjects.clear();
                 mapParents.get(i).tool.mapObjects.addAll(oldParents.get(i));
+                PropertyToolPane.updateLightsAndBlocked(map);
             }
         }
         if(this.selection != null)
@@ -77,6 +79,7 @@ public class CreateOrRemoveAttachedObject implements Action
             {
                 mapParents.get(i).tool.mapObjects.clear();
                 mapParents.get(i).tool.mapObjects.addAll(newParents.get(i));
+                PropertyToolPane.updateLightsAndBlocked(map);
             }
         }
         if(this.selection != null)

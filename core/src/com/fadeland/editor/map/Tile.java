@@ -37,11 +37,22 @@ public class Tile
 
     public void setTool(TileTool tool)
     {
+        TileTool oldTool = this.tool;
         if(tool == null)
             this.sprite = null;
         else
             this.sprite = new Sprite(tool.textureRegion);
         this.tool = tool;
+        if(oldTool != null)
+        {
+            for(int i = 0; i < oldTool.mapObjects.size; i ++)
+                oldTool.mapObjects.get(i).updateLightsAndBodies();
+        }
+        if(this.tool != null)
+        {
+            for(int i = 0; i < this.tool.mapObjects.size; i ++)
+                this.tool.mapObjects.get(i).updateLightsAndBodies();
+        }
     }
 
     public void draw()

@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.map.MapSprite;
 import com.fadeland.editor.map.Tile;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.propertyMenu.PropertyToolPane;
 
 public class CreateOrRemoveSprite implements Action
 {
@@ -43,6 +44,8 @@ public class CreateOrRemoveSprite implements Action
             this.selection.addAll(oldSelection);
         }
         this.map.propertyMenu.rebuild();
+        System.out.println("undo");
+        PropertyToolPane.updateLightsAndBlocked(map);
     }
 
     @Override
@@ -56,5 +59,7 @@ public class CreateOrRemoveSprite implements Action
             this.selection.addAll(newSelection);
         }
         this.map.propertyMenu.rebuild();
+        System.out.println("redo");
+        PropertyToolPane.updateLightsAndBlocked(map);
     }
 }

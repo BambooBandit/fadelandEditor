@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.map.MapObject;
 import com.fadeland.editor.map.Tile;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.propertyMenu.PropertyToolPane;
 
 public class CreateOrRemoveObject implements Action
 {
@@ -43,6 +44,7 @@ public class CreateOrRemoveObject implements Action
             this.selection.addAll(oldSelection);
         }
         map.propertyMenu.rebuild();
+        PropertyToolPane.updateLightsAndBlocked(map);
     }
 
     @Override
@@ -56,5 +58,6 @@ public class CreateOrRemoveObject implements Action
             this.selection.addAll(newSelection);
         }
         map.propertyMenu.rebuild();
+        PropertyToolPane.updateLightsAndBlocked(map);
     }
 }

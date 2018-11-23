@@ -16,6 +16,7 @@ import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
+import com.fadeland.editor.ui.propertyMenu.PropertyToolPane;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 import com.fadeland.editor.undoredo.*;
 
@@ -76,6 +77,8 @@ public class MapInput implements InputProcessor
                                     {
                                         deletedAttached = true;
                                         map.selectedObjects.removeValue(map.selectedLayer.tiles.get(i).tool.mapObjects.get(s), true);
+                                        map.selectedLayer.tiles.get(i).tool.mapObjects.get(s).removeBody();
+                                        map.selectedLayer.tiles.get(i).tool.mapObjects.get(s).removeLight();
                                         map.selectedLayer.tiles.get(i).tool.mapObjects.removeIndex(s);
                                         s--;
                                         if(s < 0)
@@ -101,6 +104,7 @@ public class MapInput implements InputProcessor
                 map.performAction(createOrRemoveSprite);
                 createOrRemoveObject.addObjects();
                 map.performAction(createOrRemoveObject);
+                PropertyToolPane.updateLightsAndBlocked(map);
             }
         }
         return false;
@@ -142,7 +146,7 @@ public class MapInput implements InputProcessor
                 {
                     CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                     MapSprite mapSprite = map.selectedSprites.first();
-                    mapObject = new AttachedMapObject(map, objectVertices, objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
+                    mapObject = new AttachedMapObject(map, mapSprite, objectVertices, objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     mapSprite.addMapObject((AttachedMapObject) mapObject);
                     createOrRemoveAttachedObject.addAttachedObjects();
                     map.performAction(createOrRemoveAttachedObject);
@@ -151,7 +155,7 @@ public class MapInput implements InputProcessor
                 {
                     CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                     Tile selectedTile = map.selectedTile;
-                    mapObject = new AttachedMapObject(map, objectVertices, objectVerticePosition.x - selectedTile.position.x, objectVerticePosition.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
+                    mapObject = new AttachedMapObject(map, selectedTile, objectVertices, objectVerticePosition.x - selectedTile.position.x, objectVerticePosition.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     selectedTile.addMapObject((AttachedMapObject) mapObject);
                     createOrRemoveAttachedObject.addAttachedObjects();
                     map.performAction(createOrRemoveAttachedObject);
@@ -175,7 +179,7 @@ public class MapInput implements InputProcessor
             {
                 CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                 MapSprite mapSprite = map.selectedSprites.first();
-                mapObject = new AttachedMapObject(map, coords.x - mapSprite.position.x, coords.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), coords.x, coords.y);
+                mapObject = new AttachedMapObject(map, mapSprite, coords.x - mapSprite.position.x, coords.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), coords.x, coords.y);
                 mapSprite.addMapObject((AttachedMapObject) mapObject);
                 createOrRemoveAttachedObject.addAttachedObjects();
                 map.performAction(createOrRemoveAttachedObject);
@@ -184,7 +188,7 @@ public class MapInput implements InputProcessor
             {
                 CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                 Tile selectedTile = map.selectedTile;
-                mapObject = new AttachedMapObject(map, coords.x - selectedTile.position.x, coords.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), coords.x, coords.y);
+                mapObject = new AttachedMapObject(map, selectedTile, coords.x - selectedTile.position.x, coords.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), coords.x, coords.y);
                 selectedTile.addMapObject((AttachedMapObject) mapObject);
                 createOrRemoveAttachedObject.addAttachedObjects();
                 map.performAction(createOrRemoveAttachedObject);
@@ -443,21 +447,21 @@ public class MapInput implements InputProcessor
                 }
                 if(editor.getTileTools().size > 1 && editor.getFileTool().tool == Tools.BRUSH)
                     map.performAction(new PlaceTile(map));
+                Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
+                if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT)
+                {
+                    if(clickedTile != null && clickedTile.tool != null)
+                    {
+                        if(map.selectedTile != clickedTile)
+                            map.performAction(new SelectTile(map, map.selectedTile, clickedTile));
+                        map.selectedTile = clickedTile;
+                    }
+                }
                 for (int i = 0; i < editor.getTileTools().size; i++)
                 {
                     int xOffset = editor.getTileTools().first().x - editor.getTileTools().get(i).x;
                     int yOffset = editor.getTileTools().first().y - editor.getTileTools().get(i).y;
-                    Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
-                    if(editor.getTileTools().size == 1 && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT)
-                    {
-                        if(clickedTile != null && clickedTile.tool != null)
-                        {
-                            if(map.selectedTile != clickedTile)
-                                map.performAction(new SelectTile(map, map.selectedTile, clickedTile));
-                            map.selectedTile = clickedTile;
-                        }
-                        break;
-                    }
+                    clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
                     if (editor.getFileTool() != null && clickedTile != null)
                     {
                         if (editor.getFileTool().tool == Tools.BRUSH)
@@ -533,7 +537,7 @@ public class MapInput implements InputProcessor
                         for(int k = 0; k < mapSprite.tool.mapObjects.size; k ++)
                         {
                             AttachedMapObject attachedMapObject = mapSprite.tool.mapObjects.get(k);
-                            if (attachedMapObject.polygon.contains(coords.x, coords.y))
+                            if (attachedMapObject.isHoveredOver(coords.x, coords.y))
                             {
                                 SelectObject selectObject = new SelectObject(map, map.selectedObjects);
                                 if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
@@ -905,7 +909,7 @@ public class MapInput implements InputProcessor
 
                         if (editor.getFileTool().tool == Tools.BRUSH)
                         {
-                            if(clickedTile.tool != editor.getTileTools().get(i))
+                            if(clickedTile.tool != editor.getTileTools().get(i) && map.undo.peek() instanceof PlaceTile)
                             {
                                 PlaceTile placeTile = (PlaceTile) map.undo.pop();
                                 placeTile.addTile(clickedTile, clickedTile.tool, editor.getTileTools().get(i));

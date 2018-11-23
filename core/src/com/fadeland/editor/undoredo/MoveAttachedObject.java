@@ -17,14 +17,18 @@ public class MoveAttachedObject implements Action
 
     public MoveAttachedObject(ObjectMap<Tile, Float> oldXofDragMap, ObjectMap<Tile, Float> oldYofDragMap)
     {
-        this.oldXofDragMap = oldXofDragMap;
-        this.oldYofDragMap = oldYofDragMap;
+        this.oldXofDragMap = new ObjectMap();
+        this.oldYofDragMap = new ObjectMap();
     }
 
     public void addObject(AttachedMapObject mapObject)
     {
         if(this.mapObject == null && this.mapObjects == null)
+        {
             this.mapObject = mapObject;
+            this.oldXofDragMap.put(this.mapObject, this.mapObject.positionOffset.x);
+            this.oldYofDragMap.put(this.mapObject, this.mapObject.positionOffset.y);
+        }
         else
         {
             if(this.mapObjects == null)
@@ -33,6 +37,8 @@ public class MoveAttachedObject implements Action
                 this.mapObjects.add(this.mapObject);
                 this.mapObject = null;
             }
+            this.oldXofDragMap.put(mapObject, mapObject.positionOffset.x);
+            this.oldYofDragMap.put(mapObject, mapObject.positionOffset.y);
             this.mapObjects.add(mapObject);
         }
     }

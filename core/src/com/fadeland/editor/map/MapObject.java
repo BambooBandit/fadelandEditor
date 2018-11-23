@@ -1,5 +1,7 @@
 package com.fadeland.editor.map;
 
+import box2dLight.PointLight;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -23,7 +25,12 @@ public class MapObject extends Tile
     public int indexOfSelectedVertice = -1; // x index. y is + 1
     public int indexOfHoveredVertice = -1; // x index. y is + 1
 
+    public Tile attachedTile = null;
+
     public Body body = null;
+    public Array<Body> bodies;
+    public PointLight pointLight = null;
+    public Array<PointLight> pointLights;
 
     public FloatArray vertices;
 
@@ -66,6 +73,40 @@ public class MapObject extends Tile
             this.polygon.setPosition(x, y);
             if (this.body != null)
                 this.body.setTransform(this.position, 0);
+            else if(this.bodies != null)
+            {
+                int bodyIndex = 0;
+                AttachedMapObject attachedMapObject = (AttachedMapObject) this;
+                for (int i = 0; i < map.layers.size; i++)
+                {
+                    for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
+                    {
+                        if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
+                        {
+                            bodies.get(bodyIndex).setTransform(attachedMapObject.positionOffset.x + map.layers.get(i).tiles.get(k).position.x, attachedMapObject.positionOffset.y + map.layers.get(i).tiles.get(k).position.y, 0);
+                            bodyIndex ++;
+                        }
+                    }
+                }
+            }
+        }
+        else if(this.pointLight != null)
+            this.pointLight.setPosition(this.position);
+        else if(this.pointLights != null)
+        {
+            int lightIndex = 0;
+            AttachedMapObject attachedMapObject = (AttachedMapObject) this;
+            for (int i = 0; i < map.layers.size; i++)
+            {
+                for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
+                {
+                    if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
+                    {
+                        pointLights.get(lightIndex).setPosition(attachedMapObject.positionOffset.x + map.layers.get(i).tiles.get(k).position.x, attachedMapObject.positionOffset.y + map.layers.get(i).tiles.get(k).position.y);
+                        lightIndex ++;
+                    }
+                }
+            }
         }
         if(indexOfSelectedVertice != -1)
             this.moveBox.setPosition(polygon.getTransformedVertices()[indexOfSelectedVertice], polygon.getTransformedVertices()[indexOfSelectedVertice + 1]);
@@ -79,6 +120,11 @@ public class MapObject extends Tile
         vertices[indexOfSelectedVertice] = x - this.polygon.getX();
         vertices[indexOfSelectedVertice + 1] = y - this.polygon.getY();
         if(this.body != null)
+        {
+            removeBody();
+            createBody();
+        }
+        else if(this.bodies != null && this.bodies.size > 0)
         {
             removeBody();
             createBody();
@@ -198,11 +244,29 @@ public class MapObject extends Tile
             this.map.world.destroyBody(this.body);
             this.body = null;
         }
+        else if(this.bodies != null)
+        {
+            for(int i = 0; i < this.bodies.size; i ++)
+                this.map.world.destroyBody(this.bodies.get(i));
+            this.bodies.clear();
+        }
     }
 
     public void createBody()
     {
-        if(this.body == null)
+        if(this.attachedTile != null)
+        {
+            removeBody();
+            for (int i = 0; i < map.layers.size; i++)
+            {
+                for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
+                {
+                    if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
+                        createBody(map.layers.get(i).tiles.get(k));
+                }
+            }
+        }
+        else if(this.body == null)
         {
             BodyDef bodyDef = new BodyDef();
             bodyDef.position.set(this.position);
@@ -217,6 +281,85 @@ public class MapObject extends Tile
             this.body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
             this.body.setTransform(this.position, 0);
             shape.dispose();
+        }
+    }
+
+    public void createBody(Tile tile)
+    {
+        AttachedMapObject attachedMapObject = (AttachedMapObject) this;
+        if(bodies == null)
+            bodies = new Array<>();
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(this.position);
+        PolygonShape shape = new PolygonShape();
+        float[] vertices = this.polygon.getVertices();
+        shape.set(vertices);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.friction = 0;
+        fixtureDef.filter.categoryBits = PhysicsBits.WORLD_PHYSICS;
+        fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
+        Body body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
+        body.setTransform(attachedMapObject.positionOffset.x + tile.position.x, attachedMapObject.positionOffset.y + tile.position.y, 0);
+        shape.dispose();
+
+        bodies.add(body);
+    }
+
+    public void createLight()
+    {
+        if(this.attachedTile != null)
+        {
+            removeLight();
+            for (int i = 0; i < map.layers.size; i++)
+            {
+                for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
+                {
+                    if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
+                        createLight(map.layers.get(i).tiles.get(k));
+                }
+            }
+        }
+        else if(this.pointLight == null)
+            this.pointLight = new PointLight(map.rayHandler, 100, Color.WHITE, 100, this.position.x, this.position.y);
+    }
+
+    public void createLight(Tile tile)
+    {
+        AttachedMapObject attachedMapObject = (AttachedMapObject) this;
+        if(pointLights == null)
+            pointLights = new Array<>();
+        pointLights.add(new PointLight(map.rayHandler, 100, Color.WHITE, 100, attachedMapObject.positionOffset.x + tile.position.x, attachedMapObject.positionOffset.y + tile.position.y));
+    }
+
+    public void removeLight()
+    {
+        if(this.pointLight != null)
+        {
+            this.pointLight.remove();
+            this.pointLight = null;
+        }
+        else if(this.pointLights != null)
+        {
+            for (int i = 0; i < this.pointLights.size; i++)
+                this.pointLights.get(i).remove();
+            this.pointLights.clear();
+        }
+    }
+
+    public void updateLightsAndBodies()
+    {
+        if(this.body != null || (this.bodies != null && this.bodies.size > 0))
+        {
+            removeBody();
+            createBody();
+        }
+
+        if(this.pointLight != null || (this.pointLight != null && this.pointLights.size > 0))
+        {
+            removeLight();
+            createLight();
         }
     }
 
