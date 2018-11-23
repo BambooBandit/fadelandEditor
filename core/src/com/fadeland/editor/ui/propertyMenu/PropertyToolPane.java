@@ -6,7 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.map.AttachedMapObject;
 import com.fadeland.editor.map.MapObject;
+import com.fadeland.editor.map.ObjectLayer;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.ui.tileMenu.TileMenu.toolHeight;
@@ -75,13 +77,27 @@ public class PropertyToolPane extends Group
                     TileTool tileTool = (TileTool) menu.map.tileMenu.tileTable.getChildren().get(i);
                     // top
                     PropertyField topProperty = tileTool.getPropertyField("top");
-                    if(topProperty == null)
-                    {
+                    if (topProperty == null)
                         tileTool.setTopSprite("");
-                        continue;
+                    else
+                    {
+                        String topValue = topProperty.value.getText();
+                        tileTool.setTopSprite(topValue);
                     }
-                    String topValue = topProperty.value.getText();
-                    tileTool.setTopSprite(topValue);
+
+                    // attached map objects
+                    for(int k = 0; k < tileTool.mapObjects.size; k ++)
+                    {
+                        AttachedMapObject attachedMapObject = tileTool.mapObjects.get(k);
+                        // blocked
+                        PropertyField blockedProperty = attachedMapObject.getPropertyField("blocked");
+                        if (blockedProperty == null)
+                        {
+                            attachedMapObject.removeBody();
+                            continue;
+                        }
+                        attachedMapObject.createBody();
+                    }
                 }
                 // map sprites
                 for(int i = 0; i < menu.map.tileMenu.spriteTable.getChildren().size; i ++)
@@ -90,27 +106,44 @@ public class PropertyToolPane extends Group
                     // top
                     PropertyField topProperty = tileTool.getPropertyField("top");
                     if(topProperty == null)
-                    {
                         tileTool.setTopSprite("");
-                        continue;
+                    else
+                    {
+                        String topValue = topProperty.value.getText();
+                        tileTool.setTopSprite(topValue);
                     }
-                    String topValue = topProperty.value.getText();
-                    tileTool.setTopSprite(topValue);
+
+                    // attached map objects
+                    for(int k = 0; k < tileTool.mapObjects.size; k ++)
+                    {
+                        AttachedMapObject attachedMapObject = tileTool.mapObjects.get(k);
+                        // blocked
+                        PropertyField blockedProperty = attachedMapObject.getPropertyField("blocked");
+                        if (blockedProperty == null)
+                        {
+                            attachedMapObject.removeBody();
+                            continue;
+                        }
+                        attachedMapObject.createBody();
+                    }
                 }
                 // map objects
                 for(int i = 0; i < menu.map.layers.size; i ++)
                 {
-                    for(int k = 0; k < menu.map.layers.get(i).tiles.size; k ++)
+                    if(menu.map.layers.get(i) instanceof ObjectLayer)
                     {
-                        MapObject mapObject = (MapObject) menu.map.layers.get(i).tiles.get(k);
-                        // blocked
-                        PropertyField blockedProperty = mapObject.getPropertyField("blocked");
-                        if(blockedProperty == null)
+                        for (int k = 0; k < menu.map.layers.get(i).tiles.size; k++)
                         {
-                            mapObject.removeBody();
-                            continue;
+                            MapObject mapObject = (MapObject) menu.map.layers.get(i).tiles.get(k);
+                            // blocked
+                            PropertyField blockedProperty = mapObject.getPropertyField("blocked");
+                            if (blockedProperty == null)
+                            {
+                                mapObject.removeBody();
+                                continue;
+                            }
+                            mapObject.createBody();
                         }
-                        mapObject.createBody();
                     }
                 }
             }

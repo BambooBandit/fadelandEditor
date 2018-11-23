@@ -299,8 +299,11 @@ public class MapInput implements InputProcessor
                 if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
                 {
                     MapObject mapObject = map.selectedObjects.get(i);
-                    MoveVertice moveVertice = new MoveVertice(mapObject, mapObject.getVerticeX(), mapObject.getVerticeY());
-                    map.performAction(moveVertice);
+                    if(mapObject.indexOfSelectedVertice != -1)
+                    {
+                        MoveVertice moveVertice = new MoveVertice(mapObject, mapObject.getVerticeX(), mapObject.getVerticeY());
+                        map.performAction(moveVertice);
+                    }
                 }
 
                 this.oldXofDragMap.clear();
@@ -713,7 +716,7 @@ public class MapInput implements InputProcessor
             map.propertyMenu.rebuild();
             map.boxSelect.isDragging = false;
         }
-        else if(draggingMoveBox && editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT && map.selectedObjects.size == 1)
+        else if(draggingMoveBox && editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT && map.selectedObjects.size == 1 && map.undo.peek() instanceof MoveVertice)
         {
             MoveVertice moveVertice = (MoveVertice) map.undo.pop();
             moveVertice.addNewVertices(map.selectedObjects.first().getVerticeX(), map.selectedObjects.first().getVerticeY());
