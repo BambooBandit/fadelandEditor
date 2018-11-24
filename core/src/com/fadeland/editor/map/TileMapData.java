@@ -1,67 +1,192 @@
 package com.fadeland.editor.map;
 
-import com.badlogic.gdx.utils.Array;
+import com.fadeland.editor.ui.propertyMenu.PropertyField;
+import com.fadeland.editor.ui.tileMenu.TileMenu;
+import com.fadeland.editor.ui.tileMenu.TileTool;
+
+import java.util.ArrayList;
 
 public class TileMapData
 {
     public String name;
-    public Array<Layer> layers;
-    public Layer selectedLayer;
-    public Tile selectedTile;
-    public Array<MapSprite> selectedSprites;
-    public Array<MapObject> selectedObjects;
-    public Array<TileGroup> tileGroups;
     public int mapWidth;
     public int mapHeight;
-//    public TileMenu tileMenu;
-//    public PropertyMenu propertyMenu;
+    public int tileSize;
+    public ArrayList<ToolData> tileTools;
+    public ArrayList<ToolData> spriteTools;
+    public ArrayList<LayerData> layers;
 
-    public TileMapData()
-    {
-        this.layers = new Array<>();
-        this.selectedSprites = new Array<>();
-        this.selectedObjects = new Array<>();
-        this.tileGroups = new Array<>();
-    }
-
-    public void setData(TileMap tileMap)
+    public TileMapData(TileMap tileMap)
     {
         this.name = tileMap.name;
-//        this.layers = tileMap.layers;
-        this.layers.clear();
-        this.layers.addAll(tileMap.layers);
-        this.selectedLayer = tileMap.selectedLayer;
-//        this.tileMenu = tileMap.tileMenu;
-//        this.propertyMenu = tileMap.propertyMenu;
-        this.selectedTile = tileMap.selectedTile;
-        this.selectedSprites.clear();
-        this.selectedSprites.addAll(tileMap.selectedSprites);
-        this.selectedObjects.clear();
-        this.selectedObjects.addAll(tileMap.selectedObjects);
-        this.tileGroups.clear();
-        this.tileGroups.addAll(tileMap.tileGroups);
         this.mapWidth = tileMap.mapWidth;
         this.mapHeight = tileMap.mapHeight;
+        this.tileSize = TileMenu.tileSize;
+        this.tileTools = new ArrayList<>();
+        for(int i = 0; i < tileMap.tileMenu.tileTable.getChildren().size; i ++)
+            this.tileTools.add(new ToolData((TileTool) tileMap.tileMenu.tileTable.getChildren().get(i)));
+        this.spriteTools = new ArrayList<>();
+        for(int i = 0; i < tileMap.tileMenu.spriteTable.getChildren().size; i ++)
+            this.spriteTools.add(new ToolData((TileTool) tileMap.tileMenu.spriteTable.getChildren().get(i)));
+        this.layers = new ArrayList<>();
+        for(int i = 0; i < tileMap.layers.size; i ++)
+        {
+            if(tileMap.layers.get(i) instanceof TileLayer)
+                this.layers.add(new TileLayerData(tileMap.layers.get(i)));
+            else if(tileMap.layers.get(i) instanceof SpriteLayer)
+                this.layers.add(new MapSpriteLayerData(tileMap.layers.get(i)));
+            else if(tileMap.layers.get(i) instanceof ObjectLayer)
+                this.layers.add(new MapObjectLayerData(tileMap.layers.get(i)));
+        }
     }
+}
 
-    public void setMapToOtherMap(TileMap tileMap)
+abstract class LayerData
+{
+    public String name;
+    public LayerData(Layer layer)
     {
-        tileMap.name = this.name;
-//        tileMap.layers = this.layers;
-        tileMap.layers.clear();
-        tileMap.layers.addAll(this.layers);
-        tileMap.selectedLayer = this.selectedLayer;
-//        tileMap.tileMenu = this.tileMenu;
-//        tileMap.propertyMenu = this.propertyMenu;
-        tileMap.selectedTile = this.selectedTile;
-        tileMap.selectedSprites.clear();
-        tileMap.selectedSprites.addAll(this.selectedSprites);
-        tileMap.selectedObjects.clear();
-        tileMap.selectedObjects.addAll(this.selectedObjects);
-        tileMap.tileGroups.clear();
-        tileMap.tileGroups.addAll(this.tileGroups);
-        tileMap.mapWidth = this.mapWidth;
-        tileMap.mapHeight = this.mapHeight;
-        tileMap.findAllTilesToBeGrouped();
+        this.name = layer.layerField.layerName.getText();
+    }
+}
+
+class TileLayerData extends LayerData
+{
+    public ArrayList<MapTileData> tiles;
+    public TileLayerData(Layer layer)
+    {
+        super(layer);
+        this.tiles = new ArrayList<>();
+        for(int i = 0; i < layer.tiles.size; i ++)
+            tiles.add(new MapTileData(layer.tiles.get(i)));
+    }
+}
+
+class MapSpriteLayerData extends LayerData
+{
+    public ArrayList<MapSpriteData> tiles;
+    public MapSpriteLayerData(Layer layer)
+    {
+        super(layer);
+        this.tiles = new ArrayList<>();
+        for(int i = 0; i < layer.tiles.size; i ++)
+            tiles.add(new MapSpriteData((MapSprite) layer.tiles.get(i)));
+    }
+}
+
+class MapObjectLayerData extends LayerData
+{
+    public ArrayList<MapObjectData> tiles;
+    public MapObjectLayerData(Layer layer)
+    {
+        super(layer);
+        this.tiles = new ArrayList<>();
+        for(int i = 0; i < layer.tiles.size; i ++)
+        {
+            if(((MapObject)layer.tiles.get(i)).isPoint)
+                tiles.add(new MapPointData((MapObject) layer.tiles.get(i)));
+            else
+                tiles.add(new MapPolygonData((MapObject) layer.tiles.get(i)));
+        }
+    }
+}
+
+class PropertyData
+{
+    public String property;
+    public String value;
+    public PropertyData(PropertyField propertyField)
+    {
+        this.property = propertyField.getProperty();
+        this.value = propertyField.getValue();
+    }
+}
+
+class ToolData
+{
+    public int id;
+    public String type;
+    public ArrayList<PropertyData> propertyData;
+    public ArrayList<MapObjectData> attachedObjects;
+    public ToolData(TileTool tileTool)
+    {
+        this.id = tileTool.id;
+        this.type = tileTool.tool.type;
+
+        this.propertyData = new ArrayList<>();
+        for(int i = 0; i < tileTool.properties.size; i ++)
+            propertyData.add(new PropertyData(tileTool.properties.get(i)));
+
+        this.attachedObjects = new ArrayList<>();
+        for(int i = 0; i < tileTool.mapObjects.size; i++)
+        {
+            AttachedMapObject attachedMapObject = tileTool.mapObjects.get(i);
+            MapObjectData mapObjectData;
+            if(attachedMapObject.isPoint)
+                mapObjectData = new MapPointData(attachedMapObject);
+            else
+                mapObjectData = new MapPolygonData(attachedMapObject);
+            this.attachedObjects.add(mapObjectData);
+        }
+    }
+}
+
+class MapTileData
+{
+    public int x, y, id;
+    public MapTileData(Tile tile)
+    {
+        this.x = (int) tile.position.x;
+        this.y = (int) tile.position.y;
+        if(tile.tool != null)
+            this.id = tile.tool.id;
+        else
+            this.id = -1;
+    }
+}
+
+class MapSpriteData
+{
+    public int x, y, id;
+    public float width, height, rotation;
+    public MapSpriteData(MapSprite mapSprite)
+    {
+        this.x = (int) mapSprite.position.x;
+        this.y = (int) mapSprite.position.y;
+        this.id = mapSprite.tool.id;
+        this.width = mapSprite.sprite.getWidth();
+        this.height = mapSprite.sprite.getHeight();
+        this.rotation = mapSprite.sprite.getRotation();
+    }
+}
+
+abstract class MapObjectData
+{
+    public int x, y;
+    public ArrayList<PropertyData> propertyData;
+    public MapObjectData(MapObject mapObject)
+    {
+        this.x = (int) mapObject.position.x;
+        this.y = (int) mapObject.position.y;
+        this.propertyData = new ArrayList<>();
+        for(int i = 0; i < mapObject.properties.size; i ++)
+            propertyData.add(new PropertyData(mapObject.properties.get(i)));
+    }
+}
+class MapPolygonData extends MapObjectData
+{
+    public float[] vertices;
+    public MapPolygonData(MapObject mapObject)
+    {
+        super(mapObject);
+        this.vertices = mapObject.polygon.getVertices();
+    }
+}
+
+class MapPointData extends MapObjectData
+{
+    public MapPointData(MapObject mapObject)
+    {
+        super(mapObject);
     }
 }

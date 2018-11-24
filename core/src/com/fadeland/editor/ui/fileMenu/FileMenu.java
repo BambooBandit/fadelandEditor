@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.map.TileMapData;
 
 import static com.fadeland.editor.map.TileMap.untitledCount;
 
@@ -70,6 +71,12 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                if(editor.getScreen() != null)
+                {
+                    TileMap tileMap = (TileMap) editor.getScreen();
+                    TileMapData tileMapData = new TileMapData(tileMap);
+                    System.out.println(tileMapData);
+                }
             }
         });
         this.saveAsButton.addListener(new ClickListener()
