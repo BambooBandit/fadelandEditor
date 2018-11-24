@@ -72,16 +72,17 @@ public class TileMenu extends Group
         }
 
         // Add all the sprites to the spriteTable as Images
-        Texture spriteSheet = new Texture(spriteSheetName);
         spriteTable.padLeft(1);
         spriteTable.padTop(1);
         int x = 0;
         int y = 0;
+        id = 0;
         for(int i = 0; i < GameAssets.getGameAtlas().getRegions().size; i ++)
         {
             TextureRegion spriteRegion = GameAssets.getGameAtlas().getRegions().get(i);
 
-            TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion,0, x, y, toolPane, skin);
+            TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion,id, x, y, toolPane, skin);
+            id ++;
             x += spriteRegion.getRegionWidth();
             y += spriteRegion.getRegionHeight();
             spriteTable.add(sprite);

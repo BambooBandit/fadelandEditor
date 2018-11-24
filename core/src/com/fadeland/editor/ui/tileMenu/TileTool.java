@@ -98,6 +98,5 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
             this.topSprite = new Sprite(textureRegion);
         else
             this.topSprite.setRegion(textureRegion);
-        System.out.println("yay");
     }
 }

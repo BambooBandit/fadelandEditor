@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Json;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.map.TileMapData;
@@ -75,7 +76,8 @@ public class FileMenu extends Group
                 {
                     TileMap tileMap = (TileMap) editor.getScreen();
                     TileMapData tileMapData = new TileMapData(tileMap);
-                    System.out.println(tileMapData);
+                    Json json = new Json();
+                    System.out.println(json.prettyPrint(tileMapData));
                 }
             }
         });
