@@ -347,6 +347,7 @@ public class TileMap implements Screen
                 {
                     AttachedMapObject mapObject = mapSprite.tool.mapObjects.get(k);
                     boolean selected = selectedObjects.contains(mapObject, true);
+                    mapObject.attachedTile = mapSprite;
                     mapObject.setPosition(mapSprite.position.x + mapObject.positionOffset.x, mapSprite.position.y + mapObject.positionOffset.y);
                     boolean hoveredOver = mapObject.isHoveredOver(mouseCoords.x, mouseCoords.y);
                     if (selected && editor.getFileTool().tool == Tools.BOXSELECT)
@@ -467,6 +468,7 @@ public class TileMap implements Screen
             for (int i = 0; i < selectedSprites.first().tool.mapObjects.size; i++)
             {
                 AttachedMapObject mapObject = selectedSprites.first().tool.mapObjects.get(i);
+                mapObject.attachedTile = selectedSprites.first();
                 mapObject.setPosition(selectedSprites.first().position.x + mapObject.positionOffset.x, selectedSprites.first().position.y + mapObject.positionOffset.y);
             }
         }

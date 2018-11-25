@@ -3,6 +3,7 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
@@ -83,7 +84,18 @@ public class MapSprite extends Tile
         if(this.tool.topSprite != null)
             this.tool.topSprite.setRotation(degree);
         for(int i = 0; i < tool.mapObjects.size; i ++)
-            tool.mapObjects.get(i).polygon.setRotation(degree);
+        {
+            Body body = tool.mapObjects.get(i).body;
+            Array<Body> bodies = tool.mapObjects.get(i).bodies;
+            if(body != null)
+                tool.mapObjects.get(i).body.setTransform(body.getPosition(), this.rotation);
+            if(bodies != null)
+            {
+                for (int k = 0; k < bodies.size; k++)
+                    tool.mapObjects.get(i).bodies.get(k).setTransform(bodies.get(k).getPosition(), this.rotation);
+            }
+            tool.mapObjects.get(i).polygon.rotate(degree);
+        }
 
         for(int i = 0; i < lockedProperties.size; i ++)
         {
@@ -106,7 +118,18 @@ public class MapSprite extends Tile
         if(this.tool.topSprite != null)
             this.tool.topSprite.rotate(degree);
         for(int i = 0; i < tool.mapObjects.size; i ++)
+        {
+            Body body = tool.mapObjects.get(i).body;
+            Array<Body> bodies = tool.mapObjects.get(i).bodies;
+            if(body != null)
+                tool.mapObjects.get(i).body.setTransform(body.getPosition(), this.rotation);
+            if(bodies != null)
+            {
+                for (int k = 0; k < bodies.size; k++)
+                    tool.mapObjects.get(i).bodies.get(k).setTransform(bodies.get(k).getPosition(), this.rotation);
+            }
             tool.mapObjects.get(i).polygon.rotate(degree);
+        }
 
         for(int i = 0; i < lockedProperties.size; i ++)
         {
@@ -125,19 +148,5 @@ public class MapSprite extends Tile
     public void unselect()
     {
         this.selected = false;
-    }
-
-    public void setOrigin(float x, float y, boolean center)
-    {
-        if(center)
-        {
-            this.sprite.setOrigin(x + width / 2, y + height / 2);
-            this.polygon.setOrigin(x + width / 2, y + height / 2);
-        }
-        else
-        {
-            this.sprite.setOrigin(x, y);
-            this.polygon.setOrigin(x, y);
-        }
     }
 }

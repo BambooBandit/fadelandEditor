@@ -71,8 +71,15 @@ public class MapObject extends Tile
         if(!isPoint)
         {
             this.polygon.setPosition(x, y);
+            float rotation = 0;
+            if(this.attachedTile != null && this.attachedTile instanceof MapSprite)
+            {
+                MapSprite mapSprite = (MapSprite) this.attachedTile;
+                rotation = (float) Math.toRadians(mapSprite.rotation);
+                polygon.setRotation(mapSprite.rotation);
+            }
             if (this.body != null)
-                this.body.setTransform(this.position, 0);
+                this.body.setTransform(this.position, rotation);
             else if(this.bodies != null)
             {
                 int bodyIndex = 0;
@@ -83,7 +90,14 @@ public class MapObject extends Tile
                     {
                         if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
                         {
-                            bodies.get(bodyIndex).setTransform(attachedMapObject.positionOffset.x + map.layers.get(i).tiles.get(k).position.x, attachedMapObject.positionOffset.y + map.layers.get(i).tiles.get(k).position.y, 0);
+                            Body body = bodies.get(bodyIndex);
+                            float rotation2 = rotation;
+                            if(body.getUserData() instanceof MapSprite)
+                            {
+                                MapSprite mapSprite = (MapSprite) body.getUserData();
+                                rotation2 = (float) Math.toRadians(mapSprite.rotation);
+                            }
+                            bodies.get(bodyIndex).setTransform(attachedMapObject.positionOffset.x + map.layers.get(i).tiles.get(k).position.x, attachedMapObject.positionOffset.y + map.layers.get(i).tiles.get(k).position.y, rotation2);
                             bodyIndex ++;
                         }
                     }
@@ -268,6 +282,7 @@ public class MapObject extends Tile
         }
         else if(this.body == null)
         {
+            System.out.println("create");
             BodyDef bodyDef = new BodyDef();
             bodyDef.position.set(this.position);
             PolygonShape shape = new PolygonShape();
@@ -304,6 +319,7 @@ public class MapObject extends Tile
         body.setTransform(attachedMapObject.positionOffset.x + tile.position.x, attachedMapObject.positionOffset.y + tile.position.y, 0);
         shape.dispose();
 
+        body.setUserData(tile);
         bodies.add(body);
     }
 
