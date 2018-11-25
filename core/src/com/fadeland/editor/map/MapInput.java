@@ -603,7 +603,7 @@ public class MapInput implements InputProcessor
                         }
                     }
                 }
-                else if(editor.getSpriteTool() != null &&
+                else if(editor.getSpriteTool() != null && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH &&
                         coords.x > 0 && coords.y > 0 && coords.x < map.mapWidth * tileSize && coords.y < map.mapHeight * tileSize)
                 {
                     CreateOrRemoveSprite createOrRemoveSprite = new CreateOrRemoveSprite(map, ((SpriteLayer) map.selectedLayer).tiles, null);
@@ -642,12 +642,10 @@ public class MapInput implements InputProcessor
 
                     mapSprite.lockedProperties.add(propertyField);
 
-                    if (editor.getFileTool().tool == Tools.BRUSH)
-                        ((SpriteLayer) map.selectedLayer).tiles.add(mapSprite);
+                    ((SpriteLayer) map.selectedLayer).tiles.add(mapSprite);
                     createOrRemoveSprite.addSprites();
                     map.performAction(createOrRemoveSprite);
-//                else if (editor.getFileTool().tool == Tools.ERASER)
-//                    clickedTile.setTool(null);
+                    PropertyToolPane.updateLightsAndBlocked(map);
                 }
             }
         }

@@ -12,6 +12,10 @@ import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.map.TileMapData;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import static com.fadeland.editor.map.TileMap.untitledCount;
 
 public class FileMenu extends Group
@@ -77,7 +81,25 @@ public class FileMenu extends Group
                     TileMap tileMap = (TileMap) editor.getScreen();
                     TileMapData tileMapData = new TileMapData(tileMap);
                     Json json = new Json();
-                    System.out.println(json.prettyPrint(tileMapData));
+
+                    File file = new File(tileMap.name + ".flm");
+                    try
+                    {
+                        //Create the file
+                        if (file.createNewFile())
+                            System.out.println("File is created!");
+                        else
+                            System.out.println("File already exists.");
+
+                        //Write Content
+                        FileWriter writer = new FileWriter(file);
+                        writer.write(json.prettyPrint(tileMapData));
+                        writer.close();
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

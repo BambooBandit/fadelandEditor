@@ -71,11 +71,26 @@ public class TileMap implements Screen
     public Box2DDebugRenderer b2dr;
     public RayHandler rayHandler;
 
+    public TileMap(FadelandEditor editor, TileMapData tileMapData)
+    {
+        this.editor = editor;
+        this.name = tileMapData.name;
+        init();
+        this.mapWidth = tileMapData.mapWidth;
+        this.mapHeight = tileMapData.mapHeight;
+        tileSize = tileMapData.tileSize; // TODO make this build the tiles. Currently doesn't
+        setMapPropertiesAndObjects();
+    }
+
     public TileMap(FadelandEditor editor, String name)
     {
         this.editor = editor;
         this.name = name;
+        init();
+    }
 
+    private void init()
+    {
         this.undo = new Stack<>();
         this.redo = new Stack<>();
 
@@ -595,5 +610,9 @@ public class TileMap implements Screen
         Action action = this.redo.pop();
         action.redo();
         this.undo.push(action);
+    }
+
+    private void setMapPropertiesAndObjects()
+    {
     }
 }
