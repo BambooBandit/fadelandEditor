@@ -12,6 +12,7 @@ public class Utils
     private static RandomXS128 random = new RandomXS128();
     private static Vector3 unprojector = new Vector3();
     public static Vector2 centerOrigin = new Vector2();
+    public static Vector2 positionDifference = new Vector2();
     public static boolean print = true;
     public static Vector2 tilePositionCopy = new Vector2();
 

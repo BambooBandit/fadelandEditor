@@ -3,12 +3,14 @@ package com.fadeland.editor.map;
 import box2dLight.PointLight;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
+import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
@@ -100,7 +102,9 @@ public class MapObject extends Tile
                                 MapSprite mapSprite = (MapSprite) body.getUserData();
                                 rotation2 = (float) Math.toRadians(mapSprite.rotation);
                             }
-                            bodies.get(bodyIndex).setTransform(map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2, map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2, rotation2);
+                            Utils.positionDifference.set(attachedMapObject.positionOffset);
+                            Utils.positionDifference.sub(attachedMapObject.oldPositionOffset);
+                            bodies.get(bodyIndex).setTransform(Utils.positionDifference.x + map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2, Utils.positionDifference.y + map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2, rotation2);
                             bodyIndex ++;
                         }
                     }
@@ -312,6 +316,9 @@ public class MapObject extends Tile
         bodyDef.position.set(this.position);
         PolygonShape shape = new PolygonShape();
         float[] vertices = this.polygon.getVertices().clone();
+        if(attachedMapObject.oldPositionOffset == null)
+            attachedMapObject.oldPositionOffset = new Vector2();
+        attachedMapObject.oldPositionOffset.set(attachedMapObject.positionOffset);
         for(int i = 0; i < vertices.length - 1; i += 2)
         {
             vertices[i] -= tile.width / 2;
