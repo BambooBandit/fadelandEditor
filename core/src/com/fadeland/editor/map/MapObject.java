@@ -72,14 +72,17 @@ public class MapObject extends Tile
         {
             this.polygon.setPosition(x, y);
             float rotation = 0;
+            float width = 0, height = 0;
             if(this.attachedTile != null && this.attachedTile instanceof MapSprite)
             {
                 MapSprite mapSprite = (MapSprite) this.attachedTile;
+                width = mapSprite.width;
+                height = mapSprite.height;
                 rotation = (float) Math.toRadians(mapSprite.rotation);
                 polygon.setRotation(mapSprite.rotation);
             }
             if (this.body != null)
-                this.body.setTransform(this.position, rotation);
+                this.body.setTransform(this.position.x + (width / 2), this.position.y + (height / 2), rotation);
             else if(this.bodies != null)
             {
                 int bodyIndex = 0;
@@ -97,7 +100,7 @@ public class MapObject extends Tile
                                 MapSprite mapSprite = (MapSprite) body.getUserData();
                                 rotation2 = (float) Math.toRadians(mapSprite.rotation);
                             }
-                            bodies.get(bodyIndex).setTransform(attachedMapObject.positionOffset.x + map.layers.get(i).tiles.get(k).position.x, attachedMapObject.positionOffset.y + map.layers.get(i).tiles.get(k).position.y, rotation2);
+                            bodies.get(bodyIndex).setTransform(map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2, map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2, rotation2);
                             bodyIndex ++;
                         }
                     }
@@ -308,7 +311,12 @@ public class MapObject extends Tile
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(this.position);
         PolygonShape shape = new PolygonShape();
-        float[] vertices = this.polygon.getVertices();
+        float[] vertices = this.polygon.getVertices().clone();
+        for(int i = 0; i < vertices.length - 1; i += 2)
+        {
+            vertices[i] -= tile.width / 2;
+            vertices[i + 1] -= tile.height / 2;
+        }
         shape.set(vertices);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
@@ -316,7 +324,7 @@ public class MapObject extends Tile
         fixtureDef.filter.categoryBits = PhysicsBits.WORLD_PHYSICS;
         fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
         Body body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
-        body.setTransform(attachedMapObject.positionOffset.x + tile.position.x, attachedMapObject.positionOffset.y + tile.position.y, 0);
+        body.setTransform(tile.position.x + tile.width / 2, tile.position.y + tile.height / 2, 0);
         shape.dispose();
 
         body.setUserData(tile);
