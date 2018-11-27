@@ -619,6 +619,12 @@ public class TileMap implements Screen
 
     private void setMapPropertiesAndObjects(TileMapData tileMapData)
     {
+        for(int i = 0; i < tileMapData.tileGroups.size(); i ++)
+        {
+            TileGroupData tileGroupData = tileMapData.tileGroups.get(i);
+            TileGroup tileGroup = new TileGroup(tileGroupData.width, tileGroupData.height, tileGroupData.boundGroupIds, tileGroupData.types, this);
+            tileGroups.add(tileGroup);
+        }
         for(int i = tileMapData.layers.size() - 1; i >= 0; i --)
         {
             Layer layer;
@@ -733,6 +739,7 @@ public class TileMap implements Screen
         }
         propertyMenu.rebuild();
         PropertyToolPane.apply(this);
+        findAllTilesToBeGrouped();
         undo.clear();
         redo.clear();
     }

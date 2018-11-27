@@ -3,6 +3,8 @@ package com.fadeland.editor.map;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
+import java.util.ArrayList;
+
 import static com.fadeland.editor.ui.tileMenu.TileMenu.*;
 
 public class TileGroup
@@ -12,6 +14,30 @@ public class TileGroup
     public int width; // Determines how long the rows of the boundGroup array is.
     public int height; // Determines how long the columns of the boundGroup array is.
     public TileMap map;
+
+    public TileGroup(int width, int height, ArrayList<Integer> boundGroupIds, ArrayList<String> types, TileMap tileMap)
+    {
+        this.width = width;
+        this.height = height;
+        this.map = tileMap;
+
+        this.boundGroup = new Array<>();
+        this.types = new Array<>();
+
+        for(int i = 0; i < boundGroupIds.size(); i ++)
+        {
+            if(boundGroupIds.get(i) == null)
+                boundGroup.add(null);
+            else
+            {
+                TileTool tileTool = map.tileMenu.getTileTool("tile", boundGroupIds.get(i));
+                boundGroup.add(tileTool);
+            }
+        }
+        for(int i = 0; i < types.size(); i ++)
+            this.types.add(types.get(i));
+        debugShapePrint();
+    }
 
     public TileGroup(float clickedX, float clickedY, Array<TileTool> selectedTileTools, TileMap map)
     {
@@ -77,7 +103,7 @@ public class TileGroup
                 x = 0;
         }
 
-//        debugShapePrint();
+        debugShapePrint();
     }
 
     private void debugShapePrint()
