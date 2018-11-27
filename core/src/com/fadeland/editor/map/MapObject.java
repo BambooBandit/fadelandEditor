@@ -315,7 +315,9 @@ public class MapObject extends Tile
         for(int i = 0; i < vertices.length - 1; i += 2)
         {
             vertices[i] -= tile.width / 2;
+            vertices[i] += attachedMapObject.positionOffset.x;
             vertices[i + 1] -= tile.height / 2;
+            vertices[i + 1] += attachedMapObject.positionOffset.y;
         }
         shape.set(vertices);
         FixtureDef fixtureDef = new FixtureDef();
