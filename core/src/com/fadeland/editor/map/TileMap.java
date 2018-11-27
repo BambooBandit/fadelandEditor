@@ -21,8 +21,11 @@ import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.layerMenu.LayerMenu;
+import com.fadeland.editor.ui.layerMenu.LayerTypes;
 import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
+import com.fadeland.editor.ui.propertyMenu.PropertyToolPane;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
+import com.fadeland.editor.ui.tileMenu.TileMenuTools;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 import com.fadeland.editor.undoredo.Action;
 
@@ -79,7 +82,7 @@ public class TileMap implements Screen
         this.mapWidth = tileMapData.mapWidth;
         this.mapHeight = tileMapData.mapHeight;
         tileSize = tileMapData.tileSize; // TODO make this build the tiles. Currently doesn't
-        setMapPropertiesAndObjects();
+        setMapPropertiesAndObjects(tileMapData);
     }
 
     public TileMap(FadelandEditor editor, String name)
@@ -614,7 +617,120 @@ public class TileMap implements Screen
         this.undo.push(action);
     }
 
-    private void setMapPropertiesAndObjects()
+    private void setMapPropertiesAndObjects(TileMapData tileMapData)
     {
+        for(int i = 0; i < tileMapData.layers.size(); i ++)
+        {
+            Layer layer;
+            LayerTypes layerTypes = null;
+            LayerData savedLayer = tileMapData.layers.get(i);
+
+            if(savedLayer instanceof TileLayerData)
+                layerTypes = LayerTypes.TILE;
+            else if(savedLayer instanceof MapSpriteLayerData)
+                layerTypes = LayerTypes.SPRITE;
+            else if(savedLayer instanceof MapObjectLayerData)
+                layerTypes = LayerTypes.OBJECT;
+
+            if(layerTypes != null)
+            {
+                layer = layerMenu.newLayer(layerTypes);
+                layer.layerField.layerName.setText(tileMapData.layers.get(i).name);
+
+                if(layerTypes == LayerTypes.TILE)
+                {
+                    TileLayerData savedTileLayer = (TileLayerData) savedLayer;
+                    for(int k = 0; k < savedTileLayer.tiles.size(); k ++)
+                    {
+                        int id = savedTileLayer.tiles.get(k).id;
+                        TileTool tileTool = tileMenu.getTileTool(TileMenuTools.TILE, id);
+                        layer.tiles.get(k).setTool(tileTool);
+                    }
+                }
+                else if(layerTypes == LayerTypes.SPRITE)
+                {
+                    MapSpriteLayerData savedSpriteLayer = (MapSpriteLayerData) savedLayer;
+                    for(int k = 0; k < savedSpriteLayer.tiles.size(); k ++)
+                    {
+                        int id = savedSpriteLayer.tiles.get(k).id;
+                        TileTool tileTool = tileMenu.getTileTool(TileMenuTools.SPRITE, id);
+                        MapSprite mapSprite = input.newMapSprite(this, tileTool, savedSpriteLayer.tiles.get(k).x, savedSpriteLayer.tiles.get(k).y);
+                        mapSprite.rotate(savedSpriteLayer.tiles.get(k).rotation);
+                        layer.tiles.add(mapSprite);
+                    }
+                }
+                else if(layerTypes == LayerTypes.OBJECT)
+                {
+                    MapObjectLayerData savedObjectLayer = (MapObjectLayerData) savedLayer;
+                    for(int k = 0; k < savedObjectLayer.tiles.size(); k ++)
+                    {
+                        MapObject mapObject = null;
+                        if(savedObjectLayer.tiles.get(k) instanceof MapPolygonData)
+                        {
+                            MapPolygonData mapPolygonData = (MapPolygonData) savedObjectLayer.tiles.get(k);
+                            mapObject = new MapObject(this, mapPolygonData.vertices, mapPolygonData.x, mapPolygonData.y);
+                        }
+                        else if(savedObjectLayer.tiles.get(k) instanceof MapPointData)
+                        {
+                            MapPointData mapPointData = (MapPointData) savedObjectLayer.tiles.get(k);
+                            mapObject = new MapObject(this, mapPointData.x, mapPointData.y);
+                        }
+                        if(mapObject != null)
+                        {
+                            for(int s = 0; s < savedObjectLayer.tiles.get(k).propertyData.size(); s ++)
+                            {
+                                selectedObjects.clear();
+                                selectedObjects.add(mapObject);
+                                propertyMenu.newProperty(savedObjectLayer.tiles.get(k).propertyData.get(s).property, savedObjectLayer.tiles.get(k).propertyData.get(s).value);
+                                selectedObjects.clear();
+                            }
+                            layer.tiles.add(mapObject);
+                        }
+                    }
+                }
+            }
+        }
+
+        for(int i = 0; i < tileMapData.tileTools.size(); i ++)
+        {
+            ToolData toolData = tileMapData.tileTools.get(i);
+            TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id);
+            for(int k = 0; k < toolData.propertyData.size(); k ++)
+            {
+                tileMenu.selectedTiles.clear();
+                tileMenu.selectedTiles.add(tileTool);
+                propertyMenu.newProperty(toolData.propertyData.get(i).property, toolData.propertyData.get(i).value);
+                tileMenu.selectedTiles.clear();
+            }
+            for(int k = 0; k < toolData.attachedObjects.size(); k ++)
+            {
+                MapObjectData attachedObject = toolData.attachedObjects.get(k);
+                AttachedMapObject attachedMapObject = null;
+                if(attachedObject instanceof MapPolygonData)
+                {
+                    MapPolygonData polygonData = (MapPolygonData) attachedObject;
+                    attachedMapObject = new AttachedMapObject(this, null, polygonData.vertices, polygonData.xOffset, polygonData.yOffset, polygonData.width, polygonData.height, polygonData.x, polygonData.y);
+                }
+                else if(attachedObject instanceof MapPointData)
+                {
+                    MapPointData pointData = (MapPointData) attachedObject;
+                    attachedMapObject = new AttachedMapObject(this, null, pointData.xOffset, pointData.yOffset, pointData.x, pointData.y);
+                }
+
+                for(int s = 0; s < toolData.attachedObjects.get(k).propertyData.size(); s ++)
+                {
+                    selectedObjects.clear();
+                    selectedObjects.add(attachedMapObject);
+                    propertyMenu.newProperty(toolData.attachedObjects.get(k).propertyData.get(s).property, toolData.attachedObjects.get(k).propertyData.get(s).value);
+                    selectedObjects.clear();
+                }
+
+                tileTool.mapObjects.add(attachedMapObject);
+            }
+        }
+        propertyMenu.rebuild();
+        PropertyToolPane.apply(this);
+        undo.clear();
+        redo.clear();
     }
 }

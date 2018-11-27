@@ -83,6 +83,24 @@ public class PropertyPanel extends Group
         }
     }
 
+    public void newProperty(String property, String value)
+    {
+        AddProperty addProperty = new AddProperty(map, map.selectedObjects, map.tileMenu.selectedTiles);
+        addProperty.addProperty(new PropertyField(property, value, this.skin, menu, true));
+        map.performAction(addProperty);
+
+        if(map.selectedObjects.size > 0)
+        {
+            for (int i = 0; i < map.selectedObjects.size; i++)
+                this.map.selectedObjects.get(i).properties.add(new PropertyField(property, value, this.skin, menu, true));
+        }
+        else
+        {
+            for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField(property, value, this.skin, menu, true));
+        }
+    }
+
     /** Remove all properties with the property value of the string.
      * Return true if something was removed to allow for recursive removing all the properties.
      * External use always returns false. */

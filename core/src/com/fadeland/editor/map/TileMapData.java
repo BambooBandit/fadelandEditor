@@ -16,6 +16,7 @@ public class TileMapData
     public ArrayList<ToolData> spriteTools;
     public ArrayList<LayerData> layers;
 
+    public TileMapData(){}
     public TileMapData(TileMap tileMap)
     {
         this.name = tileMap.name;
@@ -44,6 +45,7 @@ public class TileMapData
 abstract class LayerData
 {
     public String name;
+    public LayerData(){}
     public LayerData(Layer layer)
     {
         this.name = layer.layerField.layerName.getText();
@@ -53,6 +55,7 @@ abstract class LayerData
 class TileLayerData extends LayerData
 {
     public ArrayList<MapTileData> tiles;
+    public TileLayerData(){}
     public TileLayerData(Layer layer)
     {
         super(layer);
@@ -65,6 +68,7 @@ class TileLayerData extends LayerData
 class MapSpriteLayerData extends LayerData
 {
     public ArrayList<MapSpriteData> tiles;
+    public MapSpriteLayerData(){}
     public MapSpriteLayerData(Layer layer)
     {
         super(layer);
@@ -77,6 +81,7 @@ class MapSpriteLayerData extends LayerData
 class MapObjectLayerData extends LayerData
 {
     public ArrayList<MapObjectData> tiles;
+    public MapObjectLayerData(){}
     public MapObjectLayerData(Layer layer)
     {
         super(layer);
@@ -95,6 +100,7 @@ class PropertyData
 {
     public String property;
     public String value;
+    public PropertyData(){}
     public PropertyData(PropertyField propertyField)
     {
         this.property = propertyField.getProperty();
@@ -108,6 +114,7 @@ class ToolData
     public String type;
     public ArrayList<PropertyData> propertyData;
     public ArrayList<MapObjectData> attachedObjects;
+    public ToolData(){}
     public ToolData(TileTool tileTool)
     {
         this.id = tileTool.id;
@@ -134,6 +141,7 @@ class ToolData
 class MapTileData
 {
     public int x, y, id;
+    public MapTileData(){}
     public MapTileData(Tile tile)
     {
         this.x = (int) tile.position.x;
@@ -149,6 +157,7 @@ class MapSpriteData
 {
     public int x, y, id;
     public float width, height, rotation;
+    public MapSpriteData(){}
     public MapSpriteData(MapSprite mapSprite)
     {
         this.x = (int) mapSprite.position.x;
@@ -163,11 +172,21 @@ class MapSpriteData
 abstract class MapObjectData
 {
     public int x, y;
+    public float xOffset, yOffset, width, height;
     public ArrayList<PropertyData> propertyData;
+    public MapObjectData(){}
     public MapObjectData(MapObject mapObject)
     {
         this.x = (int) mapObject.position.x;
         this.y = (int) mapObject.position.y;
+        if(mapObject instanceof AttachedMapObject)
+        {
+            AttachedMapObject attachedMapObject = (AttachedMapObject) mapObject;
+            this.xOffset = attachedMapObject.positionOffset.x;
+            this.yOffset = attachedMapObject.positionOffset.y;
+            this.width = attachedMapObject.width;
+            this.height = attachedMapObject.height;
+        }
         this.propertyData = new ArrayList<>();
         for(int i = 0; i < mapObject.properties.size; i ++)
             propertyData.add(new PropertyData(mapObject.properties.get(i)));
@@ -176,6 +195,7 @@ abstract class MapObjectData
 class MapPolygonData extends MapObjectData
 {
     public float[] vertices;
+    public MapPolygonData(){}
     public MapPolygonData(MapObject mapObject)
     {
         super(mapObject);
@@ -185,6 +205,7 @@ class MapPolygonData extends MapObjectData
 
 class MapPointData extends MapObjectData
 {
+    public MapPointData(){}
     public MapPointData(MapObject mapObject)
     {
         super(mapObject);

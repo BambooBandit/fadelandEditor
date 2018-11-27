@@ -13,8 +13,10 @@ import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.map.TileMapData;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 import static com.fadeland.editor.map.TileMap.untitledCount;
 
@@ -69,6 +71,21 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                File file = new File("untitled 0" + ".flm");
+                try
+                {
+                    String content = new Scanner(file).useDelimiter("\\Z").next();
+                    Json json = new Json();
+                    TileMapData tileMapData = json.fromJson(TileMapData.class, content);
+                    TileMap newMap = new TileMap(editor, tileMapData);
+                    editor.addToMaps(newMap);
+                    mapTabPane.lookAtMap(newMap);
+                }
+                catch (FileNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+
             }
         });
         this.saveButton.addListener(new ClickListener()

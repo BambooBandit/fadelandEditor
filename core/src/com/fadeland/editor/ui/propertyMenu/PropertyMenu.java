@@ -104,6 +104,16 @@ public class PropertyMenu extends Group
         }
     }
 
+    public void newProperty(String property, String value)
+    {
+        if(map.tileMenu.selectedTiles.size > 0 || map.selectedObjects.size > 0)
+        {
+            this.propertyPanel.newProperty(property, value);
+
+            rebuild();
+        }
+    }
+
     private void setTileProperties()
     {
         for(int i = 0; i < map.tileMenu.tileTable.getChildren().size; i ++)

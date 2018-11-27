@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.FloatArray;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
@@ -34,17 +33,17 @@ public class MapObject extends Tile
     public PointLight pointLight = null;
     public Array<PointLight> pointLights;
 
-    public FloatArray vertices;
+    public float[] vertices;
 
     public boolean isPoint;
 
     // Polygon
-    public MapObject(TileMap map, FloatArray vertices, float x, float y)
+    public MapObject(TileMap map, float[] vertices, float x, float y)
     {
         super(map, x, y);
         this.vertices = vertices;
         this.properties = new Array<>();
-        this.polygon = new Polygon(vertices.toArray());
+        this.polygon = new Polygon(vertices);
         this.polygon.setPosition(x, y);
         this.position.set(x, y);
         this.moveBox = new MoveBox(this, map);

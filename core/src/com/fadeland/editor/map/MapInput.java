@@ -137,7 +137,7 @@ public class MapInput implements InputProcessor
                 if(map.selectedLayer instanceof ObjectLayer)
                 {
                     CreateOrRemoveObject createOrRemoveObject = new CreateOrRemoveObject(map, map.selectedLayer.tiles, null);
-                    mapObject = new MapObject(map, objectVertices, objectVerticePosition.x, objectVerticePosition.y);
+                    mapObject = new MapObject(map, objectVertices.toArray(), objectVerticePosition.x, objectVerticePosition.y);
                     ((ObjectLayer) map.selectedLayer).tiles.add(mapObject);
                     createOrRemoveObject.addObjects();
                     map.performAction(createOrRemoveObject);
@@ -146,7 +146,7 @@ public class MapInput implements InputProcessor
                 {
                     CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                     MapSprite mapSprite = map.selectedSprites.first();
-                    mapObject = new AttachedMapObject(map, mapSprite, objectVertices, objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
+                    mapObject = new AttachedMapObject(map, mapSprite, objectVertices.toArray(), objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     mapSprite.addMapObject((AttachedMapObject) mapObject);
                     createOrRemoveAttachedObject.addAttachedObjects();
                     map.performAction(createOrRemoveAttachedObject);
@@ -155,7 +155,7 @@ public class MapInput implements InputProcessor
                 {
                     CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                     Tile selectedTile = map.selectedTile;
-                    mapObject = new AttachedMapObject(map, selectedTile, objectVertices, objectVerticePosition.x - selectedTile.position.x, objectVerticePosition.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
+                    mapObject = new AttachedMapObject(map, selectedTile, objectVertices.toArray(), objectVerticePosition.x - selectedTile.position.x, objectVerticePosition.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     selectedTile.addMapObject((AttachedMapObject) mapObject);
                     createOrRemoveAttachedObject.addAttachedObjects();
                     map.performAction(createOrRemoveAttachedObject);
@@ -179,7 +179,7 @@ public class MapInput implements InputProcessor
             {
                 CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                 MapSprite mapSprite = map.selectedSprites.first();
-                mapObject = new AttachedMapObject(map, mapSprite, coords.x - mapSprite.position.x, coords.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), coords.x, coords.y);
+                mapObject = new AttachedMapObject(map, mapSprite, coords.x - mapSprite.position.x, coords.y - mapSprite.position.y, coords.x, coords.y);
                 mapSprite.addMapObject((AttachedMapObject) mapObject);
                 createOrRemoveAttachedObject.addAttachedObjects();
                 map.performAction(createOrRemoveAttachedObject);
@@ -188,7 +188,7 @@ public class MapInput implements InputProcessor
             {
                 CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                 Tile selectedTile = map.selectedTile;
-                mapObject = new AttachedMapObject(map, selectedTile, coords.x - selectedTile.position.x, coords.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), coords.x, coords.y);
+                mapObject = new AttachedMapObject(map, selectedTile, coords.x - selectedTile.position.x, coords.y - selectedTile.position.y, coords.x, coords.y);
                 selectedTile.addMapObject((AttachedMapObject) mapObject);
                 createOrRemoveAttachedObject.addAttachedObjects();
                 map.performAction(createOrRemoveAttachedObject);
@@ -607,40 +607,7 @@ public class MapInput implements InputProcessor
                         coords.x > 0 && coords.y > 0 && coords.x < map.mapWidth * tileSize && coords.y < map.mapHeight * tileSize)
                 {
                     CreateOrRemoveSprite createOrRemoveSprite = new CreateOrRemoveSprite(map, ((SpriteLayer) map.selectedLayer).tiles, null);
-                    MapSprite mapSprite = new MapSprite(map, editor.getSpriteTool(),
-                            coords.x - editor.getSpriteTool().textureRegion.getRegionWidth() / 2, coords.y - editor.getSpriteTool().textureRegion.getRegionHeight() / 2);
-
-                    PropertyField propertyField = new PropertyField("Rotation", "0", GameAssets.getUISkin(), map.propertyMenu, false);
-                    propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter()
-                    {
-                        @Override
-                        public boolean acceptChar(TextField textField, char c)
-                        {
-                            return c == '.' || c == '-' || Character.isDigit(c);
-                        }
-                    });
-
-                    propertyField.value.getListeners().clear();
-
-                    TextField.TextFieldClickListener rotationListener = propertyField.value.new TextFieldClickListener(){
-                        @Override
-                        public boolean keyUp (InputEvent event, int keycode)
-                        {
-                            try
-                            {
-                                if (keycode == Input.Keys.ENTER)
-                                {
-                                    for(int i = 0; i < map.selectedSprites.size; i ++)
-                                        map.selectedSprites.get(i).setRotation(Float.parseFloat(propertyField.value.getText()));
-                                }
-                            }
-                            catch (NumberFormatException e){}
-                            return true;
-                        }
-                    };
-                    propertyField.value.addListener(rotationListener);
-
-                    mapSprite.lockedProperties.add(propertyField);
+                    MapSprite mapSprite = newMapSprite(map, editor.getSpriteTool(), coords.x, coords.y);
 
                     ((SpriteLayer) map.selectedLayer).tiles.add(mapSprite);
                     createOrRemoveSprite.addSprites();
@@ -754,7 +721,7 @@ public class MapInput implements InputProcessor
             map.propertyMenu.rebuild();
             map.boxSelect.isDragging = false;
         }
-        else if(draggingMoveBox && editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT && map.selectedObjects.size == 1 && map.undo.peek() instanceof MoveVertice)
+        else if(draggingMoveBox && editor.getFileTool() != null && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT && map.selectedObjects.size == 1 && map.undo.size() > 0 && map.undo.peek() instanceof MoveVertice)
         {
             MoveVertice moveVertice = (MoveVertice) map.undo.pop();
             moveVertice.addNewVertices(map.selectedObjects.first().getVerticeX(), map.selectedObjects.first().getVerticeY());
@@ -764,7 +731,7 @@ public class MapInput implements InputProcessor
         {
             if(map.selectedObjects.first() instanceof AttachedMapObject)
             {
-                if(map.undo.peek() instanceof MoveAttachedObject)
+                if(map.undo.size() > 0 && map.undo.peek() instanceof MoveAttachedObject)
                 {
                     MoveAttachedObject moveObject = (MoveAttachedObject) map.undo.pop();
                     moveObject.addNewPosition();
@@ -773,7 +740,7 @@ public class MapInput implements InputProcessor
             }
             else if(map.selectedObjects.first() instanceof MapObject)
             {
-                if(map.undo.peek() instanceof MoveObject)
+                if(map.undo.size() > 0 && map.undo.peek() instanceof MoveObject)
                 {
                     MoveObject moveObject = (MoveObject) map.undo.pop();
                     moveObject.addNewPosition();
@@ -781,19 +748,19 @@ public class MapInput implements InputProcessor
                 }
             }
         }
-        if(map.undo.peek() instanceof MoveSprite)
+        if(map.undo.size() > 0 && map.undo.peek() instanceof MoveSprite)
         {
             MoveSprite moveSprite = (MoveSprite) map.undo.pop();
             moveSprite.addNewPosition();
             map.undo.push(moveSprite);
         }
-        else if(map.undo.peek() instanceof RotateSprite)
+        else if(map.undo.size() > 0 && map.undo.peek() instanceof RotateSprite)
         {
             RotateSprite rotateSprite = (RotateSprite) map.undo.pop();
             rotateSprite.addNewRotation();
             map.undo.push(rotateSprite);
         }
-        if(map.undo.peek() instanceof PlaceTile)
+        if(map.undo.size() > 0 && map.undo.peek() instanceof PlaceTile)
         {
             PlaceTile placeTile = (PlaceTile) map.undo.pop();
             if(placeTile.changed())
@@ -907,7 +874,7 @@ public class MapInput implements InputProcessor
 
                         if (editor.getFileTool().tool == Tools.BRUSH)
                         {
-                            if(clickedTile.tool != editor.getTileTools().get(i) && map.undo.peek() instanceof PlaceTile)
+                            if(clickedTile.tool != editor.getTileTools().get(i) && map.undo.size() > 0 && map.undo.peek() instanceof PlaceTile)
                             {
                                 PlaceTile placeTile = (PlaceTile) map.undo.pop();
                                 placeTile.addTile(clickedTile, clickedTile.tool, editor.getTileTools().get(i));
@@ -1043,5 +1010,44 @@ public class MapInput implements InputProcessor
                 fill(x, y - 64, tool);
             }
         }
+    }
+
+    public static MapSprite newMapSprite(TileMap map, TileTool tileTool, float x, float y)
+    {
+        MapSprite mapSprite = new MapSprite(map, tileTool,
+                x - tileTool.textureRegion.getRegionWidth() / 2, y - tileTool.textureRegion.getRegionHeight() / 2);
+
+        PropertyField propertyField = new PropertyField("Rotation", "0", GameAssets.getUISkin(), map.propertyMenu, false);
+        propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter()
+        {
+            @Override
+            public boolean acceptChar(TextField textField, char c)
+            {
+                return c == '.' || c == '-' || Character.isDigit(c);
+            }
+        });
+
+        propertyField.value.getListeners().clear();
+
+        TextField.TextFieldClickListener rotationListener = propertyField.value.new TextFieldClickListener(){
+            @Override
+            public boolean keyUp (InputEvent event, int keycode)
+            {
+                try
+                {
+                    if (keycode == Input.Keys.ENTER)
+                    {
+                        for(int i = 0; i < map.selectedSprites.size; i ++)
+                            map.selectedSprites.get(i).setRotation(Float.parseFloat(propertyField.value.getText()));
+                    }
+                }
+                catch (NumberFormatException e){}
+                return true;
+            }
+        };
+        propertyField.value.addListener(rotationListener);
+
+        mapSprite.lockedProperties.add(propertyField);
+        return mapSprite;
     }
 }

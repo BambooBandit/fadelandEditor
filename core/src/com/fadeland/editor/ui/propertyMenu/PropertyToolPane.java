@@ -72,37 +72,42 @@ public class PropertyToolPane extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                // map tiles
-                for(int i = 0; i < menu.map.tileMenu.tileTable.getChildren().size; i ++)
-                {
-                    TileTool tileTool = (TileTool) menu.map.tileMenu.tileTable.getChildren().get(i);
-                    // top
-                    PropertyField topProperty = tileTool.getPropertyField("top");
-                    if (topProperty == null)
-                        tileTool.setTopSprite("");
-                    else
-                    {
-                        String topValue = topProperty.value.getText();
-                        tileTool.setTopSprite(topValue);
-                    }
-                }
-                // map sprites
-                for(int i = 0; i < menu.map.tileMenu.spriteTable.getChildren().size; i ++)
-                {
-                    TileTool tileTool = (TileTool) menu.map.tileMenu.spriteTable.getChildren().get(i);
-                    // top
-                    PropertyField topProperty = tileTool.getPropertyField("top");
-                    if(topProperty == null)
-                        tileTool.setTopSprite("");
-                    else
-                    {
-                        String topValue = topProperty.value.getText();
-                        tileTool.setTopSprite(topValue);
-                    }
-                }
-                updateLightsAndBlocked(menu.map);
+                apply(menu.map);
             }
         });
+    }
+
+    public static void apply(TileMap map)
+    {
+        // map tiles
+        for(int i = 0; i < map.tileMenu.tileTable.getChildren().size; i ++)
+        {
+            TileTool tileTool = (TileTool) map.tileMenu.tileTable.getChildren().get(i);
+            // top
+            PropertyField topProperty = tileTool.getPropertyField("top");
+            if (topProperty == null)
+                tileTool.setTopSprite("");
+            else
+            {
+                String topValue = topProperty.value.getText();
+                tileTool.setTopSprite(topValue);
+            }
+        }
+        // map sprites
+        for(int i = 0; i < map.tileMenu.spriteTable.getChildren().size; i ++)
+        {
+            TileTool tileTool = (TileTool) map.tileMenu.spriteTable.getChildren().get(i);
+            // top
+            PropertyField topProperty = tileTool.getPropertyField("top");
+            if(topProperty == null)
+                tileTool.setTopSprite("");
+            else
+            {
+                String topValue = topProperty.value.getText();
+                tileTool.setTopSprite(topValue);
+            }
+        }
+        updateLightsAndBlocked(map);
     }
 
     public static void updateLightsAndBlocked(TileMap map)

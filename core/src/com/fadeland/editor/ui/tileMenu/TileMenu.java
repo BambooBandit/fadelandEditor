@@ -119,4 +119,56 @@ public class TileMenu extends Group
 
         super.setSize(width, height);
     }
+
+    public TileTool getTileTool(TileMenuTools tileMenuTools, int id)
+    {
+        if(tileMenuTools == TileMenuTools.TILE)
+        {
+            for(int i = 0; i < tileTable.getChildren().size; i ++)
+            {
+                TileTool tileTool = (TileTool) tileTable.getChildren().get(i);
+                if(tileTool.id == id)
+                    return tileTool;
+            }
+        }
+        else if(tileMenuTools == TileMenuTools.SPRITE)
+        {
+            for(int i = 0; i < spriteTable.getChildren().size; i ++)
+            {
+                TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
+                if(tileTool.id == id)
+                    return tileTool;
+            }
+        }
+        return null;
+    }
+
+    public TileTool getTileTool(String type, int id)
+    {
+        TileMenuTools tileMenuTools = null;
+        if(type.equals("tile"))
+            tileMenuTools = TileMenuTools.TILE;
+        else if(type.equals("sprite"))
+            tileMenuTools = TileMenuTools.SPRITE;
+
+        if(tileMenuTools == TileMenuTools.TILE)
+        {
+            for(int i = 0; i < tileTable.getChildren().size; i ++)
+            {
+                TileTool tileTool = (TileTool) tileTable.getChildren().get(i);
+                if(tileTool.id == id)
+                    return tileTool;
+            }
+        }
+        else if(tileMenuTools == TileMenuTools.SPRITE)
+        {
+            for(int i = 0; i < spriteTable.getChildren().size; i ++)
+            {
+                TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
+                if(tileTool.id == id)
+                    return tileTool;
+            }
+        }
+        return null;
+    }
 }
