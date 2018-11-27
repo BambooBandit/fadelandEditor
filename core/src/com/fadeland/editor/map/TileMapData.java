@@ -113,6 +113,7 @@ class ToolData
     public int id;
     public String type;
     public ArrayList<PropertyData> propertyData;
+    public ArrayList<PropertyData> lockedPropertyData;
     public ArrayList<MapObjectData> attachedObjects;
     public ToolData(){}
     public ToolData(TileTool tileTool)
@@ -123,6 +124,10 @@ class ToolData
         this.propertyData = new ArrayList<>();
         for(int i = 0; i < tileTool.properties.size; i ++)
             propertyData.add(new PropertyData(tileTool.properties.get(i)));
+
+        this.lockedPropertyData = new ArrayList<>();
+        for(int i = 0; i < tileTool.lockedProperties.size; i ++)
+            lockedPropertyData.add(new PropertyData(tileTool.lockedProperties.get(i)));
 
         this.attachedObjects = new ArrayList<>();
         for(int i = 0; i < tileTool.mapObjects.size; i++)
@@ -140,12 +145,13 @@ class ToolData
 
 class MapTileData
 {
-    public int x, y, id;
+    public float x, y;
+    int id;
     public MapTileData(){}
     public MapTileData(Tile tile)
     {
-        this.x = (int) tile.position.x;
-        this.y = (int) tile.position.y;
+        this.x = tile.position.x;
+        this.y = tile.position.y;
         if(tile.tool != null)
             this.id = tile.tool.id;
         else
@@ -155,13 +161,14 @@ class MapTileData
 
 class MapSpriteData
 {
-    public int x, y, id;
+    public float x, y;
+    int id;
     public float width, height, rotation;
     public MapSpriteData(){}
     public MapSpriteData(MapSprite mapSprite)
     {
-        this.x = (int) mapSprite.position.x;
-        this.y = (int) mapSprite.position.y;
+        this.x = mapSprite.position.x;
+        this.y = mapSprite.position.y;
         this.id = mapSprite.tool.id;
         this.width = mapSprite.sprite.getWidth();
         this.height = mapSprite.sprite.getHeight();
@@ -171,14 +178,14 @@ class MapSpriteData
 
 abstract class MapObjectData
 {
-    public int x, y;
+    public float x, y;
     public float xOffset, yOffset, width, height;
     public ArrayList<PropertyData> propertyData;
     public MapObjectData(){}
     public MapObjectData(MapObject mapObject)
     {
-        this.x = (int) mapObject.position.x;
-        this.y = (int) mapObject.position.y;
+        this.x = mapObject.position.x;
+        this.y = mapObject.position.y;
         if(mapObject instanceof AttachedMapObject)
         {
             AttachedMapObject attachedMapObject = (AttachedMapObject) mapObject;

@@ -7,8 +7,8 @@ import com.fadeland.editor.map.Tile;
 
 public class MoveSprite implements Action
 {
-    public MapSprite mapObject;
-    public Array<MapSprite> mapObjects;
+    public MapSprite mapSprite;
+    public Array<MapSprite> mapSprites;
     public ObjectMap<Tile, Float> oldXofDragMap;
     public ObjectMap<Tile, Float> oldYofDragMap;
     public ObjectMap<Tile, Float> newXofDragMap;
@@ -21,37 +21,37 @@ public class MoveSprite implements Action
         this.oldYofDragMap = oldYofDragMap;
     }
 
-    public void addSprite(MapSprite mapObject)
+    public void addSprite(MapSprite mapSprite)
     {
-        if(this.mapObject == null && this.mapObjects == null)
-            this.mapObject = mapObject;
+        if(this.mapSprite == null && this.mapSprites == null)
+            this.mapSprite = mapSprite;
         else
         {
-            if(this.mapObjects == null)
+            if(this.mapSprites == null)
             {
-                this.mapObjects = new Array<>();
-                this.mapObjects.add(this.mapObject);
-                this.mapObject = null;
+                this.mapSprites = new Array<>();
+                this.mapSprites.add(this.mapSprite);
+                this.mapSprite = null;
             }
-            this.mapObjects.add(mapObject);
+            this.mapSprites.add(mapSprite);
         }
     }
 
     public void addNewPosition()
     {
-        if (this.mapObject != null)
+        if (this.mapSprite != null)
         {
-            this.newX = this.mapObject.position.x;
-            this.newY = this.mapObject.position.y;
+            this.newX = this.mapSprite.position.x;
+            this.newY = this.mapSprite.position.y;
         }
         else
         {
             newXofDragMap = new ObjectMap<>();
             newYofDragMap = new ObjectMap<>();
-            for(int i = 0; i < this.mapObjects.size; i ++)
+            for(int i = 0; i < this.mapSprites.size; i ++)
             {
-                newXofDragMap.put(this.mapObjects.get(i), this.mapObjects.get(i).position.x);
-                newYofDragMap.put(this.mapObjects.get(i), this.mapObjects.get(i).position.y);
+                newXofDragMap.put(this.mapSprites.get(i), this.mapSprites.get(i).position.x);
+                newYofDragMap.put(this.mapSprites.get(i), this.mapSprites.get(i).position.y);
             }
         }
     }
@@ -59,20 +59,20 @@ public class MoveSprite implements Action
     @Override
     public void undo()
     {
-        if(this.mapObject != null)
-            this.mapObject.setPosition(oldXofDragMap.get(mapObject), oldYofDragMap.get(mapObject));
+        if(this.mapSprite != null)
+            this.mapSprite.setPosition(oldXofDragMap.get(mapSprite), oldYofDragMap.get(mapSprite));
         else
-            for(int i = 0; i < mapObjects.size; i ++)
-                mapObjects.get(i).setPosition(oldXofDragMap.get(mapObjects.get(i)), oldYofDragMap.get(mapObjects.get(i)));
+            for(int i = 0; i < mapSprites.size; i ++)
+                mapSprites.get(i).setPosition(oldXofDragMap.get(mapSprites.get(i)), oldYofDragMap.get(mapSprites.get(i)));
     }
 
     @Override
     public void redo()
     {
-        if(this.mapObject != null)
-            this.mapObject.setPosition(newX, newY);
+        if(this.mapSprite != null)
+            this.mapSprite.setPosition(newX, newY);
         else
-            for(int i = 0; i < mapObjects.size; i ++)
-                mapObjects.get(i).setPosition(newXofDragMap.get(mapObjects.get(i)), newYofDragMap.get(mapObjects.get(i)));
+            for(int i = 0; i < mapSprites.size; i ++)
+                mapSprites.get(i).setPosition(newXofDragMap.get(mapSprites.get(i)), newYofDragMap.get(mapSprites.get(i)));
     }
 }

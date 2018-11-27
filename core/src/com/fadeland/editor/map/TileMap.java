@@ -619,7 +619,7 @@ public class TileMap implements Screen
 
     private void setMapPropertiesAndObjects(TileMapData tileMapData)
     {
-        for(int i = 0; i < tileMapData.layers.size(); i ++)
+        for(int i = tileMapData.layers.size() - 1; i >= 0; i --)
         {
             Layer layer;
             LayerTypes layerTypes = null;
@@ -654,7 +654,8 @@ public class TileMap implements Screen
                     {
                         int id = savedSpriteLayer.tiles.get(k).id;
                         TileTool tileTool = tileMenu.getTileTool(TileMenuTools.SPRITE, id);
-                        MapSprite mapSprite = input.newMapSprite(this, tileTool, savedSpriteLayer.tiles.get(k).x, savedSpriteLayer.tiles.get(k).y);
+                        MapSprite mapSprite = input.newMapSprite(this, tileTool, savedSpriteLayer.tiles.get(k).x + savedSpriteLayer.tiles.get(k).width / 2, savedSpriteLayer.tiles.get(k).y + savedSpriteLayer.tiles.get(k).height / 2);
+                        Utils.setCenterOrigin(mapSprite.position.x, mapSprite.position.y);
                         mapSprite.rotate(savedSpriteLayer.tiles.get(k).rotation);
                         layer.tiles.add(mapSprite);
                     }
@@ -695,6 +696,8 @@ public class TileMap implements Screen
         {
             ToolData toolData = tileMapData.tileTools.get(i);
             TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id);
+            for(int k = 0; k < toolData.lockedPropertyData.size(); k ++)
+                tileTool.getPropertyField(toolData.lockedPropertyData.get(k).property).value.setText(toolData.lockedPropertyData.get(k).value);
             for(int k = 0; k < toolData.propertyData.size(); k ++)
             {
                 tileMenu.selectedTiles.clear();
