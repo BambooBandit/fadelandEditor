@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
-import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
+import static com.fadeland.editor.map.TileMap.tileSize;
 
 public class Tile
 {

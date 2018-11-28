@@ -8,12 +8,12 @@ import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.undoredo.ResizeMap;
 
+import static com.fadeland.editor.map.TileMap.mapHeight;
+import static com.fadeland.editor.map.TileMap.mapWidth;
+
 public class MapPropertyPanel extends Group
 {
     public static int textFieldHeight = 32;
-
-    public int mapWidth = 5;
-    public int mapHeight = 5;
 
     private FadelandEditor editor;
     private PropertyMenu menu;

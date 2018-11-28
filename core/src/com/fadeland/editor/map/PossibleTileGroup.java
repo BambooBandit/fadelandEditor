@@ -7,7 +7,7 @@ import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.undoredo.PlaceTile;
 
-import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
+import static com.fadeland.editor.map.TileMap.tileSize;
 
 public class PossibleTileGroup
 {

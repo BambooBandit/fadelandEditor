@@ -5,7 +5,9 @@ import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import java.util.ArrayList;
 
-import static com.fadeland.editor.ui.tileMenu.TileMenu.*;
+import static com.fadeland.editor.map.TileMap.tileSize;
+import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSheetHeight;
+import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSheetWidth;
 
 public class TileGroup
 {

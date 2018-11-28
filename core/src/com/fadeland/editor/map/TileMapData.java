@@ -1,7 +1,6 @@
 package com.fadeland.editor.map;
 
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
-import com.fadeland.editor.ui.tileMenu.TileMenu;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class TileMapData
         this.name = tileMap.name;
         this.mapWidth = tileMap.mapWidth;
         this.mapHeight = tileMap.mapHeight;
-        this.tileSize = TileMenu.tileSize;
+        this.tileSize = tileMap.tileSize;
         this.tileTools = new ArrayList<>();
         for(int i = 0; i < tileMap.tileMenu.tileTable.getChildren().size; i ++)
             this.tileTools.add(new ToolData((TileTool) tileMap.tileMenu.tileTable.getChildren().get(i)));

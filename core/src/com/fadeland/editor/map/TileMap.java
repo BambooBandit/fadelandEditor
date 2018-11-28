@@ -31,8 +31,6 @@ import com.fadeland.editor.undoredo.Action;
 
 import java.util.Stack;
 
-import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
-
 public class TileMap implements Screen
 {
     public FadelandEditor editor;
@@ -46,8 +44,9 @@ public class TileMap implements Screen
 
     public String name;
 
-    public int mapWidth;
-    public int mapHeight;
+    public static int mapWidth;
+    public static int mapHeight;
+    public static int tileSize;
 
     public MapInput input;
 
@@ -74,21 +73,28 @@ public class TileMap implements Screen
     public Box2DDebugRenderer b2dr;
     public RayHandler rayHandler;
 
+    private boolean apply = false;
+
     public TileMap(FadelandEditor editor, TileMapData tileMapData)
     {
         this.editor = editor;
         this.name = tileMapData.name;
-        init();
         this.mapWidth = tileMapData.mapWidth;
         this.mapHeight = tileMapData.mapHeight;
+        this.tileSize = tileMapData.tileSize;
+        init();
         tileSize = tileMapData.tileSize; // TODO make this build the tiles. Currently doesn't
         setMapPropertiesAndObjects(tileMapData);
+        this.apply = true;
     }
 
     public TileMap(FadelandEditor editor, String name)
     {
         this.editor = editor;
         this.name = name;
+        this.mapWidth = 5;
+        this.mapHeight = 5;
+        this.tileSize = 64;
         init();
     }
 
@@ -127,9 +133,6 @@ public class TileMap implements Screen
         this.layerMenu = new LayerMenu(GameAssets.getUISkin(), editor, this);
         this.layerMenu.setVisible(true);
         this.stage.addActor(this.layerMenu);
-
-        this.mapWidth = propertyMenu.mapPropertyPanel.mapWidth;
-        this.mapHeight = propertyMenu.mapPropertyPanel.mapHeight;
 
         this.world = new World(new Vector2(0, 0), false);
         this.rayHandler = new RayHandler(this.world);
@@ -475,7 +478,14 @@ public class TileMap implements Screen
                 mapObject.setPosition(selectedSprites.first().position.x + mapObject.positionOffset.x, selectedSprites.first().position.y + mapObject.positionOffset.y);
             }
         }
-        b2dr.render(this.world, camera.combined);
+//        b2dr.render(this.world, camera.combined);
+        if(apply)
+        {
+            apply = false;
+            PropertyToolPane.apply(this);
+            undo.clear();
+            redo.clear();
+        }
     }
 
     @Override
@@ -545,8 +555,6 @@ public class TileMap implements Screen
 
     public void resizeMap(int width, int height)
     {
-        this.propertyMenu.mapPropertyPanel.mapWidth = width;
-        this.propertyMenu.mapPropertyPanel.mapHeight = height;
         this.mapWidth = width;
         this.mapHeight = height;
         for(int i = 0; i < this.layers.size; i ++)
@@ -708,7 +716,7 @@ public class TileMap implements Screen
             {
                 tileMenu.selectedTiles.clear();
                 tileMenu.selectedTiles.add(tileTool);
-                propertyMenu.newProperty(toolData.propertyData.get(i).property, toolData.propertyData.get(i).value);
+                propertyMenu.newProperty(toolData.propertyData.get(k).property, toolData.propertyData.get(k).value);
                 tileMenu.selectedTiles.clear();
             }
             for(int k = 0; k < toolData.attachedObjects.size(); k ++)
@@ -733,8 +741,47 @@ public class TileMap implements Screen
                     propertyMenu.newProperty(toolData.attachedObjects.get(k).propertyData.get(s).property, toolData.attachedObjects.get(k).propertyData.get(s).value);
                     selectedObjects.clear();
                 }
+                if(attachedMapObject != null)
+                    tileTool.mapObjects.add(attachedMapObject);
+            }
+        }
+        for(int i = 0; i < tileMapData.spriteTools.size(); i ++)
+        {
+            ToolData toolData = tileMapData.spriteTools.get(i);
+            TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id);
+            for(int k = 0; k < toolData.lockedPropertyData.size(); k ++)
+                tileTool.getPropertyField(toolData.lockedPropertyData.get(k).property).value.setText(toolData.lockedPropertyData.get(k).value);
+            for(int k = 0; k < toolData.propertyData.size(); k ++)
+            {
+                tileMenu.selectedTiles.clear();
+                tileMenu.selectedTiles.add(tileTool);
+                propertyMenu.newProperty(toolData.propertyData.get(k).property, toolData.propertyData.get(k).value);
+                tileMenu.selectedTiles.clear();
+            }
+            for(int k = 0; k < toolData.attachedObjects.size(); k ++)
+            {
+                MapObjectData attachedObject = toolData.attachedObjects.get(k);
+                AttachedMapObject attachedMapObject = null;
+                if(attachedObject instanceof MapPolygonData)
+                {
+                    MapPolygonData polygonData = (MapPolygonData) attachedObject;
+                    attachedMapObject = new AttachedMapObject(this, null, polygonData.vertices, polygonData.xOffset, polygonData.yOffset, polygonData.width, polygonData.height, polygonData.x, polygonData.y);
+                }
+                else if(attachedObject instanceof MapPointData)
+                {
+                    MapPointData pointData = (MapPointData) attachedObject;
+                    attachedMapObject = new AttachedMapObject(this, null, pointData.xOffset, pointData.yOffset, pointData.x, pointData.y);
+                }
 
-                tileTool.mapObjects.add(attachedMapObject);
+                for(int s = 0; s < toolData.attachedObjects.get(k).propertyData.size(); s ++)
+                {
+                    selectedObjects.clear();
+                    selectedObjects.add(attachedMapObject);
+                    propertyMenu.newProperty(toolData.attachedObjects.get(k).propertyData.get(s).property, toolData.attachedObjects.get(k).propertyData.get(s).value);
+                    selectedObjects.clear();
+                }
+                if(attachedMapObject != null)
+                    tileTool.mapObjects.add(attachedMapObject);
             }
         }
         propertyMenu.rebuild();

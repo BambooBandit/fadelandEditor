@@ -9,9 +9,10 @@ import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.TileMap;
 
+import static com.fadeland.editor.map.TileMap.tileSize;
+
 public class TileMenu extends Group
 {
-    public static int tileSize = 64;
     public static int tileSheetWidth;
     public static int tileSheetHeight;
     public static int tilePadding = 2; // Bleeding area in pixels

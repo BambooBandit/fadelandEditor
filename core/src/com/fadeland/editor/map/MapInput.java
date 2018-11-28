@@ -20,7 +20,7 @@ import com.fadeland.editor.ui.propertyMenu.PropertyToolPane;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 import com.fadeland.editor.undoredo.*;
 
-import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSize;
+import static com.fadeland.editor.map.TileMap.tileSize;
 
 public class MapInput implements InputProcessor
 {
