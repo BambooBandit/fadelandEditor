@@ -288,7 +288,6 @@ public class MapObject extends Tile
         }
         else if(this.body == null)
         {
-            System.out.println("create");
             BodyDef bodyDef = new BodyDef();
             bodyDef.position.set(this.position);
             PolygonShape shape = new PolygonShape();

@@ -36,7 +36,7 @@ public class TileGroup
         }
         for(int i = 0; i < types.size(); i ++)
             this.types.add(types.get(i));
-        debugShapePrint();
+//        debugShapePrint();
     }
 
     public TileGroup(float clickedX, float clickedY, Array<TileTool> selectedTileTools, TileMap map)
@@ -103,7 +103,7 @@ public class TileGroup
                 x = 0;
         }
 
-        debugShapePrint();
+//        debugShapePrint();
     }
 
     private void debugShapePrint()
