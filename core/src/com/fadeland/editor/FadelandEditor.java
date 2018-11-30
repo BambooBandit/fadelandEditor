@@ -32,6 +32,8 @@ public class FadelandEditor extends Game
 	public TileMap activeMap; // Map currently being edited
 	public Array<TileMap> maps; // All maps open in the program.
 
+	public static boolean fileChooserOpen = false;
+
 	@Override
 	public void create ()
 	{

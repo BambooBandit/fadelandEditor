@@ -1,5 +1,6 @@
 package com.fadeland.editor.ui.fileMenu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,6 +13,8 @@ import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.map.TileMapData;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -71,21 +74,47 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                File file = new File("untitled 0" + ".flm");
-                try
-                {
-                    String content = new Scanner(file).useDelimiter("\\Z").next();
-                    Json json = new Json();
-                    TileMapData tileMapData = json.fromJson(TileMapData.class, content);
-                    TileMap newMap = new TileMap(editor, tileMapData);
-                    editor.addToMaps(newMap);
-                    mapTabPane.lookAtMap(newMap);
-                }
-                catch (FileNotFoundException e)
-                {
-                    e.printStackTrace();
-                }
-
+                if(editor.fileChooserOpen)
+                    return;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        editor.fileChooserOpen = true;
+                        JFileChooser chooser = new JFileChooser();
+                        FileNameExtensionFilter flmFilter = new FileNameExtensionFilter(
+                                "flm files (*.flm)", "flm");
+                        chooser.setFileFilter(flmFilter);
+                        JFrame f = new JFrame();
+                        f.setVisible(true);
+                        f.setAlwaysOnTop(true);
+                        f.toFront();
+                        f.setVisible(false);
+                        int res = chooser.showOpenDialog(f);
+                        f.dispose();
+                        editor.fileChooserOpen = false;
+                        if (res == JFileChooser.APPROVE_OPTION)
+                        {
+                            Gdx.app.postRunnable(() ->
+                            {
+                                try
+                                {
+                                    File file = chooser.getSelectedFile();
+                                    String content = new Scanner(file).useDelimiter("\\Z").next();
+                                    Json json = new Json();
+                                    TileMapData tileMapData = json.fromJson(TileMapData.class, content);
+                                    TileMap newMap = new TileMap(editor, tileMapData);
+                                    newMap.file = file;
+                                    editor.addToMaps(newMap);
+                                    mapTabPane.lookAtMap(newMap);
+                                }
+                                catch (FileNotFoundException e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            });
+                        }
+                    }
+                }).start();
             }
         });
         this.saveButton.addListener(new ClickListener()
@@ -96,10 +125,15 @@ public class FileMenu extends Group
                 if(editor.getScreen() != null)
                 {
                     TileMap tileMap = (TileMap) editor.getScreen();
+                    if(tileMap.file == null)
+                    {
+                        saveAs();
+                        return;
+                    }
                     TileMapData tileMapData = new TileMapData(tileMap);
                     Json json = new Json();
 
-                    File file = new File(tileMap.name + ".flm");
+                    File file = tileMap.file;
                     try
                     {
                         //Create the file
@@ -125,6 +159,7 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                saveAs();
             }
         });
         this.undoButton.addListener(new ClickListener()
@@ -161,6 +196,61 @@ public class FileMenu extends Group
         this.fileMenuTable.add(this.mapTabPane).row();
         this.fileMenuTable.add(this.toolPane);
         this.addActor(this.fileMenuTable);
+    }
+
+    private void saveAs()
+    {
+        if(editor.fileChooserOpen || editor.getScreen() == null)
+            return;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                editor.fileChooserOpen = true;
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter flmFilter = new FileNameExtensionFilter(
+                        "flm files (*.flm)", "flm");
+                chooser.setFileFilter(flmFilter);
+                TileMap tileMap = (TileMap) editor.getScreen();
+                if(tileMap.file != null)
+                    chooser.setSelectedFile(tileMap.file);
+                else
+                    chooser.setSelectedFile(new File("map.flm"));
+                JFrame f = new JFrame();
+                f.setVisible(true);
+                f.setAlwaysOnTop(true);
+                f.toFront();
+                f.setVisible(false);
+                int res = chooser.showSaveDialog(f);
+                f.dispose();
+                editor.fileChooserOpen = false;
+                if (res == JFileChooser.APPROVE_OPTION)
+                {
+                    Gdx.app.postRunnable(() ->
+                    {
+                        tileMap.setName(chooser.getSelectedFile().getName());
+                        TileMapData tileMapData = new TileMapData(tileMap);
+                        Json json = new Json();
+
+                        File file = chooser.getSelectedFile();
+                        tileMap.file = file;
+                        try
+                        {
+                            //Create the file
+                            file.createNewFile();
+
+                            //Write Content
+                            FileWriter writer = new FileWriter(file);
+                            writer.write(json.prettyPrint(tileMapData));
+                            writer.close();
+                        }
+                        catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     public void setSize(float width, float buttonHeight, float tabHeight, float toolHeight)

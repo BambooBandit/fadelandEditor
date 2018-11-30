@@ -29,6 +29,7 @@ import com.fadeland.editor.ui.tileMenu.TileMenuTools;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 import com.fadeland.editor.undoredo.Action;
 
+import java.io.File;
 import java.util.Stack;
 
 public class TileMap implements Screen
@@ -74,6 +75,8 @@ public class TileMap implements Screen
     public RayHandler rayHandler;
 
     private boolean apply = false;
+
+    public File file = null;
 
     public TileMap(FadelandEditor editor, TileMapData tileMapData)
     {
@@ -789,5 +792,13 @@ public class TileMap implements Screen
         findAllTilesToBeGrouped();
         undo.clear();
         redo.clear();
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+        this.editor.fileMenu.mapTabPane.removeMap(this);
+        this.editor.fileMenu.mapTabPane.addMap(this);
+        this.editor.fileMenu.mapTabPane.lookAtMap(this);
     }
 }
