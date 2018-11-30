@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -146,7 +147,10 @@ public class MapInput implements InputProcessor
                 {
                     CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                     MapSprite mapSprite = map.selectedSprites.first();
-                    mapObject = new AttachedMapObject(map, mapSprite, objectVertices.toArray(), objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
+                    Polygon antiRotatePolygon = new Polygon(objectVertices.toArray());
+                    antiRotatePolygon.setOrigin(-(objectVerticePosition.x - mapSprite.position.x) + mapSprite.width / 2, -(objectVerticePosition.y - mapSprite.position.y) + mapSprite.height / 2);
+                    antiRotatePolygon.rotate(-mapSprite.sprite.getRotation());
+                    mapObject = new AttachedMapObject(map, mapSprite, antiRotatePolygon.getTransformedVertices(), objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     mapSprite.addMapObject((AttachedMapObject) mapObject);
                     createOrRemoveAttachedObject.addAttachedObjects();
                     map.performAction(createOrRemoveAttachedObject);
