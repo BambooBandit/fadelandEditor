@@ -1,24 +1,21 @@
 package com.fadeland.editor.map;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.layerMenu.LayerField;
 import com.fadeland.editor.ui.layerMenu.LayerTypes;
 
+import static com.fadeland.editor.map.TileMap.tileSize;
+
 public class TileLayer extends Layer
 {
-
-    private int width, height;
-
     public Array<PossibleTileGroup> possibleTileGroups;
 
     public TileLayer(FadelandEditor editor, TileMap map, LayerTypes type, LayerField layerField)
     {
         super(editor, map, type, layerField);
-
-        this.width = map.mapWidth;
-        this.height = map.mapHeight;
 
         this.possibleTileGroups = new Array<>();
 
@@ -49,6 +46,7 @@ public class TileLayer extends Layer
         }
     }
 
+    @Override
     public void resize(int width, int height, boolean down, boolean right)
     {
         int oldWidth = this.width;
@@ -107,7 +105,7 @@ public class TileLayer extends Layer
             }
         }
 
-        if(height > oldHeight) // grow horizontal
+        if(height > oldHeight) // grow vertical
         {
             if(down) // grow down
             {
@@ -122,7 +120,7 @@ public class TileLayer extends Layer
                     this.tiles.add(new Tile(map, 0, 0));
             }
         }
-        else // shrink horizontal
+        else // shrink vertical
         {
             if(down) // shrink down
             {
@@ -159,6 +157,25 @@ public class TileLayer extends Layer
             possibleTileGroups.get(i).draw();
     }
 
+    public void drawBlocked()
+    {
+        float r = .85f;
+        float g = .25f;
+        float b = .25f;
+        for(int i = 0; i < tiles.size; i ++)
+        {
+            Tile tile = tiles.get(i);
+            if(tile.hasBlockedObjectOnTop || tile.tool.getPropertyField("blocked") != null)
+            {
+                this.editor.shapeRenderer.setColor(r, g, b, 1);
+                this.editor.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+                editor.shapeRenderer.rect(tile.position.x, tile.position.y, tileSize, tileSize);
+                this.editor.shapeRenderer.setColor(r, g, b,.075f);
+                this.editor.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+                editor.shapeRenderer.rect(tile.position.x, tile.position.y, tileSize, tileSize);
+            }
+        }
+    }
 
     // All the below methods are for grouped tiles
 

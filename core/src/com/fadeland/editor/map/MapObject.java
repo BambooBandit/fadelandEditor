@@ -83,11 +83,15 @@ public class MapObject extends Tile
                 polygon.setRotation(mapSprite.rotation);
             }
             if (this.body != null)
+            {
                 this.body.setTransform(this.position.x + (width / 2), this.position.y + (height / 2), rotation);
+                map.searchForBlockedTiles();
+            }
             else if(this.bodies != null)
             {
                 int bodyIndex = 0;
                 AttachedMapObject attachedMapObject = (AttachedMapObject) this;
+                boolean searchForBlocked = false;
                 for (int i = 0; i < map.layers.size; i++)
                 {
                     for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
@@ -105,9 +109,12 @@ public class MapObject extends Tile
                             Utils.positionDifference.sub(attachedMapObject.oldPositionOffset);
                             bodies.get(bodyIndex).setTransform(Utils.positionDifference.x + map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2, Utils.positionDifference.y + map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2, rotation2);
                             bodyIndex ++;
+                            searchForBlocked = true;
                         }
                     }
                 }
+                if(searchForBlocked)
+                    map.searchForBlockedTiles();
             }
         }
         else if(this.pointLight != null)
@@ -151,6 +158,7 @@ public class MapObject extends Tile
         }
         this.polygon.setVertices(vertices);
         setPosition(polygon.getX(), polygon.getY());
+        map.searchForBlockedTiles();
     }
 
     public float getVerticeX()
@@ -270,6 +278,7 @@ public class MapObject extends Tile
                 this.map.world.destroyBody(this.bodies.get(i));
             this.bodies.clear();
         }
+        map.searchForBlockedTiles();
     }
 
     public void createBody()
@@ -301,6 +310,7 @@ public class MapObject extends Tile
             this.body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
             this.body.setTransform(this.position, 0);
             shape.dispose();
+            map.searchForBlockedTiles();
         }
     }
 
@@ -336,6 +346,7 @@ public class MapObject extends Tile
 
         body.setUserData(tile);
         bodies.add(body);
+        map.searchForBlockedTiles();
     }
 
     public void createLight()

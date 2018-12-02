@@ -14,6 +14,7 @@ public class Tile
     public Vector2 position;
     public TileTool tool;
     public boolean hasBeenPainted = false;
+    public boolean hasBlockedObjectOnTop = false;
 
     // For Tiles, and objects
     public Tile(TileMap map, float x, float y)

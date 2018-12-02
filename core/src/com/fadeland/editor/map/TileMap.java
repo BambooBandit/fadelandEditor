@@ -455,6 +455,14 @@ public class TileMap implements Screen
             if(clickedTile != null)
                 fillPreview(mouseCoords.x, mouseCoords.y, clickedTile.tool);
         }
+        else if(editor.fileMenu.toolPane.blocked.selected)
+        {
+            for(int i = 0; i < layers.size; i++)
+            {
+                if(layers.get(i) instanceof TileLayer)
+                    ((TileLayer) layers.get(i)).drawBlocked();
+            }
+        }
         else if(selectedLayer != null && selectedLayer instanceof TileLayer && editor.getFileTool() != null && (editor.getFileTool().tool == Tools.BIND || editor.getFileTool().tool == Tools.STAMP))
             ((TileLayer)this.selectedLayer).drawPossibleTileGroups();
         this.editor.shapeRenderer.end();
@@ -561,8 +569,7 @@ public class TileMap implements Screen
         this.mapWidth = width;
         this.mapHeight = height;
         for(int i = 0; i < this.layers.size; i ++)
-            if(layers.get(i) instanceof TileLayer)
-                ((TileLayer)layers.get(i)).resize(width, height, propertyMenu.mapPropertyPanel.down.isChecked(), propertyMenu.mapPropertyPanel.right.isChecked());
+            (layers.get(i)).resize(width, height, propertyMenu.mapPropertyPanel.down.isChecked(), propertyMenu.mapPropertyPanel.right.isChecked());
     }
 
     private void fillPreview(float x, float y, TileTool tool)
@@ -662,6 +669,7 @@ public class TileMap implements Screen
                         int id = savedTileLayer.tiles.get(k).id;
                         TileTool tileTool = tileMenu.getTileTool(TileMenuTools.TILE, id);
                         layer.tiles.get(k).setTool(tileTool);
+                        layer.tiles.get(k).hasBlockedObjectOnTop = savedTileLayer.tiles.get(k).blockedByObject;
                     }
                 }
                 else if(layerTypes == LayerTypes.SPRITE)
@@ -800,5 +808,72 @@ public class TileMap implements Screen
         this.editor.fileMenu.mapTabPane.removeMap(this);
         this.editor.fileMenu.mapTabPane.addMap(this);
         this.editor.fileMenu.mapTabPane.lookAtMap(this);
+    }
+
+    public void searchForBlockedTiles()
+    {
+        for(int i = 0; i < layers.size; i ++)
+        {
+            if(!(layers.get(i) instanceof TileLayer))
+                continue;
+            tile:
+            for(int k = 0; k < layers.get(i).tiles.size; k ++)
+            {
+                // Search every tile of every layer
+                Tile tile = layers.get(i).tiles.get(k);
+                tile.hasBlockedObjectOnTop = false; // reset
+                // If a blocked object is on top of the center of the tile, the tile is blocked.
+                float centerX = tile.position.x + tileSize / 2;
+                float centerY = tile.position.y + tileSize / 2;
+
+                // Search all tile tools
+                for(int s = 0; s < tileMenu.tileTable.getChildren().size; s ++)
+                {
+                    TileTool tileTool = (TileTool) tileMenu.tileTable.getChildren().get(s);
+                    for(int d = 0; d < tileTool.mapObjects.size; d ++)
+                    {
+                        AttachedMapObject attachedMapObject = tileTool.mapObjects.get(d);
+                        if(!attachedMapObject.isPoint && attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY))
+                        {
+                            tile.hasBlockedObjectOnTop = true;
+                            continue tile;
+                        }
+                    }
+                }
+
+                // Search all sprite tools
+                for(int s = 0; s < tileMenu.spriteTable.getChildren().size; s ++)
+                {
+                    TileTool tileTool = (TileTool) tileMenu.spriteTable.getChildren().get(s);
+                    for(int d = 0; d < tileTool.mapObjects.size; d ++)
+                    {
+                        AttachedMapObject attachedMapObject = tileTool.mapObjects.get(d);
+                        if(!attachedMapObject.isPoint && attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY))
+                        {
+                            tile.hasBlockedObjectOnTop = true;
+                            continue tile;
+                        }
+                    }
+                }
+
+                // Search all object layers
+                for(int s = 0; s < layers.size; s ++)
+                {
+                    if(!(layers.get(s) instanceof ObjectLayer))
+                        continue;
+                    for(int d = 0; d < layers.get(s).tiles.size; d++)
+                    {
+                        MapObject mapObject = (MapObject) layers.get(s).tiles.get(d);
+                        if(mapObject.body == null)
+                            continue;
+                        if(!mapObject.isPoint && mapObject.body.getFixtureList().first().testPoint(centerX, centerY))
+                        {
+                            tile.hasBlockedObjectOnTop = true;
+                            continue tile;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

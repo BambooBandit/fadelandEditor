@@ -17,9 +17,9 @@ public class PossibleTileGroup
 
     public Vector2 position; // The upper left of this possible group
 
-    public float r = Utils.randomFloat(0, 1);
-    public float g = Utils.randomFloat(0, 1);
-    public float b = Utils.randomFloat(0, 1);
+    public float r = .45f;
+    public float g = .55f;
+    public float b = .15f;
 
     public PossibleTileGroup(FadelandEditor editor, TileLayer layer, Vector2 position)
     {
