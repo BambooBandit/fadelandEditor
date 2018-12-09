@@ -45,8 +45,6 @@ public class TileMap implements Screen
 
     public String name;
 
-    public static int mapWidth;
-    public static int mapHeight;
     public static int tileSize;
 
     public MapInput input;
@@ -82,8 +80,6 @@ public class TileMap implements Screen
     {
         this.editor = editor;
         this.name = tileMapData.name;
-        this.mapWidth = tileMapData.mapWidth;
-        this.mapHeight = tileMapData.mapHeight;
         this.tileSize = tileMapData.tileSize;
         init();
         tileSize = tileMapData.tileSize; // TODO make this build the tiles. Currently doesn't
@@ -95,8 +91,6 @@ public class TileMap implements Screen
     {
         this.editor = editor;
         this.name = name;
-        this.mapWidth = 5;
-        this.mapHeight = 5;
         this.tileSize = 64;
         init();
     }
@@ -195,17 +189,22 @@ public class TileMap implements Screen
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         this.editor.shapeRenderer.begin();
         this.editor.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        this.editor.shapeRenderer.line(0, 0, 0, mapHeight * tileSize);
-        this.editor.shapeRenderer.line(0, 0, mapWidth * tileSize, 0);
-        this.editor.shapeRenderer.line(0, mapHeight * tileSize, mapWidth * tileSize, mapHeight * tileSize);
-        this.editor.shapeRenderer.line(mapWidth * tileSize, 0, mapWidth * tileSize, mapHeight * tileSize);
-
-        if(editor.fileMenu.toolPane.lines.selected)
+        if(selectedLayer != null)
         {
-            for (int y = 1; y < mapHeight; y++)
-                this.editor.shapeRenderer.line(0, y * tileSize, mapWidth * tileSize, y * tileSize);
-            for (int x = 1; x < mapWidth; x++)
-                this.editor.shapeRenderer.line(x * tileSize, 0, x * tileSize, mapHeight * tileSize);
+            int layerWidth = selectedLayer.width;
+            int layerHeight = selectedLayer.height;
+            this.editor.shapeRenderer.line(0, 0, 0, layerHeight * tileSize);
+            this.editor.shapeRenderer.line(0, 0, layerWidth * tileSize, 0);
+            this.editor.shapeRenderer.line(0, layerHeight * tileSize, layerWidth * tileSize, layerHeight * tileSize);
+            this.editor.shapeRenderer.line(layerWidth * tileSize, 0, layerWidth * tileSize, layerHeight * tileSize);
+
+            if (editor.fileMenu.toolPane.lines.selected)
+            {
+                for (int y = 1; y < layerHeight; y++)
+                    this.editor.shapeRenderer.line(0, y * tileSize, layerWidth * tileSize, y * tileSize);
+                for (int x = 1; x < layerWidth; x++)
+                    this.editor.shapeRenderer.line(x * tileSize, 0, x * tileSize, layerHeight * tileSize);
+            }
         }
 
         this.editor.shapeRenderer.setColor(Color.CYAN);
@@ -548,13 +547,13 @@ public class TileMap implements Screen
 
     public Tile getTile(float x, float y)
     {
-        if(selectedLayer == null || !(selectedLayer instanceof TileLayer) || x > mapWidth * tileSize || y > mapHeight * tileSize || x < 0 || y < -tileSize)
+        if(selectedLayer == null || !(selectedLayer instanceof TileLayer) || x > selectedLayer.width * tileSize || y > selectedLayer.height * tileSize || x < 0 || y < -tileSize)
             return null;
 
         TileLayer selectedTileLayer = (TileLayer) selectedLayer;
 
         int index = 0;
-        index += Math.ceil(y / tileSize) * mapWidth - 1;
+        index += Math.ceil(y / tileSize) * selectedLayer.width - 1;
         index += Math.ceil(x / tileSize);
 
         if(index >= selectedTileLayer.tiles.size || index < 0)
@@ -562,14 +561,6 @@ public class TileMap implements Screen
 
         Tile tile = selectedTileLayer.tiles.get(index);
         return tile;
-    }
-
-    public void resizeMap(int width, int height)
-    {
-        this.mapWidth = width;
-        this.mapHeight = height;
-        for(int i = 0; i < this.layers.size; i ++)
-            (layers.get(i)).resize(width, height, propertyMenu.mapPropertyPanel.down.isChecked(), propertyMenu.mapPropertyPanel.right.isChecked());
     }
 
     private void fillPreview(float x, float y, TileTool tool)

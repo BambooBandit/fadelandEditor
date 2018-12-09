@@ -6,9 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
-
-import static com.fadeland.editor.map.TileMap.mapHeight;
-import static com.fadeland.editor.map.TileMap.mapWidth;
+import com.fadeland.editor.undoredo.ResizeLayer;
 
 public class LayerPropertyPanel extends Group
 {
@@ -41,9 +39,9 @@ public class LayerPropertyPanel extends Group
 
         TextField.TextFieldFilter.DigitsOnlyFilter filter = new TextField.TextFieldFilter.DigitsOnlyFilter();
 
-        this.layerWidthProperty = new PropertyField("Layer Width", Integer.toString(mapWidth), skin, menu, false);
+        this.layerWidthProperty = new PropertyField("Layer Width", "5", skin, menu, false);
         this.layerWidthProperty.value.setTextFieldFilter(filter);
-        this.layerHeightProperty = new PropertyField("Layer Height", Integer.toString(mapHeight), skin, menu, false);
+        this.layerHeightProperty = new PropertyField("Layer Height", "5", skin, menu, false);
         this.layerHeightProperty.value.setTextFieldFilter(filter);
 
         this.buttonDirectionTable = new Table();
@@ -62,10 +60,10 @@ public class LayerPropertyPanel extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-//                ResizeMap resizeMap = new ResizeMap(menu.map, mapWidth, mapHeight);
+                ResizeLayer resizeMap = new ResizeLayer(menu.map, menu.map.selectedLayer, menu.map.selectedLayer.width, menu.map.selectedLayer.height);
                 menu.map.selectedLayer.resize(Integer.parseInt(layerWidthProperty.value.getText()), Integer.parseInt(layerHeightProperty.value.getText()), down.isChecked(), right.isChecked());
-//                resizeMap.addNew(mapWidth, mapHeight);
-//                menu.map.performAction(resizeMap);
+                resizeMap.addNew(menu.map.selectedLayer.width, menu.map.selectedLayer.height);
+                menu.map.performAction(resizeMap);
             }
         });
 

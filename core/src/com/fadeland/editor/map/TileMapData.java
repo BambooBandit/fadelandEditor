@@ -8,8 +8,6 @@ import java.util.ArrayList;
 public class TileMapData
 {
     public String name;
-    public int mapWidth;
-    public int mapHeight;
     public int tileSize;
     public ArrayList<ToolData> tileTools;
     public ArrayList<ToolData> spriteTools;
@@ -20,8 +18,6 @@ public class TileMapData
     public TileMapData(TileMap tileMap)
     {
         this.name = tileMap.name;
-        this.mapWidth = tileMap.mapWidth;
-        this.mapHeight = tileMap.mapHeight;
         this.tileSize = tileMap.tileSize;
         this.tileTools = new ArrayList<>();
         for(int i = 0; i < tileMap.tileMenu.tileTable.getChildren().size; i ++)
@@ -73,10 +69,13 @@ class TileGroupData
 abstract class LayerData
 {
     public String name;
+    public int width, height;
     public LayerData(){}
     public LayerData(Layer layer)
     {
         this.name = layer.layerField.layerName.getText();
+        this.width = layer.width;
+        this.height = layer.height;
     }
 }
 

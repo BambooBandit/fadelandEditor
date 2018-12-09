@@ -608,7 +608,7 @@ public class MapInput implements InputProcessor
                     }
                 }
                 else if(editor.getSpriteTool() != null && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH &&
-                        coords.x > 0 && coords.y > 0 && coords.x < map.mapWidth * tileSize && coords.y < map.mapHeight * tileSize)
+                        coords.x > 0 && coords.y > 0 && coords.x < map.selectedLayer.width * tileSize && coords.y < map.selectedLayer.height * tileSize)
                 {
                     CreateOrRemoveSprite createOrRemoveSprite = new CreateOrRemoveSprite(map, ((SpriteLayer) map.selectedLayer).tiles, null);
                     MapSprite mapSprite = newMapSprite(map, editor.getSpriteTool(), coords.x, coords.y);

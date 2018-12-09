@@ -17,7 +17,6 @@ public class PropertyMenu extends Group
 
     private Image background;
 
-    public MapPropertyPanel mapPropertyPanel;
     public LayerPropertyPanel layerPropertyPanel;
     public TilePropertyPanel tilePropertyPanel;
     public SpritePropertyPanel spritePropertyPanel;
@@ -39,7 +38,6 @@ public class PropertyMenu extends Group
 
         this.stack = new Stack();
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
-        this.mapPropertyPanel = new MapPropertyPanel(skin, this, editor);
         this.layerPropertyPanel = new LayerPropertyPanel(skin, this, editor);
         this.layerPropertyPanel.setVisible(false);
         this.tilePropertyPanel = new TilePropertyPanel(skin, this, editor);
@@ -50,7 +48,6 @@ public class PropertyMenu extends Group
 
         this.propertyTable = new Table();
         this.propertyTable.left().bottom();
-        this.propertyTable.add(this.mapPropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.layerPropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.spritePropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.tilePropertyPanel).padBottom(5).row();
@@ -70,7 +67,6 @@ public class PropertyMenu extends Group
     public void setSize(float width, float height)
     {
         this.background.setBounds(0, 0, width, height - toolHeight);
-        this.mapPropertyPanel.setSize(width, toolHeight);
         this.tilePropertyPanel.setSize(width, toolHeight);
         this.layerPropertyPanel.setSize(width, toolHeight);
         this.spritePropertyPanel.setSize(width, toolHeight);
@@ -91,7 +87,7 @@ public class PropertyMenu extends Group
         else
             this.spritePropertyPanel.setSize(width, 0);
 
-        this.propertyPanel.setSize(width, height - toolHeight - this.mapPropertyPanel.getHeight() - 5 - 5 - propertyPanelStackHeight);
+        this.propertyPanel.setSize(width, height - toolHeight - 5 - 5 - propertyPanelStackHeight);
         this.propertyPanel.setPosition(0, toolHeight);
         this.propertyTable.invalidateHierarchy();
         this.toolPane.setSize(width, toolHeight);

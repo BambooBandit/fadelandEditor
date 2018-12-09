@@ -21,8 +21,8 @@ public abstract class Layer
 
     public Layer(FadelandEditor editor, TileMap map, LayerTypes type, LayerField layerField)
     {
-        this.width = map.mapWidth;
-        this.height = map.mapHeight;
+        this.width = 5;
+        this.height = 5;
         this.tiles = new Array<>();
         this.editor = editor;
         this.map = map;
