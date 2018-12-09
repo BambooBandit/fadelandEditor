@@ -18,6 +18,7 @@ public class PropertyMenu extends Group
     private Image background;
 
     public MapPropertyPanel mapPropertyPanel;
+    public LayerPropertyPanel layerPropertyPanel;
     public TilePropertyPanel tilePropertyPanel;
     public SpritePropertyPanel spritePropertyPanel;
     private PropertyPanel propertyPanel; // Custom properties
@@ -39,6 +40,8 @@ public class PropertyMenu extends Group
         this.stack = new Stack();
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.mapPropertyPanel = new MapPropertyPanel(skin, this, editor);
+        this.layerPropertyPanel = new LayerPropertyPanel(skin, this, editor);
+        this.layerPropertyPanel.setVisible(false);
         this.tilePropertyPanel = new TilePropertyPanel(skin, this, editor);
         this.spritePropertyPanel = new SpritePropertyPanel(skin, this, editor);
         this.spritePropertyPanel.setVisible(false);
@@ -48,6 +51,7 @@ public class PropertyMenu extends Group
         this.propertyTable = new Table();
         this.propertyTable.left().bottom();
         this.propertyTable.add(this.mapPropertyPanel).padBottom(5).row();
+        this.propertyTable.add(this.layerPropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.spritePropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.tilePropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.propertyPanel);
@@ -68,8 +72,15 @@ public class PropertyMenu extends Group
         this.background.setBounds(0, 0, width, height - toolHeight);
         this.mapPropertyPanel.setSize(width, toolHeight);
         this.tilePropertyPanel.setSize(width, toolHeight);
+        this.layerPropertyPanel.setSize(width, toolHeight);
         this.spritePropertyPanel.setSize(width, toolHeight);
         float propertyPanelStackHeight = 0;
+
+        if(this.layerPropertyPanel.isVisible())
+            propertyPanelStackHeight += this.layerPropertyPanel.getHeight();
+        else
+            this.layerPropertyPanel.setSize(width, 0);
+
         if(this.tilePropertyPanel.isVisible())
             propertyPanelStackHeight += this.tilePropertyPanel.getHeight();
         else
@@ -153,6 +164,14 @@ public class PropertyMenu extends Group
     {
         this.tilePropertyPanel.table.clearChildren();
         this.spritePropertyPanel.table.clearChildren();
+        if(map.selectedLayer != null)
+        {
+            this.layerPropertyPanel.setVisible(true);
+            this.layerPropertyPanel.layerWidthProperty.value.setText(Integer.toString(map.selectedLayer.width));
+            this.layerPropertyPanel.layerHeightProperty.value.setText(Integer.toString(map.selectedLayer.height));
+        }
+        else
+            this.layerPropertyPanel.setVisible(false);
         if(map.tileMenu.selectedTiles.size == 1)
         {
             if(map.tileMenu.selectedTiles.first().tool == TileMenuTools.TILE)
@@ -170,6 +189,10 @@ public class PropertyMenu extends Group
                 this.spritePropertyPanel.table.add(spriteProperties.get(i)).padBottom(1).row();
             this.spritePropertyPanel.setVisible(true);
         }
+        if(this.layerPropertyPanel.isVisible())
+            this.layerPropertyPanel.setSize(getWidth(), toolHeight);
+        else
+            this.layerPropertyPanel.setSize(getWidth(), 0);
         if(this.tilePropertyPanel.isVisible())
             this.tilePropertyPanel.setSize(getWidth(), toolHeight);
         else

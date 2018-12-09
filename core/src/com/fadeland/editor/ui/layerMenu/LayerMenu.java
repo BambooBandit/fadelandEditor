@@ -100,6 +100,7 @@ public class LayerMenu extends Group
                 unselectAll();
                 layer.select();
                 selectedMap.selectedLayer = layer.mapLayer;
+                selectedMap.propertyMenu.rebuild();
             }
         };
         layer.layerName.addListener(listener);
@@ -192,5 +193,6 @@ public class LayerMenu extends Group
         for(int i = 0; i < this.layers.size; i ++)
             this.layers.get(i).unselect();
         this.map.selectedLayer = null;
+        this.map.propertyMenu.rebuild();
     }
 }

@@ -11,7 +11,8 @@ public abstract class Layer
 {
     public Array<Tile> tiles;
 
-    protected int width, height;
+    public int width;
+    public int height;
 
     protected FadelandEditor editor;
     public TileMap map;
