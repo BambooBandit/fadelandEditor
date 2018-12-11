@@ -13,6 +13,7 @@ public abstract class Layer
 
     public int width;
     public int height;
+    public float z;
 
     protected FadelandEditor editor;
     public TileMap map;
@@ -23,6 +24,7 @@ public abstract class Layer
     {
         this.width = 5;
         this.height = 5;
+        this.z = 0;
         this.tiles = new Array<>();
         this.editor = editor;
         this.map = map;
@@ -92,5 +94,10 @@ public abstract class Layer
                     tiles.get(i).setPosition(tiles.get(i).position.x, tiles.get(i).position.y - heightShrink);
             }
         }
+    }
+
+    public void setZ(float z)
+    {
+        this.z = z;
     }
 }

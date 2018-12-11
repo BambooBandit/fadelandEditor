@@ -21,6 +21,7 @@ public class LayerPropertyPanel extends Group
 
     public PropertyField layerWidthProperty;
     public PropertyField layerHeightProperty;
+    public PropertyField layerZProperty;
 
     private Table buttonDirectionTable;
     private ButtonGroup<TextButton> buttonDirectionUpDownGroup;
@@ -43,6 +44,16 @@ public class LayerPropertyPanel extends Group
         this.layerWidthProperty.value.setTextFieldFilter(filter);
         this.layerHeightProperty = new PropertyField("Layer Height", "5", skin, menu, false);
         this.layerHeightProperty.value.setTextFieldFilter(filter);
+        this.layerZProperty = new PropertyField("Layer Z", "0", skin, menu, false);
+        this.layerZProperty.value.setTextFieldFilter(new TextField.TextFieldFilter()
+        {
+            @Override
+            public boolean acceptChar(TextField textField, char c)
+            {
+                return c == '.' || Character.isDigit(c);
+            }
+        });
+
 
         this.buttonDirectionTable = new Table();
         this.buttonDirectionUpDownGroup = new ButtonGroup<>();
@@ -60,15 +71,17 @@ public class LayerPropertyPanel extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                ResizeLayer resizeMap = new ResizeLayer(menu.map, menu.map.selectedLayer, menu.map.selectedLayer.width, menu.map.selectedLayer.height);
+                ResizeLayer resizeLayer = new ResizeLayer(menu.map, menu.map.selectedLayer, menu.map.selectedLayer.width, menu.map.selectedLayer.height, menu.map.selectedLayer.z);
+                menu.map.selectedLayer.setZ(Float.parseFloat(layerZProperty.value.getText()));
                 menu.map.selectedLayer.resize(Integer.parseInt(layerWidthProperty.value.getText()), Integer.parseInt(layerHeightProperty.value.getText()), down.isChecked(), right.isChecked());
-                resizeMap.addNew(menu.map.selectedLayer.width, menu.map.selectedLayer.height);
-                menu.map.performAction(resizeMap);
+                resizeLayer.addNew(menu.map.selectedLayer.width, menu.map.selectedLayer.height, menu.map.selectedLayer.z);
+                menu.map.performAction(resizeLayer);
             }
         });
 
         this.table.add(this.layerWidthProperty).padBottom(1).row();
         this.table.add(this.layerHeightProperty).padBottom(1).row();
+        this.table.add(this.layerZProperty).padBottom(1).row();
         this.table.add(this.buttonDirectionTable);
 
         this.stack.add(this.background);
@@ -93,7 +106,7 @@ public class LayerPropertyPanel extends Group
         this.buttonDirectionTable.getCell(this.apply).size(width - (width / 7) * 4, textFieldHeight);
         this.buttonDirectionTable.invalidateHierarchy();
 
-        float newHeight = textFieldHeight * 3;
+        float newHeight = textFieldHeight * 4;
 
         this.background.setBounds(0, 0, width, newHeight);
         this.stack.setSize(width, newHeight);

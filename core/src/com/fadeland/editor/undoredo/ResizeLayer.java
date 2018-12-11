@@ -10,11 +10,12 @@ public class ResizeLayer implements Action
 {
     public TileMap map;
     public Layer layer;
-    int oldWidth, oldHeight, newWidth, newHeight;
+    public int oldWidth, oldHeight, newWidth, newHeight;
+    public float oldZ, newZ;
     public Array<Tile> oldTiles;
     public Array<Tile> newTiles;
 
-    public ResizeLayer(TileMap map, Layer layer, int oldWidth, int oldHeight)
+    public ResizeLayer(TileMap map, Layer layer, int oldWidth, int oldHeight, float oldZ)
     {
         this.map = map;
         this.layer = layer;
@@ -24,15 +25,17 @@ public class ResizeLayer implements Action
 
         this.oldWidth = oldWidth;
         this.oldHeight = oldHeight;
+        this.oldZ = oldZ;
 
         if (layer instanceof TileLayer)
             this.oldTiles.addAll(layer.tiles);
     }
 
-    public void addNew(int newWidth, int newHeight)
+    public void addNew(int newWidth, int newHeight, float newZ)
     {
         this.newWidth = newWidth;
         this.newHeight = newHeight;
+        this.newZ = newZ;
         
         if (layer instanceof TileLayer)
             this.newTiles.addAll(layer.tiles);
@@ -43,6 +46,7 @@ public class ResizeLayer implements Action
     {
         layer.width = this.oldWidth;
         layer.height = this.oldHeight;
+        layer.setZ(oldZ);
         if (layer instanceof TileLayer)
         {
             layer.tiles.clear();
@@ -55,6 +59,7 @@ public class ResizeLayer implements Action
     {
         layer.width = this.newWidth;
         layer.height = this.newHeight;
+        layer.setZ(newZ);
         if (layer instanceof TileLayer)
         {
             layer.tiles.clear();

@@ -9,6 +9,7 @@ public class TileMapData
 {
     public String name;
     public int tileSize;
+    public float brightness;
     public ArrayList<ToolData> tileTools;
     public ArrayList<ToolData> spriteTools;
     public ArrayList<LayerData> layers;
@@ -19,6 +20,7 @@ public class TileMapData
     {
         this.name = tileMap.name;
         this.tileSize = tileMap.tileSize;
+        this.brightness = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapBrightnessProperty.value.getText());
         this.tileTools = new ArrayList<>();
         for(int i = 0; i < tileMap.tileMenu.tileTable.getChildren().size; i ++)
             this.tileTools.add(new ToolData((TileTool) tileMap.tileMenu.tileTable.getChildren().get(i)));
@@ -70,12 +72,14 @@ abstract class LayerData
 {
     public String name;
     public int width, height;
+    public float z;
     public LayerData(){}
     public LayerData(Layer layer)
     {
         this.name = layer.layerField.layerName.getText();
         this.width = layer.width;
         this.height = layer.height;
+        this.z = layer.z;
     }
 }
 

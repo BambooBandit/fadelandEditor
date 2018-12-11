@@ -628,6 +628,7 @@ public class TileMap implements Screen
 
     private void setMapPropertiesAndObjects(TileMapData tileMapData)
     {
+        rayHandler.setAmbientLight(tileMapData.brightness);
         for(int i = 0; i < tileMapData.tileGroups.size(); i ++)
         {
             TileGroupData tileGroupData = tileMapData.tileGroups.get(i);
@@ -651,6 +652,7 @@ public class TileMap implements Screen
             {
                 layer = layerMenu.newLayer(layerTypes);
                 layer.layerField.layerName.setText(tileMapData.layers.get(i).name);
+                layer.setZ(tileMapData.layers.get(i).z);
 
                 if(layerTypes == LayerTypes.TILE)
                 {
