@@ -573,7 +573,7 @@ public class TileMap implements Screen
         Tile tileToPaint = getTile(x, y - tileSize);
         if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
         {
-            if(editor.getTileTools().size > 0)
+            if(editor.getTileTools() != null && editor.getTileTools().size > 0)
             {
                 TileTool tile = editor.getTileTools().first();
                 if (tile != null)
@@ -678,6 +678,7 @@ public class TileMap implements Screen
                         int id = savedSpriteLayer.tiles.get(k).id;
                         TileTool tileTool = tileMenu.getTileTool(TileMenuTools.SPRITE, id);
                         MapSprite mapSprite = input.newMapSprite(this, tileTool, savedSpriteLayer.tiles.get(k).x + savedSpriteLayer.tiles.get(k).width / 2, savedSpriteLayer.tiles.get(k).y + savedSpriteLayer.tiles.get(k).height / 2);
+                        mapSprite.setZ(savedSpriteLayer.tiles.get(k).z);
                         Utils.setCenterOrigin(mapSprite.position.x, mapSprite.position.y);
                         mapSprite.rotate(savedSpriteLayer.tiles.get(k).rotation);
                         layer.tiles.add(mapSprite);

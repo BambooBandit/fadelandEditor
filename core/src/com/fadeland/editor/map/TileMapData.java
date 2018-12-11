@@ -194,7 +194,7 @@ class MapTileData
 
 class MapSpriteData
 {
-    public float x, y;
+    public float x, y, z;
     int id;
     public float width, height, rotation;
     public MapSpriteData(){}
@@ -202,6 +202,7 @@ class MapSpriteData
     {
         this.x = mapSprite.position.x;
         this.y = mapSprite.position.y;
+        this.z = mapSprite.z;
         this.id = mapSprite.tool.id;
         this.width = mapSprite.sprite.getWidth();
         this.height = mapSprite.sprite.getHeight();

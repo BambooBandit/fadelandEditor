@@ -1020,19 +1020,18 @@ public class MapInput implements InputProcessor
         MapSprite mapSprite = new MapSprite(map, tileTool,
                 x - tileTool.textureRegion.getRegionWidth() / 2, y - tileTool.textureRegion.getRegionHeight() / 2);
 
-        PropertyField propertyField = new PropertyField("Rotation", "0", GameAssets.getUISkin(), map.propertyMenu, false);
-        propertyField.value.setTextFieldFilter(new TextField.TextFieldFilter()
+        TextField.TextFieldFilter valueFilter = new TextField.TextFieldFilter()
         {
             @Override
             public boolean acceptChar(TextField textField, char c)
             {
                 return c == '.' || c == '-' || Character.isDigit(c);
             }
-        });
-
-        propertyField.value.getListeners().clear();
-
-        TextField.TextFieldClickListener rotationListener = propertyField.value.new TextFieldClickListener(){
+        };
+        PropertyField rotationField = new PropertyField("Rotation", "0", GameAssets.getUISkin(), map.propertyMenu, false);
+        rotationField.value.setTextFieldFilter(valueFilter);
+        rotationField.value.getListeners().clear();
+        TextField.TextFieldClickListener rotationListener = rotationField.value.new TextFieldClickListener(){
             @Override
             public boolean keyUp (InputEvent event, int keycode)
             {
@@ -1041,16 +1040,39 @@ public class MapInput implements InputProcessor
                     if (keycode == Input.Keys.ENTER)
                     {
                         for(int i = 0; i < map.selectedSprites.size; i ++)
-                            map.selectedSprites.get(i).setRotation(Float.parseFloat(propertyField.value.getText()));
+                            map.selectedSprites.get(i).setRotation(Float.parseFloat(rotationField.value.getText()));
                     }
                 }
                 catch (NumberFormatException e){}
                 return true;
             }
         };
-        propertyField.value.addListener(rotationListener);
+        rotationField.value.addListener(rotationListener);
 
-        mapSprite.lockedProperties.add(propertyField);
+        PropertyField zField = new PropertyField("Z", "0", GameAssets.getUISkin(), map.propertyMenu, false);
+        zField.value.setTextFieldFilter(valueFilter);
+        zField.value.getListeners().clear();
+        TextField.TextFieldClickListener zListener = zField.value.new TextFieldClickListener(){
+            @Override
+            public boolean keyUp (InputEvent event, int keycode)
+            {
+                try
+                {
+                    if (keycode == Input.Keys.ENTER)
+                    {
+                        for(int i = 0; i < map.selectedSprites.size; i ++)
+                            map.selectedSprites.get(i).setZ(Float.parseFloat(zField.value.getText()));
+                    }
+                }
+                catch (NumberFormatException e){}
+                return true;
+            }
+        };
+        zField.value.addListener(zListener);
+
+
+        mapSprite.lockedProperties.add(rotationField);
+        mapSprite.lockedProperties.add(zField);
         return mapSprite;
     }
 }
