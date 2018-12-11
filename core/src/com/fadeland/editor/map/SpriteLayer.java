@@ -16,9 +16,7 @@ public class SpriteLayer extends Layer
     @Override
     public void draw()
     {
-        this.map.camera.zoom = this.map.zoom - z;
-        this.map.camera.update();
-        this.editor.batch.setProjectionMatrix(map.camera.combined);
+        setCameraZoomToThisLayer();
 
         for(int i = 0; i < this.tiles.size; i ++)
             this.tiles.get(i).draw();
@@ -28,5 +26,7 @@ public class SpriteLayer extends Layer
             editor.getSpriteTool().previewSprite.setAlpha(.25f);
             editor.getSpriteTool().previewSprite.draw(editor.batch);
         }
+
+        setCameraZoomToSelectedLayer();
     }
 }

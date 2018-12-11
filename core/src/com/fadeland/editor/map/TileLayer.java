@@ -29,9 +29,7 @@ public class TileLayer extends Layer
     @Override
     public void draw()
     {
-        this.map.camera.zoom = this.map.zoom - z;
-        this.map.camera.update();
-        this.editor.batch.setProjectionMatrix(map.camera.combined);
+        setCameraZoomToThisLayer();
 
         for(int i = 0; i < tiles.size; i ++)
             this.tiles.get(i).draw();
@@ -48,6 +46,8 @@ public class TileLayer extends Layer
                 editor.getTileTools().get(i).previewSprite.draw(editor.batch);
             }
         }
+
+        setCameraZoomToSelectedLayer();
     }
 
     @Override
@@ -157,16 +157,18 @@ public class TileLayer extends Layer
 
     public void drawPossibleTileGroups()
     {
-        this.map.camera.zoom = this.map.zoom - z;
-        this.map.camera.update();
-        this.editor.batch.setProjectionMatrix(map.camera.combined);
+        setCameraZoomToThisLayer();
 
         for(int i = 0; i < possibleTileGroups.size; i ++)
             possibleTileGroups.get(i).draw();
+
+        setCameraZoomToSelectedLayer();
     }
 
     public void drawBlocked()
     {
+        setCameraZoomToThisLayer();
+
         float r = .85f;
         float g = .25f;
         float b = .25f;
@@ -183,6 +185,8 @@ public class TileLayer extends Layer
                 editor.shapeRenderer.rect(tile.position.x, tile.position.y, tileSize, tileSize);
             }
         }
+
+        setCameraZoomToSelectedLayer();
     }
 
     // All the below methods are for grouped tiles

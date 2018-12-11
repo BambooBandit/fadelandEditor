@@ -15,12 +15,12 @@ public class ObjectLayer extends Layer
     @Override
     public void draw()
     {
-        this.map.camera.zoom = this.map.zoom - z;
-        this.map.camera.update();
-        this.editor.batch.setProjectionMatrix(map.camera.combined);
+        setCameraZoomToThisLayer();
 
         for(int i = 0; i < this.tiles.size; i ++)
             this.tiles.get(i).draw();
+
+        setCameraZoomToSelectedLayer();
 
 //        if(map.selectedLayer == this && layerField.visibleImg.isVisible() && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH && editor.getSpriteTool() != null)
 //        {

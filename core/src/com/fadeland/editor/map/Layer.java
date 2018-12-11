@@ -100,4 +100,24 @@ public abstract class Layer
     {
         this.z = z;
     }
+
+    protected void setCameraZoomToThisLayer()
+    {
+        if(editor.fileMenu.toolPane.parallax.selected)
+        {
+            this.map.camera.zoom = this.map.zoom - z;
+            this.map.camera.update();
+            this.editor.batch.setProjectionMatrix(map.camera.combined);
+        }
+    }
+
+    protected void setCameraZoomToSelectedLayer()
+    {
+        if(editor.fileMenu.toolPane.parallax.selected)
+        {
+            this.map.camera.zoom = this.map.zoom - this.map.selectedLayer.z;
+            this.map.camera.update();
+            this.editor.batch.setProjectionMatrix(map.camera.combined);
+        }
+    }
 }

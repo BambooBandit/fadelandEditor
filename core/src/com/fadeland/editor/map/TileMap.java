@@ -158,6 +158,8 @@ public class TileMap implements Screen
         this.world.step(delta, 1, 1);
         b2dr = new Box2DDebugRenderer();
 
+        if(!editor.fileMenu.toolPane.parallax.selected)
+            this.camera.zoom = this.zoom;
         this.camera.update();
         this.editor.batch.setProjectionMatrix(camera.combined);
 
