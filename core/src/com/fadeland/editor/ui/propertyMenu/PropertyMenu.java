@@ -169,6 +169,7 @@ public class PropertyMenu extends Group
             this.layerPropertyPanel.setVisible(true);
             this.layerPropertyPanel.layerWidthProperty.value.setText(Integer.toString(map.selectedLayer.width));
             this.layerPropertyPanel.layerHeightProperty.value.setText(Integer.toString(map.selectedLayer.height));
+            this.layerPropertyPanel.layerZProperty.value.setText(Float.toString(map.selectedLayer.z));
         }
         else
             this.layerPropertyPanel.setVisible(false);

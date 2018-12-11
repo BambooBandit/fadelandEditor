@@ -47,6 +47,8 @@ public class TileMap implements Screen
 
     public static int tileSize;
 
+    public float zoom = 1;
+
     public MapInput input;
 
     public Array<Layer> layers;
@@ -109,6 +111,7 @@ public class TileMap implements Screen
         this.input = new MapInput(editor, this);
 
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.camera.zoom = this.zoom;
         this.viewport = new ScreenViewport(this.camera);
         this.viewport.apply();
         this.camera.position.x = 160;

@@ -29,6 +29,10 @@ public class TileLayer extends Layer
     @Override
     public void draw()
     {
+        this.map.camera.zoom = this.map.zoom - z;
+        this.map.camera.update();
+        this.editor.batch.setProjectionMatrix(map.camera.combined);
+
         for(int i = 0; i < tiles.size; i ++)
             this.tiles.get(i).draw();
         for(int i = 0; i < tiles.size; i ++)
@@ -153,6 +157,10 @@ public class TileLayer extends Layer
 
     public void drawPossibleTileGroups()
     {
+        this.map.camera.zoom = this.map.zoom - z;
+        this.map.camera.update();
+        this.editor.batch.setProjectionMatrix(map.camera.combined);
+
         for(int i = 0; i < possibleTileGroups.size; i ++)
             possibleTileGroups.get(i).draw();
     }

@@ -961,10 +961,9 @@ public class MapInput implements InputProcessor
         }
         else
         {
-            this.map.camera.zoom += amount / 3f;
-            if(this.map.camera.zoom < .1f)
-                this.map.camera.zoom = .1f;
-            this.map.camera.update();
+            this.map.zoom += amount / 3f;
+            if(this.map.zoom < .1f)
+                this.map.zoom = .1f;
         }
 
         return false;
