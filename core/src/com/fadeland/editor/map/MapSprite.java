@@ -22,6 +22,8 @@ public class MapSprite extends Tile
     public Array<PropertyField> lockedProperties; // properties such as rotation. They belong to all sprites
     public float z;
 
+    float[] verts;
+
     public MapSprite(TileMap map, TileTool tool, float x, float y)
     {
         super(map, tool, x, y);
@@ -39,6 +41,7 @@ public class MapSprite extends Tile
         this.rotationBox.setPosition(x + this.width, y + this.height);
         this.moveBox = new MoveBox(this, map);
         this.moveBox.setPosition(x + this.width, y + this.height - 25);
+        this.verts = new float[20];
     }
 
     @Override
@@ -55,65 +58,13 @@ public class MapSprite extends Tile
 
     public void draw()
     {
-        //TODO optimize
         float u = sprite.getU();
         float v = sprite.getV();
         float u2 = sprite.getU2();
         float v2 = sprite.getV2();
-
-        float[] verts = new float[20];
-
-//        Affine2 a1 = new Affine2();
-//        a1.rotate(sprite.getRotation());
-//        a1.shear(1, 0);
-//        Vector2 vec1 = new Vector2(sprite.getX(), sprite.getY() + sprite.getHeight());
-//        a1.applyTo(vec1);
-//
-//        Affine2 a2 = new Affine2();
-//        a2.rotate(sprite.getRotation());
-//        a2.shear(1, 0);
-//        Vector2 vec2 = new Vector2(sprite.getX() + sprite.getWidth(), sprite.getY() + sprite.getHeight());
-//        a2.applyTo(vec2);
-//
-//        Affine2 a3 = new Affine2();
-//        a3.rotate(sprite.getRotation());
-//        a3.shear(0, 0);
-//        Vector2 vec3 = new Vector2(sprite.getX() + sprite.getWidth(), sprite.getY());
-//        a3.applyTo(vec3);
-//
-//        Affine2 a4 = new Affine2();
-//        a4.rotate(sprite.getRotation());
-//        a4.shear(0, 0);
-//        Vector2 vec4 = new Vector2(sprite.getX(), sprite.getY());
-//        a4.applyTo(vec4);
-//
-//        verts[0] = vec1.x;
-//        verts[1] = vec1.y;
-//        verts[2] = Color.toFloatBits(255, 255, 255, 255);
-//        verts[3] = u;
-//        verts[4] = v;
-//
-//        verts[5] = vec2.x;
-//        verts[6] = vec2.y;
-//        verts[7] = Color.toFloatBits(255, 255, 255, 255);
-//        verts[8] = u2;
-//        verts[9] = v;
-//
-//        verts[10] = vec3.x;
-//        verts[11] = vec3.y;
-//        verts[12] = Color.toFloatBits(255, 255, 255, 255);
-//        verts[13] = u2;
-//        verts[14] = v2;
-//
-//        verts[15] = vec4.x;
-//        verts[16] = vec4.y;
-//        verts[17] = Color.toFloatBits(255, 255, 255, 255);
-//        verts[18] = u;
-//        verts[19] = v2;
         float centerScreen = Gdx.graphics.getWidth() / 2;
         float centerSprite = Utils.project(map.camera,sprite.getX() + sprite.getHeight() / 2, sprite.getY()).x;
         float skewAmount = (centerSprite - centerScreen) / 2;
-
         float[] vertices = sprite.getVertices();
 
         verts[0] = vertices[SpriteBatch.X2] + skewAmount;
@@ -140,33 +91,7 @@ public class MapSprite extends Tile
         verts[18] = u;
         verts[19] = v2;
 
-//        verts[0] = sprite.getX() + 100;
-//        verts[1] = sprite.getY() + sprite.getHeight();
-//        verts[2] = Color.toFloatBits(255, 255, 255, 255);
-//        verts[3] = u;
-//        verts[4] = v;
-//
-//        verts[5] = sprite.getX() + sprite.getWidth() + 100;
-//        verts[6] = sprite.getY() + sprite.getHeight();
-//        verts[7] = Color.toFloatBits(255, 255, 255, 255);
-//        verts[8] = u2;
-//        verts[9] = v;
-//
-//        verts[10] = sprite.getX() + sprite.getWidth();
-//        verts[11] = sprite.getY();
-//        verts[12] = Color.toFloatBits(255, 255, 255, 255);
-//        verts[13] = u2;
-//        verts[14] = v2;
-//
-//        verts[15] = sprite.getX();
-//        verts[16] = sprite.getY();
-//        verts[17] = Color.toFloatBits(255, 255, 255, 255);
-//        verts[18] = u;
-//        verts[19] = v2;
-
         map.editor.batch.draw(sprite.getTexture(), verts, 0, verts.length);
-
-//        sprite.draw(map.editor.batch);
 
         if(tool.topSprite != null)
         {
@@ -174,7 +99,6 @@ public class MapSprite extends Tile
             tool.topSprite.setRotation(sprite.getRotation());
 
             map.editor.batch.draw(tool.topSprite.getTexture(), verts, 0, verts.length);
-//            tool.topSprite.draw(map.editor.batch);
         }
     }
 
