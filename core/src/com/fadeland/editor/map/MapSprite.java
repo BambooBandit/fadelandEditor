@@ -64,7 +64,7 @@ public class MapSprite extends Tile
         float v2 = sprite.getV2();
         float centerScreen = Gdx.graphics.getWidth() / 2;
         float centerSprite = Utils.project(map.camera,sprite.getX() + sprite.getHeight() / 2, sprite.getY()).x;
-        float skewAmount = (centerSprite - centerScreen) / 2;
+        float skewAmount = ((centerSprite - centerScreen) / 3) * z;
         float[] vertices = sprite.getVertices();
 
         verts[0] = vertices[SpriteBatch.X2] + skewAmount;
