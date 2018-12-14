@@ -62,19 +62,22 @@ public class MapSprite extends Tile
         float v = sprite.getV();
         float u2 = sprite.getU2();
         float v2 = sprite.getV2();
-        float centerScreen = Gdx.graphics.getWidth() / 2;
-        float centerSprite = Utils.project(map.camera,sprite.getX() + sprite.getHeight() / 2, sprite.getY()).x;
-        float skewAmount = ((centerSprite - centerScreen) / 3) * z;
+        float xCenterScreen = Gdx.graphics.getWidth() / 2;
+        float xCenterSprite = Utils.project(map.camera,sprite.getX() + sprite.getWidth() / 2, sprite.getY()).x;
+        float yCenterScreen = Gdx.graphics.getHeight() / 2;
+        float ySprite = Utils.project(map.camera,sprite.getX(), sprite.getY()).y;
+        float xSkewAmount = ((xCenterSprite - xCenterScreen) / 3) * z;
+        float ySkewAmount = ((ySprite - yCenterScreen) / 5) * z;
         float[] vertices = sprite.getVertices();
 
-        verts[0] = vertices[SpriteBatch.X2] + skewAmount;
-        verts[1] = vertices[SpriteBatch.Y2];
+        verts[0] = vertices[SpriteBatch.X2] + xSkewAmount;
+        verts[1] = vertices[SpriteBatch.Y2] + ySkewAmount;
         verts[2] = Color.toFloatBits(255, 255, 255, 255);
         verts[3] = u;
         verts[4] = v;
 
-        verts[5] = vertices[SpriteBatch.X3] + skewAmount;
-        verts[6] = vertices[SpriteBatch.Y3];
+        verts[5] = vertices[SpriteBatch.X3] + xSkewAmount;
+        verts[6] = vertices[SpriteBatch.Y3] + ySkewAmount;
         verts[7] = Color.toFloatBits(255, 255, 255, 255);
         verts[8] = u2;
         verts[9] = v;
