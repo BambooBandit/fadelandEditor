@@ -2,12 +2,17 @@ package com.fadeland.editor.ui.tileMenu;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.TileMap;
+
+import java.util.Iterator;
 
 import static com.fadeland.editor.map.TileMap.tileSize;
 
@@ -43,10 +48,54 @@ public class TileMenu extends Group
         this.tileTable = new Table();
         this.tileTable.left().top();
         this.tileScrollPane = new ScrollPane(this.tileTable, GameAssets.getUISkin());
+        Iterator<EventListener> iterator = tileScrollPane.getListeners().iterator();
+        while (iterator.hasNext())
+        {
+            EventListener listener = iterator.next();
+            if (listener instanceof InputListener)
+                iterator.remove();
+        }
+        this.tileScrollPane.addListener(new InputListener()
+        {
+            public boolean scrolled (InputEvent event, float x, float y, int amount)
+            {
+                Table table = (Table) tileScrollPane.getWidget();
+                for(int i = 0; i < table.getCells().size; i ++)
+                {
+                    table.getCells().get(i).size(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
+                    TileTool tileTool = (TileTool) table.getCells().get(i).getActor();
+                    tileTool.image.setSize(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
+                    table.invalidateHierarchy();
+                }
+                return false;
+            }
+        });
 
         this.spriteTable = new Table();
         this.spriteTable.left().top();
         this.spriteScrollPane = new ScrollPane(this.spriteTable, GameAssets.getUISkin());
+        iterator = spriteScrollPane.getListeners().iterator();
+        while (iterator.hasNext())
+        {
+            EventListener listener = iterator.next();
+            if (listener instanceof InputListener)
+                iterator.remove();
+        }
+        this.spriteScrollPane.addListener(new InputListener()
+        {
+            public boolean scrolled (InputEvent event, float x, float y, int amount)
+            {
+                Table table = (Table) spriteScrollPane.getWidget();
+                for(int i = 0; i < table.getCells().size; i ++)
+                {
+                    table.getCells().get(i).size(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
+                    TileTool tileTool = (TileTool) table.getCells().get(i).getActor();
+                    tileTool.image.setSize(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
+                    table.invalidateHierarchy();
+                }
+                return false;
+            }
+        });
 
         this.stack = new Stack();
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
