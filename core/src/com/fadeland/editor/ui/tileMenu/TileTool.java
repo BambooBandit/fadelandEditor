@@ -121,7 +121,6 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
         {
             String topSpriteNoDigits = topSpriteName.substring(0, topSpriteName.length() - digits);
             int number = Integer.parseInt(topSpriteName.substring(topSpriteName.length() - digits));
-            System.out.println(topSpriteNoDigits + ", " + number);
             TextureRegion textureRegion = GameAssets.getTextureRegion(topSpriteName);
             while(textureRegion != null)
             {
