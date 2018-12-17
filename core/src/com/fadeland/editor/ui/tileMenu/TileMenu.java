@@ -67,7 +67,7 @@ public class TileMenu extends Group
                     tileTool.image.setSize(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
                     table.invalidateHierarchy();
                 }
-                return false;
+                return true;
             }
         });
 
@@ -88,12 +88,12 @@ public class TileMenu extends Group
                 Table table = (Table) spriteScrollPane.getWidget();
                 for(int i = 0; i < table.getCells().size; i ++)
                 {
-                    table.getCells().get(i).size(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
+                    table.getCells().get(i).size(table.getCells().get(i).getMinWidth() - (table.getCells().get(i).getMinWidth() / (amount * 3f)), table.getCells().get(i).getMinHeight() - (table.getCells().get(i).getMinHeight() / (amount * 3f)));
                     TileTool tileTool = (TileTool) table.getCells().get(i).getActor();
-                    tileTool.image.setSize(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
+                    tileTool.image.setSize(table.getCells().get(i).getMinWidth(), table.getCells().get(i).getMinHeight());
                     table.invalidateHierarchy();
                 }
-                return false;
+                return true;
             }
         });
 
@@ -124,21 +124,19 @@ public class TileMenu extends Group
         // Add all the sprites to the spriteTable as Images
         spriteTable.padLeft(1);
         spriteTable.padTop(1);
-        int x = 0;
-        int y = 0;
         id = 0;
         for(int i = 0; i < GameAssets.getGameAtlas().getRegions().size; i ++)
         {
             TextureRegion spriteRegion = GameAssets.getGameAtlas().getRegions().get(i);
 
-            TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion,id, x, y, toolPane, skin);
-            sprite.image.setSize(64, 64);
-            sprite.setSize(64, 64);
+            TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion, id, 0, 0, toolPane, skin);
+            float newWidth = sprite.image.getWidth() / 5;
+            float newHeight = sprite.image.getHeight() / 5;
+            sprite.image.setSize(newWidth, newHeight);
+            sprite.setSize(newWidth, newHeight);
             id ++;
-            x += spriteRegion.getRegionWidth();
-            y += spriteRegion.getRegionHeight();
             spriteTable.add(sprite);
-            if(i % 5 == 0)
+            if((i + 1) % 5 == 0)
                 spriteTable.row();
         }
 

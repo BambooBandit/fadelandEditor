@@ -1,48 +1,69 @@
 
 map.png
-size: 2048,512
+size: 4096,4096
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-boulder
+houseBack2
   rotate: false
-  xy: 606, 2
-  size: 300, 300
-  orig: 300, 300
+  xy: 1220, 2822
+  size: 1216, 1024
+  orig: 1216, 1024
   offset: 0, 0
   index: -1
-grass
+houseFront2
   rotate: false
-  xy: 908, 2
-  size: 300, 300
-  orig: 300, 300
+  xy: 2, 1926
+  size: 1216, 1920
+  orig: 1216, 1920
   offset: 0, 0
   index: -1
-log
+houseFront2Pole
   rotate: false
   xy: 2, 2
-  size: 300, 300
-  orig: 300, 300
+  size: 64, 512
+  orig: 64, 512
   offset: 0, 0
   index: -1
-puddle
+tree0
   rotate: false
-  xy: 1512, 2
-  size: 300, 300
-  orig: 300, 300
+  xy: 2, 516
+  size: 960, 1408
+  orig: 960, 1408
   offset: 0, 0
   index: -1
-tree
+tree1
   rotate: false
-  xy: 304, 2
-  size: 300, 300
-  orig: 300, 300
+  xy: 1670, 2052
+  size: 448, 768
+  orig: 448, 768
   offset: 0, 0
   index: -1
-treetop
+tree2
   rotate: false
-  xy: 1210, 2
-  size: 300, 300
-  orig: 300, 300
+  xy: 1220, 1924
+  size: 448, 896
+  orig: 448, 896
+  offset: 0, 0
+  index: -1
+tree4
+  rotate: false
+  xy: 2438, 2950
+  size: 768, 896
+  orig: 768, 896
+  offset: 0, 0
+  index: -1
+tree5
+  rotate: false
+  xy: 964, 1604
+  size: 192, 320
+  orig: 192, 320
+  offset: 0, 0
+  index: -1
+tree6
+  rotate: false
+  xy: 3208, 2950
+  size: 768, 896
+  orig: 768, 896
   offset: 0, 0
   index: -1

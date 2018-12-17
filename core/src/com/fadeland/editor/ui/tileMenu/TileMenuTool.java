@@ -78,7 +78,10 @@ public class TileMenuTool extends Group
         this.isSelected = true;
 
         if(this.tool == TileMenuTools.LINES)
+        {
             tileMenuToolPane.menu.tileTable.setDebug(true);
+            tileMenuToolPane.menu.spriteTable.setDebug(true);
+        }
         else if(this.tool == TileMenuTools.TILESELECT)
             tileMenuToolPane.menu.tileScrollPane.setVisible(true);
         else if(this.tool == TileMenuTools.SPRITESELECT)
@@ -95,7 +98,10 @@ public class TileMenuTool extends Group
         this.isSelected = false;
 
         if(this.tool == TileMenuTools.LINES)
+        {
             tileMenuToolPane.menu.tileTable.setDebug(false);
+            tileMenuToolPane.menu.spriteTable.setDebug(false);
+        }
         else if(this.tool == TileMenuTools.TILESELECT)
             tileMenuToolPane.menu.tileScrollPane.setVisible(false);
         else if(this.tool == TileMenuTools.SPRITESELECT)

@@ -46,7 +46,10 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
         this.isSelected = true;
 
         if(this.tool == TileMenuTools.LINES)
+        {
             tileMenuToolPane.menu.tileTable.setDebug(true);
+            tileMenuToolPane.menu.spriteTable.setDebug(true);
+        }
     }
 
     @Override
@@ -57,7 +60,10 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
         this.isSelected = false;
 
         if(this.tool == TileMenuTools.LINES)
+        {
             tileMenuToolPane.menu.tileTable.setDebug(false);
+            tileMenuToolPane.menu.spriteTable.setDebug(false);
+        }
     }
 
     @Override
