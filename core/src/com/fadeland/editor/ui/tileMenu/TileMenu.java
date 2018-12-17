@@ -132,22 +132,15 @@ public class TileMenu extends Group
             TextureRegion spriteRegion = GameAssets.getGameAtlas().getRegions().get(i);
 
             TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion,id, x, y, toolPane, skin);
+            sprite.image.setSize(64, 64);
+            sprite.setSize(64, 64);
             id ++;
             x += spriteRegion.getRegionWidth();
             y += spriteRegion.getRegionHeight();
             spriteTable.add(sprite);
+            if(i % 5 == 0)
+                spriteTable.row();
         }
-//        for(int y = 0; y < spriteSheet.getHeight(); y += tileSize)
-//        {
-//            for(int x = 0; x < spriteSheet.getWidth(); x += tileSize)
-//            {
-//                TextureRegion spriteRegion = new TextureRegion(spriteSheet, x, y, tileSize, tileSize);
-//
-//                TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion,x + y, spriteSheet.getWidth() - x, y, toolPane, skin);
-//                spriteTable.add(sprite);
-//            }
-//            spriteTable.row();
-//        }
 
         this.stack.add(this.background);
         this.stack.add(this.tileScrollPane);
