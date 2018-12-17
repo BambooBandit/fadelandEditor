@@ -23,8 +23,11 @@ public class SpriteLayer extends Layer
 
         if(map.selectedLayer == this && layerField.visibleImg.isVisible() && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH && editor.getSpriteTool() != null)
         {
-            editor.getSpriteTool().previewSprite.setAlpha(.25f);
-            editor.getSpriteTool().previewSprite.draw(editor.batch);
+            for(int i = 0; i < this.editor.getSpriteTool().previewSprites.size; i ++)
+            {
+                editor.getSpriteTool().previewSprites.get(i).setAlpha(.25f);
+                editor.getSpriteTool().previewSprites.get(i).draw(editor.batch);
+            }
         }
 
         setCameraZoomToSelectedLayer();

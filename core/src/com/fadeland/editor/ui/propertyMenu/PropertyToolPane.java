@@ -86,11 +86,11 @@ public class PropertyToolPane extends Group
             // top
             PropertyField topProperty = tileTool.getPropertyField("top");
             if (topProperty == null)
-                tileTool.setTopSprite("");
+                tileTool.setTopSprites("");
             else
             {
                 String topValue = topProperty.value.getText();
-                tileTool.setTopSprite(topValue);
+                tileTool.setTopSprites(topValue);
             }
         }
         // map sprites
@@ -100,11 +100,11 @@ public class PropertyToolPane extends Group
             // top
             PropertyField topProperty = tileTool.getPropertyField("top");
             if(topProperty == null)
-                tileTool.setTopSprite("");
+                tileTool.setTopSprites("");
             else
             {
                 String topValue = topProperty.value.getText();
-                tileTool.setTopSprite(topValue);
+                tileTool.setTopSprites(topValue);
             }
         }
         updateLightsAndBlocked(map);

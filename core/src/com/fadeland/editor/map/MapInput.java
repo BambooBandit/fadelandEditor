@@ -919,13 +919,16 @@ public class MapInput implements InputProcessor
                 Tile hoverTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
 
                 if (editor.getFileTool() != null && hoverTile != null && (editor.getFileTool().tool == Tools.BRUSH || editor.getFileTool().tool == Tools.BIND))
-                    editor.getTileTools().get(i).previewSprite.setPosition(hoverTile.position.x, hoverTile.position.y);
+                    editor.getTileTools().get(i).previewSprites.get(0).setPosition(hoverTile.position.x, hoverTile.position.y);
             }
         }
         else if(map.selectedLayer instanceof SpriteLayer && editor.getSpriteTool() != null)
         {
             if (editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH)
-                editor.getSpriteTool().previewSprite.setPosition(coords.x - editor.getSpriteTool().previewSprite.getWidth() / 2, coords.y - editor.getSpriteTool().previewSprite.getHeight() / 2);
+            {
+                for(int i = 0; i < editor.getSpriteTool().previewSprites.size; i ++)
+                    editor.getSpriteTool().previewSprites.get(i).setPosition(coords.x - editor.getSpriteTool().previewSprites.get(i).getWidth() / 2, coords.y - editor.getSpriteTool().previewSprites.get(i).getHeight() / 2);
+            }
         }
         if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
         {

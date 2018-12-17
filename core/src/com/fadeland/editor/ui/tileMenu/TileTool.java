@@ -22,14 +22,15 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
 
     public TextureRegion textureRegion;
 
-    public Sprite previewSprite;
-    public Sprite topSprite;
+    public Array<Sprite> previewSprites;
+    public Array<Sprite> topSprites;
 
     public TileTool(TileMenuTools tool, Image image, TextureRegion textureRegion, int id, int x, int y, TileMenuToolPane tileMenuToolPane, Skin skin)
     {
         super(tool, image, tileMenuToolPane, skin);
         this.textureRegion = textureRegion;
-        this.previewSprite = new Sprite(textureRegion);
+        this.previewSprites = new Array();
+        this.previewSprites.add(new Sprite(textureRegion));
         this.lockedProperties = new Array<>();
         this.properties = new Array<>();
         this.id = id;
@@ -92,17 +93,43 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
         return null;
     }
 
-    public void setTopSprite(String topSpriteName)
+    public void setTopSprites(String topSpriteName)
     {
-        TextureRegion textureRegion = GameAssets.getTextureRegion(topSpriteName);
-        if(textureRegion == null)
+        if(this.topSprites == null)
+            this.topSprites = new Array();
+        this.topSprites.clear();
+        if(this.previewSprites.size > 1)
+            this.previewSprites.removeRange(1, this.previewSprites.size - 1);
+        int digits = 0;
+        for(int i = topSpriteName.length() - 1; i >= 0; i --)
         {
-            this.topSprite = null;
-            return;
+            if(Character.isDigit(topSpriteName.charAt(i)))
+                digits++;
+            else
+                break;
         }
-        if(this.topSprite == null)
-            this.topSprite = new Sprite(textureRegion);
+        if(digits == 0)
+        {
+            TextureRegion textureRegion = GameAssets.getTextureRegion(topSpriteName);
+            if (textureRegion == null)
+                return;
+            Sprite sprite = new Sprite(textureRegion);
+            this.topSprites.add(sprite);
+            this.previewSprites.add(sprite);
+        }
         else
-            this.topSprite.setRegion(textureRegion);
+        {
+            String topSpriteNoDigits = topSpriteName.substring(0, topSpriteName.length() - digits);
+            int number = Integer.parseInt(topSpriteName.substring(topSpriteName.length() - digits));
+            System.out.println(topSpriteNoDigits + ", " + number);
+            TextureRegion textureRegion = GameAssets.getTextureRegion(topSpriteName);
+            while(textureRegion != null)
+            {
+                this.topSprites.add(new Sprite(textureRegion));
+                this.previewSprites.add(new Sprite(textureRegion));
+                number ++;
+                textureRegion = GameAssets.getTextureRegion(topSpriteNoDigits + number);
+            }
+        }
     }
 }

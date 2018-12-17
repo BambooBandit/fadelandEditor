@@ -62,12 +62,15 @@ public class Tile
             map.editor.batch.draw(sprite, position.x, position.y, width, height);
     }
 
-    public void drawTopSprite()
+    public void drawTopSprites()
     {
         if(this.sprite != null)
         {
-            if(this.tool.topSprite != null)
-                map.editor.batch.draw(this.tool.topSprite, position.x, position.y);
+            if(this.tool.topSprites != null)
+            {
+                for(int i = 0; i < this.tool.topSprites.size; i ++)
+                    map.editor.batch.draw(this.tool.topSprites.get(i), position.x, position.y);
+            }
         }
     }
 

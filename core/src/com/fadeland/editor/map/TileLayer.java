@@ -36,14 +36,14 @@ public class TileLayer extends Layer
         for(int i = 0; i < tiles.size; i ++)
         {
             if(!(tiles.get(i) instanceof MapSprite))
-                this.tiles.get(i).drawTopSprite();
+                this.tiles.get(i).drawTopSprites();
         }
         if(map.selectedLayer == this && layerField.visibleImg.isVisible() && editor.getFileTool() != null && editor.getTileTools() != null && (editor.getFileTool().tool == Tools.BRUSH || editor.getFileTool().tool == Tools.BIND))
         {
             for (int i = 0; i < editor.getTileTools().size; i ++)
             {
-                editor.getTileTools().get(i).previewSprite.setAlpha(.25f);
-                editor.getTileTools().get(i).previewSprite.draw(editor.batch);
+                editor.getTileTools().get(i).previewSprites.get(0).setAlpha(.25f);
+                editor.getTileTools().get(i).previewSprites.get(0).draw(editor.batch);
             }
         }
 

@@ -96,12 +96,24 @@ public class MapSprite extends Tile
 
         map.editor.batch.draw(sprite.getTexture(), verts, 0, verts.length);
 
-        if(tool.topSprite != null)
+        if(tool.topSprites != null)
         {
-            tool.topSprite.setPosition(sprite.getX(), sprite.getY());
-            tool.topSprite.setRotation(sprite.getRotation());
+            for(int i = 0; i < tool.topSprites.size; i ++)
+            {
+                tool.topSprites.get(i).setPosition(sprite.getX(), sprite.getY());
+                tool.topSprites.get(i).setRotation(sprite.getRotation());
 
-            map.editor.batch.draw(tool.topSprite.getTexture(), verts, 0, verts.length);
+                verts[3] = tool.topSprites.get(i).getU();
+                verts[4] = tool.topSprites.get(i).getV();
+                verts[8] = tool.topSprites.get(i).getU2();
+                verts[9] = tool.topSprites.get(i).getV();
+                verts[13] = tool.topSprites.get(i).getU2();
+                verts[14] = tool.topSprites.get(i).getV2();
+                verts[18] = tool.topSprites.get(i).getU();
+                verts[19] = tool.topSprites.get(i).getV2();
+
+                map.editor.batch.draw(tool.topSprites.get(i).getTexture(), verts, 0, verts.length);
+            }
         }
     }
 
@@ -131,8 +143,11 @@ public class MapSprite extends Tile
         this.rotation = degree;
         this.sprite.setRotation(degree);
         this.polygon.setRotation(degree);
-        if(this.tool.topSprite != null)
-            this.tool.topSprite.setRotation(degree);
+        if(this.tool.topSprites != null)
+        {
+            for(int i = 0; i < this.tool.topSprites.size; i++)
+                this.tool.topSprites.get(i).setRotation(degree);
+        }
         for(int i = 0; i < tool.mapObjects.size; i ++)
         {
             Body body = tool.mapObjects.get(i).body;
@@ -165,8 +180,11 @@ public class MapSprite extends Tile
         setPosition(endPos.x, endPos.y);
         this.sprite.rotate(degree);
         this.polygon.rotate(degree);
-        if(this.tool.topSprite != null)
-            this.tool.topSprite.rotate(degree);
+        if(this.tool.topSprites != null)
+        {
+            for(int i = 0; i < this.tool.topSprites.size; i ++)
+                this.tool.topSprites.get(i).rotate(degree);
+        }
         for(int i = 0; i < tool.mapObjects.size; i ++)
         {
             Body body = tool.mapObjects.get(i).body;

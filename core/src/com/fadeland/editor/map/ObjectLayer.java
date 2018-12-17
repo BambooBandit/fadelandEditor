@@ -24,8 +24,8 @@ public class ObjectLayer extends Layer
 
 //        if(map.selectedLayer == this && layerField.visibleImg.isVisible() && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH && editor.getSpriteTool() != null)
 //        {
-//            editor.getSpriteTool().previewSprite.setAlpha(.25f);
-//            editor.getSpriteTool().previewSprite.draw(editor.batch);
+//            editor.getSpriteTool().previewSprites.setAlpha(.25f);
+//            editor.getSpriteTool().previewSprites.draw(editor.batch);
 //        }
     }
 
