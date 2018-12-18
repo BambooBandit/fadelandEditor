@@ -4,8 +4,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.fadeland.editor.map.MapSprite;
 import com.fadeland.editor.map.Tile;
+import com.fadeland.editor.map.TileMap;
 
-public class MoveSprite implements Action
+public class MoveSprite extends PerformableAction
 {
     public MapSprite mapSprite;
     public Array<MapSprite> mapSprites;
@@ -15,8 +16,9 @@ public class MoveSprite implements Action
     public ObjectMap<Tile, Float> newYofDragMap;
     public float newX, newY;
 
-    public MoveSprite(ObjectMap<Tile, Float> oldXofDragMap, ObjectMap<Tile, Float> oldYofDragMap)
+    public MoveSprite(TileMap map, ObjectMap<Tile, Float> oldXofDragMap, ObjectMap<Tile, Float> oldYofDragMap)
     {
+        super(map);
         this.oldXofDragMap = oldXofDragMap;
         this.oldYofDragMap = oldYofDragMap;
     }
@@ -59,6 +61,7 @@ public class MoveSprite implements Action
     @Override
     public void undo()
     {
+        super.undo();
         if(this.mapSprite != null)
             this.mapSprite.setPosition(oldXofDragMap.get(mapSprite), oldYofDragMap.get(mapSprite));
         else
@@ -69,6 +72,7 @@ public class MoveSprite implements Action
     @Override
     public void redo()
     {
+        super.redo();
         if(this.mapSprite != null)
             this.mapSprite.setPosition(newX, newY);
         else

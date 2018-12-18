@@ -4,16 +4,15 @@ import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.map.MapObject;
 import com.fadeland.editor.map.TileMap;
 
-public class SelectObject implements Action
+public class SelectObject extends PerformableAction
 {
-    public TileMap map;
     public Array<MapObject> selectedObjects;
     public Array<MapObject> selectedOld;
     public Array<MapObject> selectedNew;
 
     public SelectObject(TileMap map, Array<MapObject> selectedObjects)
     {
-        this.map = map;
+        super(map);
         this.selectedObjects = selectedObjects;
         this.selectedOld = new Array<>(selectedObjects);
     }
@@ -26,6 +25,7 @@ public class SelectObject implements Action
     @Override
     public void undo()
     {
+        super.undo();
         this.selectedObjects.clear();
         this.selectedObjects.addAll(this.selectedOld);
         this.map.propertyMenu.rebuild();
@@ -34,6 +34,7 @@ public class SelectObject implements Action
     @Override
     public void redo()
     {
+        super.redo();
         this.selectedObjects.clear();
         this.selectedObjects.addAll(this.selectedNew);
         this.map.propertyMenu.rebuild();

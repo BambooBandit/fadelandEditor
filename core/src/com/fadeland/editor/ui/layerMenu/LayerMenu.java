@@ -85,7 +85,7 @@ public class LayerMenu extends Group
     {
         final TileMap selectedMap = this.map;
         final LayerField layer = new LayerField(type.name, type, editor, map, skin, this);
-        map.performAction(new CreateOrRemoveLayer(layer.mapLayer, true));
+        map.performAction(new CreateOrRemoveLayer(map, layer.mapLayer, true));
         this.table.add(layer).padBottom(1).row();
         this.layers.add(layer);
         selectedMap.layers.add(layer.mapLayer);
@@ -125,7 +125,7 @@ public class LayerMenu extends Group
 
     public void moveLayerUp(LayerField layer)
     {
-        MoveLayer moveLayer = new MoveLayer(this.layers);
+        MoveLayer moveLayer = new MoveLayer(map, this.layers);
         map.performAction(moveLayer);
         int index = this.layers.indexOf(layer, false);
         index --;
@@ -141,7 +141,7 @@ public class LayerMenu extends Group
 
     public void moveLayerDown(LayerField layer)
     {
-        MoveLayer moveLayer = new MoveLayer(this.layers);
+        MoveLayer moveLayer = new MoveLayer(map, this.layers);
         map.performAction(moveLayer);
         int index = this.layers.indexOf(layer, false);
         index ++;

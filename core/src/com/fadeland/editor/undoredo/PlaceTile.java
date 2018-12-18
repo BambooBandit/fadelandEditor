@@ -5,10 +5,8 @@ import com.fadeland.editor.map.Tile;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
-public class PlaceTile implements Action
+public class PlaceTile extends PerformableAction
 {
-    public TileMap tileMap;
-
     public Tile tile;
     public TileTool oldTileTool;
     public TileTool newTileTool;
@@ -17,18 +15,18 @@ public class PlaceTile implements Action
     public Array<TileTool> oldTileTools;
     public Array<TileTool> newTileTools;
 
-    public PlaceTile(TileMap tileMap, Tile tile, TileTool oldTileTool, TileTool newTileTool)
+    public PlaceTile(TileMap map, Tile tile, TileTool oldTileTool, TileTool newTileTool)
     {
-        this.tileMap = tileMap;
+        super(map);
         this.tile = tile;
         this.oldTileTool = oldTileTool;
         this.newTileTool = newTileTool;
     }
 
     /** Place many tiles*/
-    public PlaceTile(TileMap tileMap)
+    public PlaceTile(TileMap map)
     {
-        this.tileMap = tileMap;
+        super(map);
         tiles = new Array<>();
         oldTileTools = new Array<>();
         newTileTools = new Array<>();
@@ -58,23 +56,25 @@ public class PlaceTile implements Action
     @Override
     public void undo()
     {
+        super.undo();
         if(tile == null)
             for(int i = 0; i < this.tiles.size; i ++)
                 this.tiles.get(i).setTool(oldTileTools.get(i));
         else
             this.tile.setTool(oldTileTool);
-        this.tileMap.findAllTilesToBeGrouped();
+        this.map.findAllTilesToBeGrouped();
     }
 
     @Override
     public void redo()
     {
+        super.redo();
         if(tile == null)
             for(int i = 0; i < this.tiles.size; i ++)
                 this.tiles.get(i).setTool(newTileTools.get(i));
         else
             this.tile.setTool(newTileTool);
-        this.tileMap.findAllTilesToBeGrouped();
+        this.map.findAllTilesToBeGrouped();
     }
 
     public boolean changed()

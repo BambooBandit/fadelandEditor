@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -28,6 +29,7 @@ import com.fadeland.editor.ui.tileMenu.TileMenu;
 import com.fadeland.editor.ui.tileMenu.TileMenuTools;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 import com.fadeland.editor.undoredo.Action;
+import com.fadeland.editor.undoredo.PerformableAction;
 
 import java.io.File;
 import java.util.Stack;
@@ -44,6 +46,10 @@ public class TileMap implements Screen
     public float b = Utils.randomFloat(0, 1);
 
     public String name;
+
+    public TextButton mapPaneButton;
+
+    public boolean changed = false; // Any changes since the last save/opening/creating the file?
 
     public static int tileSize;
 
@@ -503,6 +509,18 @@ public class TileMap implements Screen
         }
     }
 
+    public void setChanged(boolean changed)
+    {
+        if(this.changed != changed)
+        {
+            if(changed)
+                mapPaneButton.setText(name + "*");
+            else
+                mapPaneButton.setText(name);
+        }
+        this.changed = changed;
+    }
+
     @Override
     public void resize(int width, int height)
     {
@@ -602,8 +620,10 @@ public class TileMap implements Screen
     }
 
     /** Must be called before anything in the map changes. */
-    public void performAction(Action action)
+    public void performAction(PerformableAction action)
     {
+        action.setOldChanged(changed);
+        setChanged(true);
         this.undo.push(action);
         if(this.undo.size() > 75)
             this.undo.remove(0);
@@ -804,9 +824,7 @@ public class TileMap implements Screen
     public void setName(String name)
     {
         this.name = name;
-        this.editor.fileMenu.mapTabPane.removeMap(this);
-        this.editor.fileMenu.mapTabPane.addMap(this);
-        this.editor.fileMenu.mapTabPane.lookAtMap(this);
+        mapPaneButton.setText(name);
     }
 
     public void searchForBlockedTiles()

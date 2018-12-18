@@ -100,7 +100,7 @@ public class LayerField extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                map.performAction(new CreateOrRemoveLayer(layer.mapLayer, false));
+                map.performAction(new CreateOrRemoveLayer(map, layer.mapLayer, false));
                 menu.removeLayer(layer);
             }
         });

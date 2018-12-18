@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.AreYouSureDialog;
 
 /** Handles switching views of maps via tabs, adding and removing tabs.*/
 public class MapTabPane extends Group
@@ -73,6 +74,7 @@ public class MapTabPane extends Group
                 lookAtMap(map);
             }
         });
+        map.mapPaneButton = mapButton;
 
         // For closing out of the map in the pane
         TextButton closeButton = new TextButton("X", skin);
@@ -82,7 +84,19 @@ public class MapTabPane extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                removeMap(map);
+                if(map.changed)
+                {
+                    new AreYouSureDialog("Save before closing " + map.name + "?", map.editor.stage, "", skin)
+                    {
+                        @Override
+                        public void yes() { map.editor.fileMenu.save(map, true); }
+
+                        @Override
+                        public void no() { removeMap(map); }
+                    };
+                }
+                else
+                    removeMap(map);
             }
         });
         mapButton.addActor(closeButton);

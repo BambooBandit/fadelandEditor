@@ -7,9 +7,8 @@ import com.fadeland.editor.map.Tile;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.propertyMenu.PropertyToolPane;
 
-public class CreateOrRemoveAttachedObject implements Action
+public class CreateOrRemoveAttachedObject extends PerformableAction
 {
-    public TileMap map;
     public Array<Tile> mapParents;
     public Array<Array<AttachedMapObject>> oldParents;
     public Array<Array<AttachedMapObject>> newParents;
@@ -19,7 +18,7 @@ public class CreateOrRemoveAttachedObject implements Action
 
     public CreateOrRemoveAttachedObject(TileMap map, Array<Tile> mapParents, Array<MapObject> selection)
     {
-        this.map = map;
+        super(map);
         this.mapParents = mapParents;
         this.selection = selection;
         if(selection != null)
@@ -53,6 +52,7 @@ public class CreateOrRemoveAttachedObject implements Action
     @Override
     public void undo()
     {
+        super.undo();
         for(int i = 0; i < mapParents.size; i ++)
         {
             if(mapParents.get(i).tool != null)
@@ -73,6 +73,7 @@ public class CreateOrRemoveAttachedObject implements Action
     @Override
     public void redo()
     {
+        super.redo();
         for(int i = 0; i < mapParents.size; i ++)
         {
             if(mapParents.get(i).tool != null)

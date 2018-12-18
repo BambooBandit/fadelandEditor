@@ -170,7 +170,7 @@ public class ToolPane extends Group
                 TileMap map = ((TileMap)editor.getScreen());
                 if(map == null || map.selectedSprites.size != 1)
                     return;
-                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map.selectedLayer.tiles);
+                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map, map.selectedLayer.tiles);
                 MapSprite selectedSprite = map.selectedSprites.first();
                 int index = map.selectedLayer.tiles.indexOf(selectedSprite, true);
                 if(index < map.selectedLayer.tiles.size - 1)
@@ -188,7 +188,7 @@ public class ToolPane extends Group
                 TileMap map = ((TileMap)editor.getScreen());
                 if(map == null || map.selectedSprites.size != 1)
                     return;
-                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map.selectedLayer.tiles);
+                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map, map.selectedLayer.tiles);
                 MapSprite selectedSprite = map.selectedSprites.first();
                 int index = map.selectedLayer.tiles.indexOf(selectedSprite, true);
                 if(index > 0)
@@ -206,7 +206,7 @@ public class ToolPane extends Group
                 TileMap map = ((TileMap)editor.getScreen());
                 if(map == null || map.selectedSprites.size != 1)
                     return;
-                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map.selectedLayer.tiles);
+                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map, map.selectedLayer.tiles);
                 MapSprite selectedSprite = map.selectedSprites.first();
                 map.selectedLayer.tiles.removeValue(selectedSprite, true);
                 map.selectedLayer.tiles.add(selectedSprite);
@@ -223,7 +223,7 @@ public class ToolPane extends Group
                 TileMap map = ((TileMap)editor.getScreen());
                 if(map == null || map.selectedSprites.size != 1)
                     return;
-                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map.selectedLayer.tiles);
+                BringSpriteUpOrDown bringSpriteUpOrDown = new BringSpriteUpOrDown(map, map.selectedLayer.tiles);
                 MapSprite selectedSprite = map.selectedSprites.first();
                 map.selectedLayer.tiles.removeValue(selectedSprite, true);
                 map.selectedLayer.tiles.insert(0, selectedSprite);

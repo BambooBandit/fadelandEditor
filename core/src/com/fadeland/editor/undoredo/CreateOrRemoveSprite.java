@@ -6,9 +6,8 @@ import com.fadeland.editor.map.Tile;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.propertyMenu.PropertyToolPane;
 
-public class CreateOrRemoveSprite implements Action
+public class CreateOrRemoveSprite extends PerformableAction
 {
-    public TileMap map;
     public Array<Tile> mapSprites;
     public Array<Tile> oldSprites;
     public Array<Tile> newSprites;
@@ -18,7 +17,7 @@ public class CreateOrRemoveSprite implements Action
 
     public CreateOrRemoveSprite(TileMap map, Array<Tile> mapSprites, Array<MapSprite> selection)
     {
-        this.map = map;
+        super(map);
         this.mapSprites = mapSprites;
         this.selection = selection;
         this.oldSprites = new Array<>(mapSprites);
@@ -36,6 +35,7 @@ public class CreateOrRemoveSprite implements Action
     @Override
     public void undo()
     {
+        super.undo();
         this.mapSprites.clear();
         this.mapSprites.addAll(oldSprites);
         if(this.selection != null)
@@ -50,6 +50,7 @@ public class CreateOrRemoveSprite implements Action
     @Override
     public void redo()
     {
+        super.redo();
         this.mapSprites.clear();
         this.mapSprites.addAll(newSprites);
         if(this.selection != null)

@@ -218,7 +218,7 @@ public class MapInput implements InputProcessor
         {
             if (map.selectedSprites.get(i).moveBox.contains(coords.x, coords.y))
             {
-                moveSprite = new MoveSprite(oldXofDragMap, oldYofDragMap);
+                moveSprite = new MoveSprite(map, oldXofDragMap, oldYofDragMap);
                 break;
             }
         }
@@ -298,7 +298,7 @@ public class MapInput implements InputProcessor
             {
                 if (map.selectedObjects.get(i).moveBox.contains(coords.x, coords.y))
                 {
-                    moveObject = new MoveAttachedObject(oldXofDragMap, oldYofDragMap);
+                    moveObject = new MoveAttachedObject(map, oldXofDragMap, oldYofDragMap);
                     break;
                 }
             }
@@ -316,7 +316,7 @@ public class MapInput implements InputProcessor
             {
                 if (map.selectedObjects.get(i).moveBox.contains(coords.x, coords.y))
                 {
-                    moveObject = new MoveObject(oldXofDragMap, oldYofDragMap);
+                    moveObject = new MoveObject(map, oldXofDragMap, oldYofDragMap);
                     break;
                 }
             }
@@ -339,7 +339,7 @@ public class MapInput implements InputProcessor
                     MapObject mapObject = map.selectedObjects.get(i);
                     if(mapObject.indexOfSelectedVertice != -1)
                     {
-                        MoveVertice moveVertice = new MoveVertice(mapObject, mapObject.getVerticeX(), mapObject.getVerticeY());
+                        MoveVertice moveVertice = new MoveVertice(map, mapObject, mapObject.getVerticeX(), mapObject.getVerticeY());
                         map.performAction(moveVertice);
                     }
                 }
@@ -375,7 +375,7 @@ public class MapInput implements InputProcessor
         }
         if(editor.getFileTool() != null && map.selectedObjects.size == 1 && !map.selectedObjects.first().isPoint && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
         {
-            SelectVertice selectVertice = new SelectVertice(map.selectedObjects.first(), map.selectedObjects.first().indexOfSelectedVertice, map.selectedObjects.first().indexOfHoveredVertice);
+            SelectVertice selectVertice = new SelectVertice(map, map.selectedObjects.first(), map.selectedObjects.first().indexOfSelectedVertice, map.selectedObjects.first().indexOfHoveredVertice);
             map.performAction(selectVertice);
             map.selectedObjects.first().indexOfSelectedVertice = map.selectedObjects.first().indexOfHoveredVertice;
             map.selectedObjects.first().setPosition(map.selectedObjects.first().polygon.getX(), map.selectedObjects.first().polygon.getY()); // Move the movebox to where the selected vertice is

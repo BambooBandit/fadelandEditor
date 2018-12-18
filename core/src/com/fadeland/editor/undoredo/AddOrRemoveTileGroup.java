@@ -4,16 +4,15 @@ import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.map.TileGroup;
 import com.fadeland.editor.map.TileMap;
 
-public class AddOrRemoveTileGroup implements Action
+public class AddOrRemoveTileGroup extends PerformableAction
 {
-    public TileMap map;
     public Array<TileGroup> tileGroups;
     public TileGroup tileGroup;
     public boolean add;
 
     public AddOrRemoveTileGroup(TileMap map, Array<TileGroup> tileGroups, TileGroup tileGroup, boolean add)
     {
-        this.map = map;
+        super(map);
         this.tileGroups = tileGroups;
         this.tileGroup = tileGroup;
         this.add = add;
@@ -22,6 +21,7 @@ public class AddOrRemoveTileGroup implements Action
     @Override
     public void undo()
     {
+        super.undo();
         if(add)
             remove();
         else
@@ -31,6 +31,7 @@ public class AddOrRemoveTileGroup implements Action
     @Override
     public void redo()
     {
+        super.redo();
         if(add)
             add();
         else

@@ -4,16 +4,15 @@ import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.map.MapSprite;
 import com.fadeland.editor.map.TileMap;
 
-public class SelectSprite implements Action
+public class SelectSprite extends PerformableAction
 {
-    public TileMap map;
     public Array<MapSprite> selectedSprites;
     public Array<MapSprite> selectedOld;
     public Array<MapSprite> selectedNew;
 
     public SelectSprite(TileMap map, Array<MapSprite> selectedSprites)
     {
-        this.map = map;
+        super(map);
         this.selectedSprites = selectedSprites;
         this.selectedOld = new Array<>(selectedSprites);
     }
@@ -26,6 +25,7 @@ public class SelectSprite implements Action
     @Override
     public void undo()
     {
+        super.undo();
         this.selectedSprites.clear();
         this.selectedSprites.addAll(this.selectedOld);
         this.map.propertyMenu.rebuild();
@@ -34,6 +34,7 @@ public class SelectSprite implements Action
     @Override
     public void redo()
     {
+        super.redo();
         this.selectedSprites.clear();
         this.selectedSprites.addAll(this.selectedNew);
         this.map.propertyMenu.rebuild();

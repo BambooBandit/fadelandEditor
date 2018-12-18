@@ -7,9 +7,8 @@ import com.fadeland.editor.map.MapSprite;
 import com.fadeland.editor.map.Tile;
 import com.fadeland.editor.map.TileMap;
 
-public class RotateSprite implements Action
+public class RotateSprite extends PerformableAction
 {
-    public TileMap map;
     public MapSprite mapSprite;
     public Array<MapSprite> mapSprites;
     public float oldRotation, newRotation;
@@ -19,7 +18,7 @@ public class RotateSprite implements Action
 
     public RotateSprite(TileMap map)
     {
-        this.map = map;
+        super(map);
     }
 
     public void addSprite(MapSprite mapSprite)
@@ -57,6 +56,7 @@ public class RotateSprite implements Action
     @Override
     public void undo()
     {
+        super.undo();
         float xSum = 0, ySum = 0;
         for(MapSprite mapSprite : map.selectedSprites)
         {
@@ -77,6 +77,7 @@ public class RotateSprite implements Action
     @Override
     public void redo()
     {
+        super.redo();
         float xSum = 0, ySum = 0;
         for(MapSprite mapSprite : map.selectedSprites)
         {

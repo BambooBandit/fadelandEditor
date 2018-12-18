@@ -1,14 +1,16 @@
 package com.fadeland.editor.undoredo;
 
 import com.fadeland.editor.map.Layer;
+import com.fadeland.editor.map.TileMap;
 
-public class CreateOrRemoveLayer implements Action
+public class CreateOrRemoveLayer extends PerformableAction
 {
     public Layer layer;
     public boolean create;
 
-    public CreateOrRemoveLayer(Layer layer, boolean create)
+    public CreateOrRemoveLayer(TileMap map, Layer layer, boolean create)
     {
+        super(map);
         this.layer = layer;
         this.create = create;
     }
@@ -16,6 +18,7 @@ public class CreateOrRemoveLayer implements Action
     @Override
     public void undo()
     {
+        super.undo();
         if(create)
             remove();
         else
@@ -25,6 +28,7 @@ public class CreateOrRemoveLayer implements Action
     @Override
     public void redo()
     {
+        super.redo();
         if(create)
             create();
         else

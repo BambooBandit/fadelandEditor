@@ -3,15 +3,14 @@ package com.fadeland.editor.undoredo;
 import com.fadeland.editor.map.Layer;
 import com.fadeland.editor.map.TileMap;
 
-public class SelectLayer implements Action
+public class SelectLayer extends PerformableAction
 {
-    public TileMap map;
     public Layer oldSelectedLayer;
     public Layer newSelectedLayer;
     
     public SelectLayer(TileMap map, Layer oldLayer, Layer newLayer)
     {
-        this.map = map;
+        super(map);
         this.oldSelectedLayer = oldLayer;
         this.newSelectedLayer = newLayer;
     }
@@ -19,6 +18,7 @@ public class SelectLayer implements Action
     @Override
     public void undo()
     {
+        super.undo();
         map.layerMenu.unselectAll();
         if(oldSelectedLayer != null)
             oldSelectedLayer.layerField.select();
@@ -28,6 +28,7 @@ public class SelectLayer implements Action
     @Override
     public void redo()
     {
+        super.redo();
         map.layerMenu.unselectAll();
         if(newSelectedLayer != null)
             newSelectedLayer.layerField.select();

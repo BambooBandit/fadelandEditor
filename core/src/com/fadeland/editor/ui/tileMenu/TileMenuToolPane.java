@@ -42,7 +42,9 @@ public class TileMenuToolPane extends Group
         this.toolTable.add(this.sprites).padRight(1);
         this.toolTable.add(this.lines).padRight(1);
 
-        selectTool(this.tiles);
+        this.sprites.unselect();
+        this.tiles.select();
+        selectMultipleTiles();
 
         this.editor = editor;
         this.skin = skin;

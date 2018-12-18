@@ -6,9 +6,8 @@ import com.fadeland.editor.map.Tile;
 import com.fadeland.editor.map.TileLayer;
 import com.fadeland.editor.map.TileMap;
 
-public class ResizeLayer implements Action
+public class ResizeLayer extends PerformableAction
 {
-    public TileMap map;
     public Layer layer;
     public int oldWidth, oldHeight, newWidth, newHeight;
     public float oldZ, newZ;
@@ -17,7 +16,7 @@ public class ResizeLayer implements Action
 
     public ResizeLayer(TileMap map, Layer layer, int oldWidth, int oldHeight, float oldZ)
     {
-        this.map = map;
+        super(map);
         this.layer = layer;
 
         this.oldTiles = new Array<>();
@@ -44,6 +43,7 @@ public class ResizeLayer implements Action
     @Override
     public void undo()
     {
+        super.undo();
         layer.width = this.oldWidth;
         layer.height = this.oldHeight;
         layer.setZ(oldZ);
@@ -57,6 +57,7 @@ public class ResizeLayer implements Action
     @Override
     public void redo()
     {
+        super.redo();
         layer.width = this.newWidth;
         layer.height = this.newHeight;
         layer.setZ(newZ);

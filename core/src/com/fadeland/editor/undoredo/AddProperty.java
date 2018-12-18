@@ -6,16 +6,15 @@ import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
-public class AddProperty implements Action
+public class AddProperty extends PerformableAction
 {
-    public TileMap tileMap;
     public Array<MapObject> selectedMapObjects;
     public Array<TileTool> selectedTiles;
     public PropertyField propertyField;
 
-    public AddProperty(TileMap tileMap, Array<MapObject> selectedMapObjects, Array<TileTool> selectedTiles)
+    public AddProperty(TileMap map, Array<MapObject> selectedMapObjects, Array<TileTool> selectedTiles)
     {
-        this.tileMap = tileMap;
+        super(map);
         this.selectedMapObjects = selectedMapObjects;
         this.selectedTiles = selectedTiles;
     }
@@ -28,6 +27,7 @@ public class AddProperty implements Action
     @Override
     public void undo()
     {
+        super.undo();
         if(selectedMapObjects.size > 0)
         {
             for(int i = 0; i < selectedMapObjects.size; i ++)
@@ -38,12 +38,13 @@ public class AddProperty implements Action
             for(int i = 0; i < selectedTiles.size; i ++)
                 selectedTiles.get(i).properties.removeValue(propertyField, false);
         }
-        tileMap.propertyMenu.rebuild();
+        map.propertyMenu.rebuild();
     }
 
     @Override
     public void redo()
     {
+        super.redo();
         if(selectedMapObjects.size > 0)
         {
             for(int i = 0; i < selectedMapObjects.size; i ++)
@@ -54,6 +55,6 @@ public class AddProperty implements Action
             for(int i = 0; i < selectedTiles.size; i ++)
                 selectedTiles.get(i).properties.add(propertyField);
         }
-        tileMap.propertyMenu.rebuild();
+        map.propertyMenu.rebuild();
     }
 }

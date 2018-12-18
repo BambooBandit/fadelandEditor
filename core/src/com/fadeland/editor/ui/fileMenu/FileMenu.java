@@ -64,7 +64,7 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                TileMap newMap = new TileMap(editor, "untitled " + untitledCount ++);
+                TileMap newMap = new TileMap(editor, "untitled " + untitledCount++);
                 editor.addToMaps(newMap);
                 mapTabPane.lookAtMap(newMap);
             }
@@ -74,11 +74,13 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                if(editor.fileChooserOpen)
+                if (editor.fileChooserOpen)
                     return;
-                new Thread(new Runnable() {
+                new Thread(new Runnable()
+                {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         editor.fileChooserOpen = true;
                         JFileChooser chooser = new JFileChooser();
                         FileNameExtensionFilter flmFilter = new FileNameExtensionFilter(
@@ -123,35 +125,7 @@ public class FileMenu extends Group
             public void clicked(InputEvent event, float x, float y)
             {
                 if(editor.getScreen() != null)
-                {
-                    TileMap tileMap = (TileMap) editor.getScreen();
-                    if(tileMap.file == null)
-                    {
-                        saveAs();
-                        return;
-                    }
-                    TileMapData tileMapData = new TileMapData(tileMap);
-                    Json json = new Json();
-
-                    File file = tileMap.file;
-                    try
-                    {
-                        //Create the file
-                        if (file.createNewFile())
-                            System.out.println("File is created!");
-                        else
-                            System.out.println("File already exists.");
-
-                        //Write Content
-                        FileWriter writer = new FileWriter(file);
-                        writer.write(json.prettyPrint(tileMapData));
-                        writer.close();
-                    }
-                    catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
+                    save((TileMap) editor.getScreen(), false);
             }
         });
         this.saveAsButton.addListener(new ClickListener()
@@ -159,7 +133,8 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                saveAs();
+                if(editor.getScreen() != null)
+                    saveAs((TileMap) editor.getScreen(), false);
             }
         });
         this.undoButton.addListener(new ClickListener()
@@ -198,7 +173,42 @@ public class FileMenu extends Group
         this.addActor(this.fileMenuTable);
     }
 
-    private void saveAs()
+    public void save(TileMap tileMap, boolean removeMapAfterSaving)
+    {
+        if (tileMap.file == null)
+        {
+            saveAs(tileMap, removeMapAfterSaving);
+            return;
+        }
+        TileMapData tileMapData = new TileMapData(tileMap);
+        Json json = new Json();
+
+        File file = tileMap.file;
+        try
+        {
+            //Create the file
+            if (file.createNewFile())
+                System.out.println("File is created!");
+            else
+                System.out.println("File already exists.");
+
+            //Write Content
+            FileWriter writer = new FileWriter(file);
+            writer.write(json.prettyPrint(tileMapData));
+            writer.close();
+
+            tileMap.setChanged(false);
+
+            if(removeMapAfterSaving)
+                editor.fileMenu.mapTabPane.removeMap(tileMap);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveAs(TileMap tileMap, boolean removeMapAfterSaving)
     {
         if(editor.fileChooserOpen || editor.getScreen() == null)
             return;
@@ -210,9 +220,9 @@ public class FileMenu extends Group
                 FileNameExtensionFilter flmFilter = new FileNameExtensionFilter(
                         "flm files (*.flm)", "flm");
                 chooser.setFileFilter(flmFilter);
-                TileMap tileMap = (TileMap) editor.getScreen();
-                if(tileMap.file != null)
-                    chooser.setSelectedFile(tileMap.file);
+                TileMap map = tileMap;
+                if(map.file != null)
+                    chooser.setSelectedFile(map.file);
                 else
                     chooser.setSelectedFile(new File("map.flm"));
                 JFrame f = new JFrame();
@@ -227,12 +237,12 @@ public class FileMenu extends Group
                 {
                     Gdx.app.postRunnable(() ->
                     {
-                        tileMap.setName(chooser.getSelectedFile().getName());
-                        TileMapData tileMapData = new TileMapData(tileMap);
+                        map.setName(chooser.getSelectedFile().getName());
+                        TileMapData tileMapData = new TileMapData(map);
                         Json json = new Json();
 
                         File file = chooser.getSelectedFile();
-                        tileMap.file = file;
+                        map.file = file;
                         try
                         {
                             //Create the file
@@ -242,6 +252,11 @@ public class FileMenu extends Group
                             FileWriter writer = new FileWriter(file);
                             writer.write(json.prettyPrint(tileMapData));
                             writer.close();
+
+                            tileMap.setChanged(false);
+
+                            if(removeMapAfterSaving)
+                                editor.fileMenu.mapTabPane.removeMap(tileMap);
                         }
                         catch (IOException e)
                         {

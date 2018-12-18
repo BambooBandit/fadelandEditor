@@ -4,8 +4,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.fadeland.editor.map.AttachedMapObject;
 import com.fadeland.editor.map.Tile;
+import com.fadeland.editor.map.TileMap;
 
-public class MoveAttachedObject implements Action
+public class MoveAttachedObject extends PerformableAction
 {
     public AttachedMapObject mapObject;
     public Array<AttachedMapObject> mapObjects;
@@ -15,8 +16,9 @@ public class MoveAttachedObject implements Action
     public ObjectMap<Tile, Float> newYofDragMap;
     public float newX, newY;
 
-    public MoveAttachedObject(ObjectMap<Tile, Float> oldXofDragMap, ObjectMap<Tile, Float> oldYofDragMap)
+    public MoveAttachedObject(TileMap map, ObjectMap<Tile, Float> oldXofDragMap, ObjectMap<Tile, Float> oldYofDragMap)
     {
+        super(map);
         this.oldXofDragMap = new ObjectMap();
         this.oldYofDragMap = new ObjectMap();
     }
@@ -65,6 +67,7 @@ public class MoveAttachedObject implements Action
     @Override
     public void undo()
     {
+        super.undo();
         if(this.mapObject != null)
             this.mapObject.positionOffset.set(oldXofDragMap.get(mapObject), oldYofDragMap.get(mapObject));
         else
@@ -75,6 +78,7 @@ public class MoveAttachedObject implements Action
     @Override
     public void redo()
     {
+        super.redo();
         if(this.mapObject != null)
             this.mapObject.positionOffset.set(newX, newY);
         else
