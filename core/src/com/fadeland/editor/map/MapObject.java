@@ -2,13 +2,13 @@ package com.fadeland.editor.map;
 
 import box2dLight.PointLight;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
+import com.fadeland.editor.EditorPolygon;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
@@ -16,7 +16,7 @@ import com.fadeland.editor.ui.tileMenu.TileTool;
 public class MapObject extends Tile
 {
 //    protected float rotation;
-    public Polygon polygon;
+    public EditorPolygon polygon;
     public static float[] pointShape = new float[10];
 //    public RotationBox rotationBox;
     public MoveBox moveBox;
@@ -43,7 +43,7 @@ public class MapObject extends Tile
         super(map, x, y);
         this.vertices = vertices;
         this.properties = new Array<>();
-        this.polygon = new Polygon(vertices);
+        this.polygon = new EditorPolygon(vertices);
         this.polygon.setPosition(x, y);
         this.position.set(x, y);
         this.moveBox = new MoveBox(this, map);
@@ -87,7 +87,7 @@ public class MapObject extends Tile
                 this.body.setTransform(this.position.x + (width / 2), this.position.y + (height / 2), rotation);
                 map.searchForBlockedTiles();
             }
-            else if(this.bodies != null)
+            else if(this.bodies != null && this.bodies.size > 0)
             {
                 int bodyIndex = 0;
                 AttachedMapObject attachedMapObject = (AttachedMapObject) this;
@@ -323,7 +323,7 @@ public class MapObject extends Tile
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(this.position);
         PolygonShape shape = new PolygonShape();
-        float[] vertices = this.polygon.getVertices().clone();
+        float[] vertices = this.polygon.getScaledVertices().clone();
         if(attachedMapObject.oldPositionOffset == null)
             attachedMapObject.oldPositionOffset = new Vector2();
         attachedMapObject.oldPositionOffset.set(attachedMapObject.positionOffset);

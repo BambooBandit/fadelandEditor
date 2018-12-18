@@ -196,7 +196,7 @@ class MapSpriteData
 {
     public float x, y, z;
     int id;
-    public float width, height, rotation;
+    public float width, height, rotation, scale;
     public MapSpriteData(){}
     public MapSpriteData(MapSprite mapSprite)
     {
@@ -207,6 +207,7 @@ class MapSpriteData
         this.width = mapSprite.sprite.getWidth();
         this.height = mapSprite.sprite.getHeight();
         this.rotation = mapSprite.sprite.getRotation();
+        this.scale = mapSprite.sprite.getScaleX();
     }
 }
 

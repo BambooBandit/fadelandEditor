@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
+import com.fadeland.editor.EditorPolygon;
 import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
@@ -15,7 +15,7 @@ import com.fadeland.editor.ui.tileMenu.TileTool;
 public class MapSprite extends Tile
 {
     public float rotation;
-    public Polygon polygon;
+    public EditorPolygon polygon;
     public RotationBox rotationBox;
     public MoveBox moveBox;
     public ScaleBox scaleBox;
@@ -35,7 +35,7 @@ public class MapSprite extends Tile
         this.height = this.sprite.getHeight();
         this.tool = tool;
         float[] vertices = {0, 0, this.width, 0, this.width, this.height, 0, this.height};
-        this.polygon = new Polygon(vertices);
+        this.polygon = new EditorPolygon(vertices);
         this.polygon.setPosition(x, y);
         this.polygon.setOrigin(this.width / 2, this.height / 2);
         this.rotationBox = new RotationBox(this, map);

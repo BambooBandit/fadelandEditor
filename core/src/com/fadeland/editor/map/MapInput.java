@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.fadeland.editor.EditorPolygon;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.Utils;
@@ -148,7 +148,7 @@ public class MapInput implements InputProcessor
                 {
                     CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                     MapSprite mapSprite = map.selectedSprites.first();
-                    Polygon antiRotatePolygon = new Polygon(objectVertices.toArray());
+                    EditorPolygon antiRotatePolygon = new EditorPolygon(objectVertices.toArray());
                     antiRotatePolygon.setOrigin(-(objectVerticePosition.x - mapSprite.position.x) + mapSprite.width / 2, -(objectVerticePosition.y - mapSprite.position.y) + mapSprite.height / 2);
                     antiRotatePolygon.rotate(-mapSprite.sprite.getRotation());
                     mapObject = new AttachedMapObject(map, mapSprite, antiRotatePolygon.getTransformedVertices(), objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
@@ -852,7 +852,7 @@ public class MapInput implements InputProcessor
         {
             Vector2 pos2 = new Vector2(this.pos.x, this.pos.y);
             for(int i = 0; i < map.selectedSprites.size; i ++)
-                map.selectedSprites.get(i).setScale(dragOrigin.angle(pos2) / 55f);
+                map.selectedSprites.get(i).setScale(dragOrigin.angle(pos2) / 100f);
             return false;
         }
         if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.GRAB)
