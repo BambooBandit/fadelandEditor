@@ -89,7 +89,7 @@ public class MapTabPane extends Group
                     new AreYouSureDialog("Save before closing " + map.name + "?", map.editor.stage, "", skin)
                     {
                         @Override
-                        public void yes() { map.editor.fileMenu.save(map, true); }
+                        public void yes() { map.editor.fileMenu.save(map, true, false); }
 
                         @Override
                         public void no() { removeMap(map); }
@@ -144,6 +144,7 @@ public class MapTabPane extends Group
         this.mapsToButtons.remove(map); // Explained above
 
         this.setSize(getWidth(), getHeight()); // Fit the buttons
+        editor.maps.removeValue(map, true);
     }
 
     /** Makes the editor look at this map. */

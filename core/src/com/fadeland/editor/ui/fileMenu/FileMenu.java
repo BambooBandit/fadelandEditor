@@ -125,7 +125,7 @@ public class FileMenu extends Group
             public void clicked(InputEvent event, float x, float y)
             {
                 if(editor.getScreen() != null)
-                    save((TileMap) editor.getScreen(), false);
+                    save((TileMap) editor.getScreen(), false, false);
             }
         });
         this.saveAsButton.addListener(new ClickListener()
@@ -134,7 +134,7 @@ public class FileMenu extends Group
             public void clicked(InputEvent event, float x, float y)
             {
                 if(editor.getScreen() != null)
-                    saveAs((TileMap) editor.getScreen(), false);
+                    saveAs((TileMap) editor.getScreen(), false, false);
             }
         });
         this.undoButton.addListener(new ClickListener()
@@ -173,11 +173,11 @@ public class FileMenu extends Group
         this.addActor(this.fileMenuTable);
     }
 
-    public void save(TileMap tileMap, boolean removeMapAfterSaving)
+    public void save(TileMap tileMap, boolean removeMapAfterSaving, boolean closeApplicationAfterSaving)
     {
         if (tileMap.file == null)
         {
-            saveAs(tileMap, removeMapAfterSaving);
+            saveAs(tileMap, removeMapAfterSaving, closeApplicationAfterSaving);
             return;
         }
         TileMapData tileMapData = new TileMapData(tileMap);
@@ -201,6 +201,8 @@ public class FileMenu extends Group
 
             if(removeMapAfterSaving)
                 editor.fileMenu.mapTabPane.removeMap(tileMap);
+            if(closeApplicationAfterSaving)
+                Gdx.app.exit();
         }
         catch (IOException e)
         {
@@ -208,7 +210,7 @@ public class FileMenu extends Group
         }
     }
 
-    public void saveAs(TileMap tileMap, boolean removeMapAfterSaving)
+    public void saveAs(TileMap tileMap, boolean removeMapAfterSaving, boolean closeApplicationAfterSaving)
     {
         if(editor.fileChooserOpen || editor.getScreen() == null)
             return;
@@ -257,6 +259,8 @@ public class FileMenu extends Group
 
                             if(removeMapAfterSaving)
                                 editor.fileMenu.mapTabPane.removeMap(tileMap);
+                            if(closeApplicationAfterSaving)
+                                Gdx.app.exit();
                         }
                         catch (IOException e)
                         {
