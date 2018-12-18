@@ -215,6 +215,8 @@ public class MapInput implements InputProcessor
         }
 
         MoveSprite moveSprite = null;
+        RotateSprite rotateSprite = null;
+        ScaleSprite scaleSprite = null;
         for (int i = 0; i < map.selectedSprites.size; i++)
         {
             if (map.selectedSprites.get(i).moveBox.contains(coords.x, coords.y))
@@ -229,9 +231,8 @@ public class MapInput implements InputProcessor
                 moveSprite.addSprite(map.selectedSprites.get(i));
             map.performAction(moveSprite);
         }
-        else // rotate
+        else // rotate and scale
         {
-            RotateSprite rotateSprite = null;
             for (int i = 0; i < map.selectedSprites.size; i++)
             {
                 if (map.selectedSprites.get(i).rotationBox.contains(coords.x, coords.y))
@@ -245,6 +246,23 @@ public class MapInput implements InputProcessor
                 for (int i = 0; i < map.selectedSprites.size; i++)
                     rotateSprite.addSprite(map.selectedSprites.get(i));
                 map.performAction(rotateSprite);
+            }
+            else
+            {
+                for (int i = 0; i < map.selectedSprites.size; i++)
+                {
+                    if (map.selectedSprites.get(i).scaleBox.contains(coords.x, coords.y))
+                    {
+                        scaleSprite = new ScaleSprite(map);
+                        break;
+                    }
+                }
+                if (scaleSprite != null)
+                {
+                    for (int i = 0; i < map.selectedSprites.size; i++)
+                        scaleSprite.addSprite(map.selectedSprites.get(i));
+                    map.performAction(scaleSprite);
+                }
             }
         }
         for(int i = 0; i < map.selectedSprites.size; i ++)
@@ -278,6 +296,8 @@ public class MapInput implements InputProcessor
                     this.oldXofDragMap.put(map.selectedSprites.get(k), map.selectedSprites.get(k).position.x);
                     this.oldYofDragMap.put(map.selectedSprites.get(k), map.selectedSprites.get(k).position.y);
                 }
+                if(moveSprite != null)
+                    moveSprite.addOldPosition(this.oldXofDragMap, this.oldYofDragMap);
 
                 float xSum = 0, ySum = 0;
                 for(MapSprite mapSprite : map.selectedSprites)
@@ -778,23 +798,30 @@ public class MapInput implements InputProcessor
                 }
             }
         }
-        if(map.undo.size() > 0 && map.undo.peek() instanceof MoveSprite)
+        if(map.undo.size() > 0)
         {
-            MoveSprite moveSprite = (MoveSprite) map.undo.pop();
-            moveSprite.addNewPosition();
-            map.undo.push(moveSprite);
-        }
-        else if(map.undo.size() > 0 && map.undo.peek() instanceof RotateSprite)
-        {
-            RotateSprite rotateSprite = (RotateSprite) map.undo.pop();
-            rotateSprite.addNewRotation();
-            map.undo.push(rotateSprite);
-        }
-        if(map.undo.size() > 0 && map.undo.peek() instanceof PlaceTile)
-        {
-            PlaceTile placeTile = (PlaceTile) map.undo.pop();
-            if(placeTile.changed())
-                map.undo.push(placeTile);
+            if (map.undo.peek() instanceof MoveSprite)
+            {
+                MoveSprite moveSprite = (MoveSprite) map.undo.pop();
+                moveSprite.addNewPosition();
+                map.undo.push(moveSprite);
+            } else if (map.undo.peek() instanceof RotateSprite)
+            {
+                RotateSprite rotateSprite = (RotateSprite) map.undo.pop();
+                rotateSprite.addNewRotation();
+                map.undo.push(rotateSprite);
+            } else if (map.undo.peek() instanceof ScaleSprite)
+            {
+                ScaleSprite scaleSprite = (ScaleSprite) map.undo.pop();
+                scaleSprite.addNewScale();
+                map.undo.push(scaleSprite);
+            }
+            if (map.undo.peek() instanceof PlaceTile)
+            {
+                PlaceTile placeTile = (PlaceTile) map.undo.pop();
+                if (placeTile.changed())
+                    map.undo.push(placeTile);
+            }
         }
         this.draggingRotateBox = false;
         this.draggingMoveBox = false;

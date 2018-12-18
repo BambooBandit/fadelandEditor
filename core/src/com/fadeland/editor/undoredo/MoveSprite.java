@@ -19,8 +19,6 @@ public class MoveSprite extends PerformableAction
     public MoveSprite(TileMap map, ObjectMap<Tile, Float> oldXofDragMap, ObjectMap<Tile, Float> oldYofDragMap)
     {
         super(map);
-        this.oldXofDragMap = oldXofDragMap;
-        this.oldYofDragMap = oldYofDragMap;
     }
 
     public void addSprite(MapSprite mapSprite)
@@ -37,6 +35,12 @@ public class MoveSprite extends PerformableAction
             }
             this.mapSprites.add(mapSprite);
         }
+    }
+
+    public void addOldPosition(ObjectMap<Tile, Float> oldXofDragMap, ObjectMap<Tile, Float> oldYofDragMap)
+    {
+        this.oldXofDragMap = new ObjectMap(oldXofDragMap);
+        this.oldYofDragMap = new ObjectMap(oldYofDragMap);
     }
 
     public void addNewPosition()

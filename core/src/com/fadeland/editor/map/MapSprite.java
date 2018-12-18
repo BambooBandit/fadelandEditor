@@ -14,7 +14,7 @@ import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class MapSprite extends Tile
 {
-    public float rotation;
+    public float rotation, scale;
     public EditorPolygon polygon;
     public RotationBox rotationBox;
     public MoveBox moveBox;
@@ -45,6 +45,7 @@ public class MapSprite extends Tile
         this.scaleBox = new ScaleBox(this, map);
         this.scaleBox.setPosition(x + this.width, y + this.height - 50);
         this.verts = new float[20];
+        this.scale = 1;
     }
 
     @Override
@@ -220,8 +221,10 @@ public class MapSprite extends Tile
 
     public void setScale(float scale)
     {
+        // TODO do undo
         if(scale > 1 || scale <= 0)
             return;
+        this.scale = scale;
         this.sprite.setScale(scale);
         this.polygon.setScale(scale, scale);
         if(this.tool.topSprites != null)
