@@ -35,6 +35,7 @@ public class MapInput implements InputProcessor
 
     private boolean draggingRotateBox = false;
     private boolean draggingMoveBox = false;
+    private boolean draggingScaleBox = false;
 
     public FloatArray objectVertices; // allows for seeing where you are clicking when constructing a new MapObject polygon
     public Vector2 objectVerticePosition;
@@ -269,6 +270,31 @@ public class MapInput implements InputProcessor
             {
                 // If clicked moveBox with SELECT tool, ignore everything
                 this.draggingMoveBox = true;
+
+                this.oldXofDragMap.clear();
+                this.oldYofDragMap.clear();
+                for(int k = 0; k < map.selectedSprites.size; k ++)
+                {
+                    this.oldXofDragMap.put(map.selectedSprites.get(k), map.selectedSprites.get(k).position.x);
+                    this.oldYofDragMap.put(map.selectedSprites.get(k), map.selectedSprites.get(k).position.y);
+                }
+
+                float xSum = 0, ySum = 0;
+                for(MapSprite mapSprite : map.selectedSprites)
+                {
+                    xSum += mapSprite.position.x;
+                    ySum += mapSprite.position.y;
+                }
+                float xAverage = xSum / map.selectedSprites.size;
+                float yAverage = ySum / map.selectedSprites.size;
+                Utils.setCenterOrigin(xAverage, yAverage);
+
+                return false;
+            }
+            else if(map.selectedSprites.get(i).scaleBox.contains(coords.x, coords.y))
+            {
+                // If clicked scaleBox with SELECT tool, ignore everything
+                this.draggingScaleBox = true;
 
                 this.oldXofDragMap.clear();
                 this.oldYofDragMap.clear();
@@ -772,6 +798,7 @@ public class MapInput implements InputProcessor
         }
         this.draggingRotateBox = false;
         this.draggingMoveBox = false;
+        this.draggingScaleBox = false;
         return false;
     }
 
@@ -819,6 +846,13 @@ public class MapInput implements InputProcessor
                         map.selectedObjects.get(i).setPosition(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
                 }
             }
+            return false;
+        }
+        else if(draggingScaleBox)
+        {
+            Vector2 pos2 = new Vector2(this.pos.x, this.pos.y);
+            for(int i = 0; i < map.selectedSprites.size; i ++)
+                map.selectedSprites.get(i).setScale(dragOrigin.angle(pos2) / 55f);
             return false;
         }
         if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.GRAB)
@@ -1052,6 +1086,31 @@ public class MapInput implements InputProcessor
         };
         rotationField.value.addListener(rotationListener);
 
+        PropertyField scaleField = new PropertyField("Scale", "1", GameAssets.getUISkin(), map.propertyMenu, false);
+        scaleField.value.setTextFieldFilter(valueFilter);
+        scaleField.value.getListeners().clear();
+        TextField.TextFieldClickListener scaleListener = scaleField.value.new TextFieldClickListener(){
+            @Override
+            public boolean keyUp (InputEvent event, int keycode)
+            {
+                try
+                {
+                    if (keycode == Input.Keys.ENTER)
+                    {
+                        float scaleAmount = Float.parseFloat(scaleField.value.getText());
+                        if(scaleAmount <= 1 && scaleAmount > 0)
+                        {
+                            for (int i = 0; i < map.selectedSprites.size; i++)
+                                map.selectedSprites.get(i).setScale(scaleAmount);
+                        }
+                    }
+                }
+                catch (NumberFormatException e){}
+                return true;
+            }
+        };
+        scaleField.value.addListener(scaleListener);
+
         PropertyField zField = new PropertyField("Z", "0", GameAssets.getUISkin(), map.propertyMenu, false);
         zField.value.setTextFieldFilter(valueFilter);
         zField.value.getListeners().clear();
@@ -1075,6 +1134,7 @@ public class MapInput implements InputProcessor
 
 
         mapSprite.lockedProperties.add(rotationField);
+        mapSprite.lockedProperties.add(scaleField);
         mapSprite.lockedProperties.add(zField);
         return mapSprite;
     }

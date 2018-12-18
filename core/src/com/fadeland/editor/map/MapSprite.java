@@ -18,6 +18,7 @@ public class MapSprite extends Tile
     public Polygon polygon;
     public RotationBox rotationBox;
     public MoveBox moveBox;
+    public ScaleBox scaleBox;
     public boolean selected;
     public Array<PropertyField> lockedProperties; // properties such as rotation. They belong to all sprites
     public float z;
@@ -41,6 +42,8 @@ public class MapSprite extends Tile
         this.rotationBox.setPosition(x + this.width, y + this.height);
         this.moveBox = new MoveBox(this, map);
         this.moveBox.setPosition(x + this.width, y + this.height - 25);
+        this.scaleBox = new ScaleBox(this, map);
+        this.scaleBox.setPosition(x + this.width, y + this.height - 50);
         this.verts = new float[20];
     }
 
@@ -54,6 +57,7 @@ public class MapSprite extends Tile
         this.polygon.setPosition(x, y);
         this.rotationBox.setPosition(x + this.width, y + this.height);
         this.moveBox.setPosition(x + this.width, y + this.height - 25);
+        this.scaleBox.setPosition(x + this.width, y + this.height - 50);
     }
 
     public void draw()
@@ -126,6 +130,11 @@ public class MapSprite extends Tile
     {
         if(selected)
             moveBox.sprite.draw(map.editor.batch);
+    }
+    public void drawScaleBox()
+    {
+        if(selected)
+            scaleBox.sprite.draw(map.editor.batch);
     }
 
     public void drawOutline()
@@ -204,6 +213,33 @@ public class MapSprite extends Tile
             if(lockedProperties.get(i).getProperty().equals("Rotation"))
             {
                 lockedProperties.get(i).value.setText(Float.toString(this.rotation));
+                break;
+            }
+        }
+    }
+
+    public void setScale(float scale)
+    {
+        if(scale > 1 || scale <= 0)
+            return;
+        this.sprite.setScale(scale);
+        this.polygon.setScale(scale, scale);
+        if(this.tool.topSprites != null)
+        {
+            for(int i = 0; i < this.tool.topSprites.size; i ++)
+                this.tool.topSprites.get(i).setScale(scale);
+        }
+        for(int i = 0; i < tool.mapObjects.size; i ++)
+        {
+            tool.mapObjects.get(i).polygon.setScale(scale, scale);
+            tool.mapObjects.get(i).updateLightsAndBodies();
+        }
+
+        for(int i = 0; i < lockedProperties.size; i ++)
+        {
+            if(lockedProperties.get(i).getProperty().equals("Scale"))
+            {
+                lockedProperties.get(i).value.setText(Float.toString(scale));
                 break;
             }
         }

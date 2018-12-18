@@ -190,6 +190,7 @@ public class TileMap implements Screen
         {
             this.selectedSprites.get(i).drawRotationBox();
             this.selectedSprites.get(i).drawMoveBox();
+            this.selectedSprites.get(i).drawScaleBox();
         }
         for(int i = 0; i < this.selectedObjects.size; i ++)
             this.selectedObjects.get(i).drawMoveBox();
@@ -499,7 +500,7 @@ public class TileMap implements Screen
                 mapObject.setPosition(selectedSprites.first().position.x + mapObject.positionOffset.x, selectedSprites.first().position.y + mapObject.positionOffset.y);
             }
         }
-//        b2dr.render(this.world, camera.combined);
+        b2dr.render(this.world, camera.combined);
         if(apply)
         {
             apply = false;
