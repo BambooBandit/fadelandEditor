@@ -73,6 +73,11 @@ public class MapSprite extends Tile
         float ySprite = Utils.project(map.camera,sprite.getX(), sprite.getY()).y;
         float xSkewAmount = ((xCenterSprite - xCenterScreen) / 3) * z;
         float ySkewAmount = ((ySprite - yCenterScreen) / 5) * z;
+        if(!map.editor.fileMenu.toolPane.parallax.selected)
+        {
+            xSkewAmount = 0;
+            ySkewAmount = 0;
+        }
         float[] vertices = sprite.getVertices();
 
         verts[0] = vertices[SpriteBatch.X2] + xSkewAmount;
