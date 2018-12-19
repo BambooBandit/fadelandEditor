@@ -32,9 +32,12 @@ public class MapInput implements InputProcessor
     private Vector3 pos;
     private ObjectMap<Tile, Float> oldXofDragMap;
     private ObjectMap<Tile, Float> oldYofDragMap;
+    private float oldXofDragLayer;
+    private float oldYofDragLayer;
 
     private boolean draggingRotateBox = false;
     private boolean draggingMoveBox = false;
+    private boolean draggingLayerMoveBox = false;
     private boolean draggingScaleBox = false;
 
     public FloatArray objectVertices; // allows for seeing where you are clicking when constructing a new MapObject polygon
@@ -373,6 +376,11 @@ public class MapInput implements InputProcessor
                 map.performAction(moveObject);
             }
         }
+        else if(map.selectedLayer != null && map.selectedLayer.moveBox.contains(coords.x, coords.y))
+        {
+            MoveLayerPosition moveLayerPosition = new MoveLayerPosition(map, map.selectedLayer);
+            map.performAction(moveLayerPosition);
+        }
         for(int i = 0; i < map.selectedObjects.size; i ++)
         {
             if(map.selectedObjects.get(i).moveBox.contains(coords.x, coords.y))
@@ -418,6 +426,13 @@ public class MapInput implements InputProcessor
 
                 return false;
             }
+        }
+        if(map.selectedLayer != null && map.selectedLayer.moveBox.contains(coords.x, coords.y))
+        {
+            this.oldXofDragLayer = map.selectedLayer.x;
+            this.oldYofDragLayer = map.selectedLayer.y;
+            this.draggingLayerMoveBox = true;
+            return false;
         }
         if(editor.getFileTool() != null && map.selectedObjects.size == 1 && !map.selectedObjects.first().isPoint && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
         {
@@ -654,7 +669,7 @@ public class MapInput implements InputProcessor
                     }
                 }
                 else if(editor.getSpriteTool() != null && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH &&
-                        coords.x > 0 && coords.y > 0 && coords.x < map.selectedLayer.width * tileSize && coords.y < map.selectedLayer.height * tileSize)
+                        coords.x > map.selectedLayer.x && coords.y > map.selectedLayer.y && coords.x < map.selectedLayer.x + (map.selectedLayer.width * tileSize) && coords.y < map.selectedLayer.y + (map.selectedLayer.height * tileSize))
                 {
                     CreateOrRemoveSprite createOrRemoveSprite = new CreateOrRemoveSprite(map, ((SpriteLayer) map.selectedLayer).tiles, null);
                     MapSprite mapSprite = newMapSprite(map, editor.getSpriteTool(), coords.x, coords.y);
@@ -815,6 +830,11 @@ public class MapInput implements InputProcessor
                 ScaleSprite scaleSprite = (ScaleSprite) map.undo.pop();
                 scaleSprite.addNewScale();
                 map.undo.push(scaleSprite);
+            } else if (map.undo.peek() instanceof MoveLayerPosition)
+            {
+                MoveLayerPosition moveLayerPosition = (MoveLayerPosition) map.undo.pop();
+                moveLayerPosition.addNewPosition();
+                map.undo.push(moveLayerPosition);
             }
             if (map.undo.peek() instanceof PlaceTile)
             {
@@ -825,6 +845,7 @@ public class MapInput implements InputProcessor
         }
         this.draggingRotateBox = false;
         this.draggingMoveBox = false;
+        this.draggingLayerMoveBox = false;
         this.draggingScaleBox = false;
         return false;
     }
@@ -875,6 +896,8 @@ public class MapInput implements InputProcessor
             }
             return false;
         }
+        else if(draggingLayerMoveBox)
+            map.selectedLayer.setPosition(this.oldXofDragLayer + pos.x, this.oldYofDragLayer + pos.y);
         else if(draggingScaleBox)
         {
             Vector2 pos2 = new Vector2(this.pos.x, this.pos.y);

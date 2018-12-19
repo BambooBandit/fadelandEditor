@@ -20,6 +20,9 @@ public abstract class Layer
     public LayerField layerField;
     public LayerTypes type;
 
+    public float x, y;
+    public MoveBox moveBox;
+
     public Layer(FadelandEditor editor, TileMap map, LayerTypes type, LayerField layerField)
     {
         this.width = 5;
@@ -30,6 +33,26 @@ public abstract class Layer
         this.map = map;
         this.type = type;
         this.layerField = layerField;
+
+        this.moveBox = new MoveBox();
+        this.moveBox.setPosition(x + (this.width * tileSize), y + (this.height * tileSize));
+    }
+
+    public void setPosition(float x, float y)
+    {
+        float xOffset = x - this.x;
+        float yOffset = y - this.y;
+        this.x = x;
+        this.y = y;
+        this.moveBox.setPosition(x + (this.width * tileSize), y + (this.height * tileSize));
+        for(int i = 0; i < tiles.size; i ++)
+            tiles.get(i).setPosition(tiles.get(i).position.x + xOffset, tiles.get(i).position.y + yOffset);
+    }
+
+    public void drawMoveBox()
+    {
+        if(map.selectedLayer == this)
+            moveBox.sprite.draw(map.editor.batch);
     }
 
     public abstract void draw();
@@ -108,6 +131,7 @@ public abstract class Layer
             this.map.camera.zoom = this.map.zoom - z;
             this.map.camera.update();
             this.editor.batch.setProjectionMatrix(map.camera.combined);
+            this.editor.shapeRenderer.setProjectionMatrix(map.camera.combined);
         }
     }
 
@@ -118,6 +142,7 @@ public abstract class Layer
             this.map.camera.zoom = this.map.zoom - this.map.selectedLayer.z;
             this.map.camera.update();
             this.editor.batch.setProjectionMatrix(map.camera.combined);
+            this.editor.shapeRenderer.setProjectionMatrix(map.camera.combined);
         }
     }
 }

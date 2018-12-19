@@ -40,7 +40,7 @@ public class MapSprite extends Tile
         this.polygon.setOrigin(this.width / 2, this.height / 2);
         this.rotationBox = new RotationBox(this, map);
         this.rotationBox.setPosition(x + this.width, y + this.height);
-        this.moveBox = new MoveBox(this, map);
+        this.moveBox = new MoveBox();
         this.moveBox.setPosition(x + this.width, y + this.height - 25);
         this.scaleBox = new ScaleBox(this, map);
         this.scaleBox.setPosition(x + this.width, y + this.height - 50);

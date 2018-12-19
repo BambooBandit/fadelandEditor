@@ -46,7 +46,7 @@ public class MapObject extends Tile
         this.polygon = new EditorPolygon(vertices);
         this.polygon.setPosition(x, y);
         this.position.set(x, y);
-        this.moveBox = new MoveBox(this, map);
+        this.moveBox = new MoveBox();
         this.moveBox.setPosition(x, y);
         this.isPoint = false;
     }
@@ -57,7 +57,7 @@ public class MapObject extends Tile
         super(map, x, y);
         this.properties = new Array<>();
         this.position.set(x, y);
-        this.moveBox = new MoveBox(this, map);
+        this.moveBox = new MoveBox();
         this.moveBox.setPosition(x, y);
         this.isPoint = true;
     }
@@ -173,6 +173,7 @@ public class MapObject extends Tile
         return vertices[indexOfSelectedVertice + 1] + this.polygon.getY();
     }
 
+    @Override
     public void draw()
     {
         if(isPoint)

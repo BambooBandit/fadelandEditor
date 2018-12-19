@@ -194,6 +194,8 @@ public class TileMap implements Screen
         }
         for(int i = 0; i < this.selectedObjects.size; i ++)
             this.selectedObjects.get(i).drawMoveBox();
+        if(selectedLayer != null)
+            selectedLayer.drawMoveBox();
         this.editor.batch.end();
 
         this.editor.shapeRenderer.setColor(Color.BLACK);
@@ -205,17 +207,17 @@ public class TileMap implements Screen
         {
             int layerWidth = selectedLayer.width;
             int layerHeight = selectedLayer.height;
-            this.editor.shapeRenderer.line(0, 0, 0, layerHeight * tileSize);
-            this.editor.shapeRenderer.line(0, 0, layerWidth * tileSize, 0);
-            this.editor.shapeRenderer.line(0, layerHeight * tileSize, layerWidth * tileSize, layerHeight * tileSize);
-            this.editor.shapeRenderer.line(layerWidth * tileSize, 0, layerWidth * tileSize, layerHeight * tileSize);
+            this.editor.shapeRenderer.line(selectedLayer.x, selectedLayer.y, selectedLayer.x, selectedLayer.y + (layerHeight * tileSize));
+            this.editor.shapeRenderer.line(selectedLayer.x, selectedLayer.y, selectedLayer.x + (layerWidth * tileSize), selectedLayer.y);
+            this.editor.shapeRenderer.line(selectedLayer.x, selectedLayer.y + (layerHeight * tileSize), selectedLayer.x + (layerWidth * tileSize), selectedLayer.y + (layerHeight * tileSize));
+            this.editor.shapeRenderer.line(selectedLayer.x + (layerWidth * tileSize), selectedLayer.y, selectedLayer.x + (layerWidth * tileSize), selectedLayer.y + (layerHeight * tileSize));
 
             if (editor.fileMenu.toolPane.lines.selected)
             {
                 for (int y = 1; y < layerHeight; y++)
-                    this.editor.shapeRenderer.line(0, y * tileSize, layerWidth * tileSize, y * tileSize);
+                    this.editor.shapeRenderer.line(selectedLayer.x, selectedLayer.y + (y * tileSize), selectedLayer.x + (layerWidth * tileSize), selectedLayer.y + (y * tileSize));
                 for (int x = 1; x < layerWidth; x++)
-                    this.editor.shapeRenderer.line(x * tileSize, 0, x * tileSize, layerHeight * tileSize);
+                    this.editor.shapeRenderer.line(selectedLayer.x + (x * tileSize), selectedLayer.y, selectedLayer.x + (x * tileSize), selectedLayer.y + (layerHeight * tileSize));
             }
         }
 
@@ -571,7 +573,11 @@ public class TileMap implements Screen
 
     public Tile getTile(float x, float y)
     {
-        if(selectedLayer == null || !(selectedLayer instanceof TileLayer) || x > selectedLayer.width * tileSize || y > selectedLayer.height * tileSize || x < 0 || y < -tileSize)
+        if(selectedLayer == null)
+            return null;
+        x -= selectedLayer.x;
+        y -= selectedLayer.y;
+        if(!(selectedLayer instanceof TileLayer) || x > selectedLayer.width * tileSize || y > selectedLayer.height * tileSize || x < 0 || y < -tileSize)
             return null;
 
         TileLayer selectedTileLayer = (TileLayer) selectedLayer;
@@ -679,6 +685,7 @@ public class TileMap implements Screen
                 layer = layerMenu.newLayer(layerTypes);
                 layer.layerField.layerName.setText(tileMapData.layers.get(i).name);
                 layer.setZ(tileMapData.layers.get(i).z);
+                layer.setPosition(tileMapData.layers.get(i).x, tileMapData.layers.get(i).y);
 
                 if(layerTypes == LayerTypes.TILE)
                 {
