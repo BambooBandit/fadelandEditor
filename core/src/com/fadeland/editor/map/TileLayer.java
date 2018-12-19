@@ -140,6 +140,7 @@ public class TileLayer extends Layer
             }
         }
         repositionTiles();
+        super.resize();
     }
 
     private void repositionTiles()
@@ -175,7 +176,7 @@ public class TileLayer extends Layer
         for(int i = 0; i < tiles.size; i ++)
         {
             Tile tile = tiles.get(i);
-            if(tile.hasBlockedObjectOnTop || tile.tool.getPropertyField("blocked") != null)
+            if(tile.hasBlockedObjectOnTop || (tile.tool != null && tile.tool.getPropertyField("blocked") != null))
             {
                 this.editor.shapeRenderer.setColor(r, g, b, 1);
                 this.editor.shapeRenderer.set(ShapeRenderer.ShapeType.Line);

@@ -74,6 +74,11 @@ public abstract class Layer
         }
     }
 
+    protected void resize()
+    {
+        this.moveBox.setPosition(x + (this.width * tileSize), y + (this.height * tileSize));
+    }
+
     public void resize(int width, int height, boolean down, boolean right)
     {
         int oldWidth = this.width;
@@ -117,6 +122,7 @@ public abstract class Layer
                     tiles.get(i).setPosition(tiles.get(i).position.x, tiles.get(i).position.y - heightShrink);
             }
         }
+        resize();
     }
 
     public void setZ(float z)
@@ -124,7 +130,7 @@ public abstract class Layer
         this.z = z;
     }
 
-    protected void setCameraZoomToThisLayer()
+    public void setCameraZoomToThisLayer()
     {
         if(editor.fileMenu.toolPane.parallax.selected)
         {
@@ -135,8 +141,10 @@ public abstract class Layer
         }
     }
 
-    protected void setCameraZoomToSelectedLayer()
+    public void setCameraZoomToSelectedLayer()
     {
+        if(this.map.selectedLayer == null)
+            return;
         if(editor.fileMenu.toolPane.parallax.selected)
         {
             this.map.camera.zoom = this.map.zoom - this.map.selectedLayer.z;

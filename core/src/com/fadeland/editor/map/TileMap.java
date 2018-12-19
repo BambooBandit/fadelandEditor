@@ -224,6 +224,7 @@ public class TileMap implements Screen
         this.editor.shapeRenderer.setColor(Color.CYAN);
         for(int i = 0; i < this.layers.size; i ++)
         {
+            this.layers.get(i).setCameraZoomToThisLayer();
             if(this.layers.get(i) instanceof ObjectLayer)
             {
                 if (this.layers.get(i).layerField.visibleImg.isVisible())
@@ -231,6 +232,7 @@ public class TileMap implements Screen
             }
             else
                 this.layers.get(i).drawAttachedMapObjects();
+            this.layers.get(i).setCameraZoomToSelectedLayer();
         }
         this.editor.shapeRenderer.setColor(Color.GRAY);
         int oldIndex = 0;
@@ -514,6 +516,8 @@ public class TileMap implements Screen
 
     public void setChanged(boolean changed)
     {
+        if(mapPaneButton == null)
+            return;
         if(this.changed != changed)
         {
             if(changed)
@@ -686,6 +690,7 @@ public class TileMap implements Screen
                 layer.layerField.layerName.setText(tileMapData.layers.get(i).name);
                 layer.setZ(tileMapData.layers.get(i).z);
                 layer.setPosition(tileMapData.layers.get(i).x, tileMapData.layers.get(i).y);
+                layer.resize(savedLayer.width, savedLayer.height, false, false);
 
                 if(layerTypes == LayerTypes.TILE)
                 {
@@ -859,10 +864,24 @@ public class TileMap implements Screen
                     for(int d = 0; d < tileTool.mapObjects.size; d ++)
                     {
                         AttachedMapObject attachedMapObject = tileTool.mapObjects.get(d);
-                        if(!attachedMapObject.isPoint && attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY))
+                        if(attachedMapObject.body == null && attachedMapObject.bodies != null)
                         {
-                            tile.hasBlockedObjectOnTop = true;
-                            continue tile;
+                            for(int w = 0; w < attachedMapObject.bodies.size; w++)
+                            {
+                                if (!attachedMapObject.isPoint && attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY))
+                                {
+                                    tile.hasBlockedObjectOnTop = true;
+                                    continue tile;
+                                }
+                            }
+                        }
+                        else if(attachedMapObject.bodies == null && attachedMapObject.body != null)
+                        {
+                            if (!attachedMapObject.isPoint && attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY))
+                            {
+                                tile.hasBlockedObjectOnTop = true;
+                                continue tile;
+                            }
                         }
                     }
                 }
@@ -874,10 +893,24 @@ public class TileMap implements Screen
                     for(int d = 0; d < tileTool.mapObjects.size; d ++)
                     {
                         AttachedMapObject attachedMapObject = tileTool.mapObjects.get(d);
-                        if(!attachedMapObject.isPoint && attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY))
+                        if(attachedMapObject.body == null && attachedMapObject.bodies != null)
                         {
-                            tile.hasBlockedObjectOnTop = true;
-                            continue tile;
+                            for(int w = 0; w < attachedMapObject.bodies.size; w++)
+                            {
+                                if (!attachedMapObject.isPoint && attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY))
+                                {
+                                    tile.hasBlockedObjectOnTop = true;
+                                    continue tile;
+                                }
+                            }
+                        }
+                        else if(attachedMapObject.bodies == null && attachedMapObject.body != null)
+                        {
+                            if (!attachedMapObject.isPoint && attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY))
+                            {
+                                tile.hasBlockedObjectOnTop = true;
+                                continue tile;
+                            }
                         }
                     }
                 }
