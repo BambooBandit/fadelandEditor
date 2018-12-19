@@ -230,7 +230,7 @@ public class TileMap implements Screen
                 if (this.layers.get(i).layerField.visibleImg.isVisible())
                     this.layers.get(i).draw();
             }
-            else
+            else if(this.layers.get(i).layerField.attachedVisibleImg.isVisible())
                 this.layers.get(i).drawAttachedMapObjects();
             this.layers.get(i).setCameraZoomToSelectedLayer();
         }
