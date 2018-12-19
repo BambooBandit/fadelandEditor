@@ -1,5 +1,6 @@
 package com.fadeland.editor.ui.fileMenu;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -78,6 +79,7 @@ public class MapTabPane extends Group
 
         // For closing out of the map in the pane
         TextButton closeButton = new TextButton("X", skin);
+        closeButton.setColor(Color.FIREBRICK);
         closeButton.setSize(25, getHeight());
         closeButton.addListener(new ClickListener()
         {

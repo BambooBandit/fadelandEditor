@@ -38,6 +38,8 @@ public class CreateOrRemoveLayer extends PerformableAction
     private void create()
     {
         this.layer.map.layerMenu.addLayer(this.layer);
+        if(this.layer.layerField.isSelected)
+            this.layer.map.selectedLayer = this.layer;
     }
 
     private void remove()

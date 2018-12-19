@@ -33,6 +33,8 @@ public class LayerField extends Group
 
     private LayerMenu menu;
 
+    public boolean isSelected = false;
+
     public LayerField(String name, LayerTypes type, FadelandEditor editor, TileMap map, Skin skin, final LayerMenu menu)
     {
         this.menu = menu;
@@ -73,6 +75,7 @@ public class LayerField extends Group
             this.attachedNotVisibleImg.setVisible(false);
         }
         this.remove = new TextButton("X", skin);
+        this.remove.setColor(Color.FIREBRICK);
 
         this.table.add(this.layerName);
         this.table.add(this.visibilityStack);
@@ -181,7 +184,7 @@ public class LayerField extends Group
         this.layerName.setColor(Color.GREEN);
         this.up.setColor(Color.GREEN);
         this.down.setColor(Color.GREEN);
-        this.remove.setColor(Color.GREEN);
+        this.isSelected = true;
     }
 
     public void unselect()
@@ -189,7 +192,7 @@ public class LayerField extends Group
         this.layerName.setColor(Color.WHITE);
         this.up.setColor(Color.WHITE);
         this.down.setColor(Color.WHITE);
-        this.remove.setColor(Color.WHITE);
+        this.isSelected = false;
     }
 }
 

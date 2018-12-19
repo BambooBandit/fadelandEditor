@@ -1,5 +1,6 @@
 package com.fadeland.editor.ui.propertyMenu;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -44,6 +45,7 @@ public class PropertyField extends Group
         if(removeable)
         {
             this.remove = new TextButton("X", skin);
+            this.remove.setColor(Color.FIREBRICK);
             final PropertyField removeableField = this;
             this.remove.addListener(new ClickListener()
             {

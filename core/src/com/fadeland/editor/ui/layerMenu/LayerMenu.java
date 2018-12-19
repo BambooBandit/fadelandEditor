@@ -160,6 +160,8 @@ public class LayerMenu extends Group
         this.table.removeActor(layerField, false);
         this.layers.removeValue(layerField, false);
         this.map.layers.removeValue(layerField.mapLayer, false);
+        if(this.map.selectedLayer == layerField.mapLayer)
+            this.map.selectedLayer = null;
 
         rearrangeLayers();
         rebuild();

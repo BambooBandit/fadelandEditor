@@ -1,5 +1,6 @@
 package com.fadeland.editor.ui;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -23,12 +24,14 @@ public class AreYouSureDialog extends Dialog
         this.yesNoTable = new Table();
 
         this.yes = new TextButton("Yes", skin);
+        this.yes.setColor(Color.GREEN);
         this.yes.addListener(new ClickListener() {@Override public void clicked(InputEvent event, float x, float y) {
             yes();
             remove();
         }});
 
         this.no = new TextButton("No", skin);
+        this.no.setColor(Color.FIREBRICK);
         this.no.addListener(new ClickListener() {@Override public void clicked(InputEvent event, float x, float y) {
             no();
             remove();
