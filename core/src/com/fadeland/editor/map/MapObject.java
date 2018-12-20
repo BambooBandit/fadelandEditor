@@ -212,11 +212,19 @@ public class MapObject extends Tile
             moveBox.sprite.draw(map.editor.batch);
     }
 
+    public PropertyField getLightPropertyField()
+    {
+        for(int i = 0; i < this.properties.size; i ++)
+            if(this.properties.get(i).rgbaDistanceRayAmount)
+                return this.properties.get(i);
+        return null;
+    }
+
     public PropertyField getPropertyField(String propertyName)
     {
         for(int i = 0; i < this.properties.size; i ++)
         {
-            if(this.properties.get(i).getProperty().equals(propertyName))
+            if(this.properties.get(i).getProperty() != null && this.properties.get(i).getProperty().equals(propertyName))
                 return this.properties.get(i);
         }
         return null;
@@ -365,7 +373,11 @@ public class MapObject extends Tile
             }
         }
         else if(this.pointLight == null)
-            this.pointLight = new PointLight(map.rayHandler, 100, Color.WHITE, 100, this.position.x, this.position.y);
+        {
+            PropertyField propertyField = getLightPropertyField();
+            Color color = new Color(Float.parseFloat(propertyField.rValue.getText()), Float.parseFloat(propertyField.gValue.getText()), Float.parseFloat(propertyField.bValue.getText()), Float.parseFloat(propertyField.aValue.getText()));
+            this.pointLight = new PointLight(map.rayHandler, Integer.parseInt(propertyField.rayAmountValue.getText()), color, Float.parseFloat(propertyField.distanceValue.getText()), this.position.x, this.position.y);
+        }
     }
 
     public void createLight(Tile tile)
@@ -373,7 +385,9 @@ public class MapObject extends Tile
         AttachedMapObject attachedMapObject = (AttachedMapObject) this;
         if(pointLights == null)
             pointLights = new Array<>();
-        pointLights.add(new PointLight(map.rayHandler, 100, Color.WHITE, 100, attachedMapObject.positionOffset.x + tile.position.x, attachedMapObject.positionOffset.y + tile.position.y));
+        PropertyField propertyField = getLightPropertyField();
+        Color color = new Color(Float.parseFloat(propertyField.rValue.getText()), Float.parseFloat(propertyField.gValue.getText()), Float.parseFloat(propertyField.bValue.getText()), Float.parseFloat(propertyField.aValue.getText()));
+        pointLights.add(new PointLight(map.rayHandler, Integer.parseInt(propertyField.rayAmountValue.getText()), color, Float.parseFloat(propertyField.distanceValue.getText()), attachedMapObject.positionOffset.x + tile.position.x, attachedMapObject.positionOffset.y + tile.position.y));
     }
 
     public void removeLight()

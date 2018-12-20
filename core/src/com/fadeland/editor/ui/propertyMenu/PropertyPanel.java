@@ -65,21 +65,34 @@ public class PropertyPanel extends Group
         super.setSize(width, height);
     }
 
-    public void newProperty()
+    public void newProperty(boolean light)
     {
         AddProperty addProperty = new AddProperty(map, map.selectedObjects, map.tileMenu.selectedTiles);
-        addProperty.addProperty(new PropertyField("Property", "Value", this.skin, menu, true));
+        if(light)
+            addProperty.addProperty(new PropertyField(this.skin, menu, true, 1, 1, 1, 1, 100, 25));
+        else
+            addProperty.addProperty(new PropertyField("Property", "Value", this.skin, menu, true));
         map.performAction(addProperty);
 
         if(map.selectedObjects.size > 0)
         {
             for (int i = 0; i < map.selectedObjects.size; i++)
-                this.map.selectedObjects.get(i).properties.add(new PropertyField("Property", "Value", this.skin, menu, true));
+            {
+                if(light)
+                    this.map.selectedObjects.get(i).properties.add(new PropertyField(this.skin, menu, true, 1, 1, 1, 1, 100, 25));
+                else
+                    this.map.selectedObjects.get(i).properties.add(new PropertyField("Property", "Value", this.skin, menu, true));
+            }
         }
         else
         {
             for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
-                this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField("Property", "Value", this.skin, menu, true));
+            {
+                if(light)
+                    this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField(this.skin, menu, true, 1, 1, 1, 1, 100, 25));
+                else
+                    this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField("Property", "Value", this.skin, menu, true));
+            }
         }
     }
 
@@ -98,6 +111,42 @@ public class PropertyPanel extends Group
         {
             for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
                 this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField(property, value, this.skin, menu, true));
+        }
+    }
+
+    public void newProperty(float r, float g, float b, float a)
+    {
+        AddProperty addProperty = new AddProperty(map, map.selectedObjects, map.tileMenu.selectedTiles);
+        addProperty.addProperty(new PropertyField(this.skin, menu, true, r, g, b, a));
+        map.performAction(addProperty);
+
+        if(map.selectedObjects.size > 0)
+        {
+            for (int i = 0; i < map.selectedObjects.size; i++)
+                this.map.selectedObjects.get(i).properties.add(new PropertyField(this.skin, menu, true, r, g, b, a));
+        }
+        else
+        {
+            for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField(this.skin, menu, true, r, g, b, a));
+        }
+    }
+
+    public void newProperty(float r, float g, float b, float a, float distance, int rayAmount)
+    {
+        AddProperty addProperty = new AddProperty(map, map.selectedObjects, map.tileMenu.selectedTiles);
+        addProperty.addProperty(new PropertyField(this.skin, menu, true, r, g, b, a, distance, rayAmount));
+        map.performAction(addProperty);
+
+        if(map.selectedObjects.size > 0)
+        {
+            for (int i = 0; i < map.selectedObjects.size; i++)
+                this.map.selectedObjects.get(i).properties.add(new PropertyField(this.skin, menu, true, r, g, b, a, distance, rayAmount));
+        }
+        else
+        {
+            for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField(this.skin, menu, true, r, g, b, a, distance, rayAmount));
         }
     }
 

@@ -105,11 +105,11 @@ public class PropertyMenu extends Group
         super.setSize(width, height);
     }
 
-    public void newProperty()
+    public void newProperty(boolean light)
     {
         if(map.tileMenu.selectedTiles.size > 0 || map.selectedObjects.size > 0)
         {
-            this.propertyPanel.newProperty();
+            this.propertyPanel.newProperty(light);
 
             rebuild();
         }
@@ -120,6 +120,26 @@ public class PropertyMenu extends Group
         if(map.tileMenu.selectedTiles.size > 0 || map.selectedObjects.size > 0)
         {
             this.propertyPanel.newProperty(property, value);
+
+            rebuild();
+        }
+    }
+
+    public void newProperty(float r, float g, float b, float a)
+    {
+        if(map.tileMenu.selectedTiles.size > 0 || map.selectedObjects.size > 0)
+        {
+            this.propertyPanel.newProperty(r, g, b, a);
+
+            rebuild();
+        }
+    }
+
+    public void newProperty(float r, float g, float b, float a, float distance, int rayAmount)
+    {
+        if(map.tileMenu.selectedTiles.size > 0 || map.selectedObjects.size > 0)
+        {
+            this.propertyPanel.newProperty(r, g, b, a, distance, rayAmount);
 
             rebuild();
         }

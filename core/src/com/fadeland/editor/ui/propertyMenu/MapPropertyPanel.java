@@ -18,7 +18,7 @@ public class MapPropertyPanel extends Group
     private Stack stack;
     public Table table; // Holds all the text fields
 
-    public PropertyField mapBrightnessProperty;
+    public PropertyField mapRGBAProperty;
 
     public TextButton apply;
 
@@ -32,15 +32,7 @@ public class MapPropertyPanel extends Group
         this.table = new Table();
         this.table.left().top();
 
-        this.mapBrightnessProperty = new PropertyField("Brightness", "1", skin, menu, false);
-        this.mapBrightnessProperty.value.setTextFieldFilter(new TextField.TextFieldFilter()
-        {
-            @Override
-            public boolean acceptChar(TextField textField, char c)
-            {
-                return c == '.' || Character.isDigit(c);
-            }
-        });
+        this.mapRGBAProperty = new PropertyField(skin, menu, false, 0, 0, 0, 1);
 
         this.apply = new TextButton("Apply", skin);
         this.apply.addListener(new ClickListener()
@@ -48,11 +40,11 @@ public class MapPropertyPanel extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                menu.map.rayHandler.setAmbientLight(Float.parseFloat(mapBrightnessProperty.value.getText()));
+                menu.map.rayHandler.setAmbientLight(Float.parseFloat(mapRGBAProperty.rValue.getText()), Float.parseFloat(mapRGBAProperty.gValue.getText()), Float.parseFloat(mapRGBAProperty.bValue.getText()), Float.parseFloat(mapRGBAProperty.aValue.getText()));
             }
         });
 
-        this.table.add(this.mapBrightnessProperty).padBottom(1).row();
+        this.table.add(this.mapRGBAProperty).padBottom(1).row();
         this.table.add(this.apply).padBottom(1).row();
 
         this.stack.add(this.background);

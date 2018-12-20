@@ -37,7 +37,10 @@ public class PropertyTool extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                propertyToolPane.menu.newProperty();
+                if(tool == PropertyTools.NEW)
+                    propertyToolPane.menu.newProperty(false);
+                else
+                    propertyToolPane.menu.newProperty(true);
             }
         });
     }

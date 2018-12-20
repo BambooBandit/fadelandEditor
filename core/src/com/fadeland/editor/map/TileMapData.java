@@ -9,7 +9,7 @@ public class TileMapData
 {
     public String name;
     public int tileSize;
-    public float brightness;
+    public float r, g, b, a;
     public ArrayList<ToolData> tileTools;
     public ArrayList<ToolData> spriteTools;
     public ArrayList<LayerData> layers;
@@ -20,7 +20,10 @@ public class TileMapData
     {
         this.name = tileMap.name;
         this.tileSize = tileMap.tileSize;
-        this.brightness = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapBrightnessProperty.value.getText());
+        this.r = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.rValue.getText());
+        this.g = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.gValue.getText());
+        this.b = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.bValue.getText());
+        this.a = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.aValue.getText());
         this.tileTools = new ArrayList<>();
         for(int i = 0; i < tileMap.tileMenu.tileTable.getChildren().size; i ++)
             this.tileTools.add(new ToolData((TileTool) tileMap.tileMenu.tileTable.getChildren().get(i)));
@@ -129,15 +132,47 @@ class MapObjectLayerData extends LayerData
     }
 }
 
-class PropertyData
+abstract class PropertyData
+{
+    public PropertyData(){}
+    public PropertyData(PropertyField propertyField) { }
+}
+
+class NonColorPropertyData extends PropertyData
 {
     public String property;
     public String value;
-    public PropertyData(){}
-    public PropertyData(PropertyField propertyField)
+    public NonColorPropertyData(){}
+    public NonColorPropertyData(PropertyField propertyField)
     {
         this.property = propertyField.getProperty();
         this.value = propertyField.getValue();
+    }
+}
+
+class ColorPropertyData extends PropertyData
+{
+    public float r, g, b, a;
+    public ColorPropertyData(){}
+    public ColorPropertyData(PropertyField propertyField)
+    {
+        this.r = propertyField.getR();
+        this.g = propertyField.getG();
+        this.b = propertyField.getB();
+        this.a = propertyField.getA();
+    }
+}
+
+class LightPropertyData extends ColorPropertyData
+{
+    public float distance;
+    public int rayAmount;
+    public LightPropertyData(){}
+    public LightPropertyData(PropertyField propertyField)
+    {
+        super(propertyField);
+        this.distance = propertyField.getDistance();
+        this.rayAmount = propertyField.getRayAmount();
     }
 }
 
@@ -156,11 +191,27 @@ class ToolData
 
         this.propertyData = new ArrayList<>();
         for(int i = 0; i < tileTool.properties.size; i ++)
-            propertyData.add(new PropertyData(tileTool.properties.get(i)));
+        {
+            PropertyField properties = tileTool.properties.get(i);
+            if(properties.rgba)
+                propertyData.add(new ColorPropertyData(properties));
+            else if(properties.rgbaDistanceRayAmount)
+                propertyData.add(new LightPropertyData(properties));
+            else
+                propertyData.add(new NonColorPropertyData(properties));
+        }
 
         this.lockedPropertyData = new ArrayList<>();
         for(int i = 0; i < tileTool.lockedProperties.size; i ++)
-            lockedPropertyData.add(new PropertyData(tileTool.lockedProperties.get(i)));
+        {
+            PropertyField properties = tileTool.lockedProperties.get(i);
+            if(properties.rgba)
+                lockedPropertyData.add(new ColorPropertyData(properties));
+            else if(properties.rgbaDistanceRayAmount)
+                lockedPropertyData.add(new LightPropertyData(properties));
+            else
+                lockedPropertyData.add(new NonColorPropertyData(properties));
+        }
 
         this.attachedObjects = new ArrayList<>();
         for(int i = 0; i < tileTool.mapObjects.size; i++)
@@ -233,7 +284,15 @@ abstract class MapObjectData
         }
         this.propertyData = new ArrayList<>();
         for(int i = 0; i < mapObject.properties.size; i ++)
-            propertyData.add(new PropertyData(mapObject.properties.get(i)));
+        {
+            PropertyField properties = mapObject.properties.get(i);
+            if(properties.rgba)
+                propertyData.add(new ColorPropertyData(properties));
+            else if(properties.rgbaDistanceRayAmount)
+                propertyData.add(new LightPropertyData(properties));
+            else
+                propertyData.add(new NonColorPropertyData(properties));
+        }
     }
 }
 class MapPolygonData extends MapObjectData

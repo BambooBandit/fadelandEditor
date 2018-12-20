@@ -142,7 +142,7 @@ public class TileMap implements Screen
 
         this.world = new World(new Vector2(0, 0), false);
         this.rayHandler = new RayHandler(this.world);
-        this.rayHandler.setAmbientLight(.9f);
+        this.rayHandler.setAmbientLight(1);
     }
 
     @Override
@@ -664,7 +664,11 @@ public class TileMap implements Screen
 
     private void setMapPropertiesAndObjects(TileMapData tileMapData)
     {
-        rayHandler.setAmbientLight(tileMapData.brightness);
+        propertyMenu.mapPropertyPanel.mapRGBAProperty.rValue.setText(Float.toString(tileMapData.r));
+        propertyMenu.mapPropertyPanel.mapRGBAProperty.gValue.setText(Float.toString(tileMapData.g));
+        propertyMenu.mapPropertyPanel.mapRGBAProperty.bValue.setText(Float.toString(tileMapData.b));
+        propertyMenu.mapPropertyPanel.mapRGBAProperty.aValue.setText(Float.toString(tileMapData.a));
+        rayHandler.setAmbientLight(tileMapData.r, tileMapData.g, tileMapData.b, tileMapData.a);
         for(int i = 0; i < tileMapData.tileGroups.size(); i ++)
         {
             TileGroupData tileGroupData = tileMapData.tileGroups.get(i);
@@ -740,7 +744,22 @@ public class TileMap implements Screen
                             {
                                 selectedObjects.clear();
                                 selectedObjects.add(mapObject);
-                                propertyMenu.newProperty(savedObjectLayer.tiles.get(k).propertyData.get(s).property, savedObjectLayer.tiles.get(k).propertyData.get(s).value);
+                                PropertyData propertyData = savedObjectLayer.tiles.get(k).propertyData.get(s);
+                                if(propertyData instanceof LightPropertyData)
+                                {
+                                    LightPropertyData lightPropertyData = (LightPropertyData) propertyData;
+                                    propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                                }
+                                else if(propertyData instanceof ColorPropertyData)
+                                {
+                                    ColorPropertyData colorPropertyData = (ColorPropertyData) propertyData;
+                                    propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                                }
+                                else
+                                {
+                                    NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) propertyData;
+                                    propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                                }
                                 selectedObjects.clear();
                             }
                             layer.tiles.add(mapObject);
@@ -755,12 +774,30 @@ public class TileMap implements Screen
             ToolData toolData = tileMapData.tileTools.get(i);
             TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id);
             for(int k = 0; k < toolData.lockedPropertyData.size(); k ++)
-                tileTool.getPropertyField(toolData.lockedPropertyData.get(k).property).value.setText(toolData.lockedPropertyData.get(k).value);
+            {
+                NonColorPropertyData propertyData = (NonColorPropertyData) toolData.lockedPropertyData.get(k);
+                tileTool.getPropertyField(propertyData.property).value.setText(propertyData.value);
+            }
             for(int k = 0; k < toolData.propertyData.size(); k ++)
             {
                 tileMenu.selectedTiles.clear();
                 tileMenu.selectedTiles.add(tileTool);
-                propertyMenu.newProperty(toolData.propertyData.get(k).property, toolData.propertyData.get(k).value);
+                PropertyData property = toolData.propertyData.get(k);
+                if(property instanceof LightPropertyData)
+                {
+                    LightPropertyData lightPropertyData = (LightPropertyData) property;
+                    propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                }
+                else if(property instanceof ColorPropertyData)
+                {
+                    ColorPropertyData colorPropertyData = (ColorPropertyData) property;
+                    propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                }
+                else
+                {
+                    NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
+                    propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                }
                 tileMenu.selectedTiles.clear();
             }
             for(int k = 0; k < toolData.attachedObjects.size(); k ++)
@@ -782,7 +819,22 @@ public class TileMap implements Screen
                 {
                     selectedObjects.clear();
                     selectedObjects.add(attachedMapObject);
-                    propertyMenu.newProperty(toolData.attachedObjects.get(k).propertyData.get(s).property, toolData.attachedObjects.get(k).propertyData.get(s).value);
+                    PropertyData property = toolData.attachedObjects.get(k).propertyData.get(s);
+                    if(property instanceof LightPropertyData)
+                    {
+                        LightPropertyData lightPropertyData = (LightPropertyData) property;
+                        propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                    }
+                    else if(property instanceof ColorPropertyData)
+                    {
+                        ColorPropertyData colorPropertyData = (ColorPropertyData) property;
+                        propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                    }
+                    else
+                    {
+                        NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
+                        propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                    }
                     selectedObjects.clear();
                 }
                 if(attachedMapObject != null)
@@ -794,12 +846,30 @@ public class TileMap implements Screen
             ToolData toolData = tileMapData.spriteTools.get(i);
             TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id);
             for(int k = 0; k < toolData.lockedPropertyData.size(); k ++)
-                tileTool.getPropertyField(toolData.lockedPropertyData.get(k).property).value.setText(toolData.lockedPropertyData.get(k).value);
+            {
+                NonColorPropertyData property = (NonColorPropertyData) toolData.lockedPropertyData.get(k);
+                tileTool.getPropertyField(property.property).value.setText(property.value);
+            }
             for(int k = 0; k < toolData.propertyData.size(); k ++)
             {
                 tileMenu.selectedTiles.clear();
                 tileMenu.selectedTiles.add(tileTool);
-                propertyMenu.newProperty(toolData.propertyData.get(k).property, toolData.propertyData.get(k).value);
+                PropertyData property = toolData.propertyData.get(k);
+                if(property instanceof LightPropertyData)
+                {
+                    LightPropertyData lightPropertyData = (LightPropertyData) property;
+                    propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                }
+                else if(property instanceof ColorPropertyData)
+                {
+                    ColorPropertyData colorPropertyData = (ColorPropertyData) property;
+                    propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                }
+                else
+                {
+                    NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
+                    propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                }
                 tileMenu.selectedTiles.clear();
             }
             for(int k = 0; k < toolData.attachedObjects.size(); k ++)
@@ -821,7 +891,22 @@ public class TileMap implements Screen
                 {
                     selectedObjects.clear();
                     selectedObjects.add(attachedMapObject);
-                    propertyMenu.newProperty(toolData.attachedObjects.get(k).propertyData.get(s).property, toolData.attachedObjects.get(k).propertyData.get(s).value);
+                    PropertyData property = toolData.attachedObjects.get(k).propertyData.get(s);
+                    if(property instanceof LightPropertyData)
+                    {
+                        LightPropertyData lightPropertyData = (LightPropertyData) property;
+                        propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                    }
+                    else if(property instanceof ColorPropertyData)
+                    {
+                        ColorPropertyData colorPropertyData = (ColorPropertyData) property;
+                        propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                    }
+                    else
+                    {
+                        NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
+                        propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                    }
                     selectedObjects.clear();
                 }
                 if(attachedMapObject != null)

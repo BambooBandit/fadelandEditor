@@ -87,7 +87,7 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
 
         for(int i = 0; i < this.properties.size; i ++)
         {
-            if(this.properties.get(i).getProperty().equals(propertyName))
+            if(this.properties.get(i).getProperty() != null && this.properties.get(i).getProperty().equals(propertyName))
                 return this.properties.get(i);
         }
         return null;

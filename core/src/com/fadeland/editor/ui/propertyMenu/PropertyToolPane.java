@@ -23,6 +23,7 @@ public class PropertyToolPane extends Group
     private FadelandEditor editor;
 
     private PropertyTool newProperty;
+    private PropertyTool newLightProperty;
     private TextButton apply;
 
     public PropertyMenu menu;
@@ -32,10 +33,12 @@ public class PropertyToolPane extends Group
         this.menu = menu;
         this.toolTable = new Table();
         this.newProperty = new PropertyTool(PropertyTools.NEW, this, skin);
+        this.newLightProperty = new PropertyTool(PropertyTools.NEWLIGHT, this, skin);
         this.apply = new TextButton("Apply", skin);
         setApplyListener();
         this.toolTable.left();
         this.toolTable.add(this.newProperty).padRight(1);
+        this.toolTable.add(this.newLightProperty).padRight(1);
         this.toolTable.add(this.apply);
 
         this.editor = editor;
@@ -57,6 +60,7 @@ public class PropertyToolPane extends Group
 
         // Resize all buttons in the pane
         this.toolTable.getCell(this.newProperty).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.newLightProperty).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.apply).size(toolHeight * 2, toolHeight);
         this.toolTable.invalidateHierarchy();
 
@@ -135,7 +139,7 @@ public class PropertyToolPane extends Group
                 else
                 {
                     // light
-                    PropertyField lightProperty = attachedMapObject.getPropertyField("light");
+                    PropertyField lightProperty = attachedMapObject.getLightPropertyField();
                     if (lightProperty == null)
                     {
                         attachedMapObject.removeLight();
@@ -168,7 +172,7 @@ public class PropertyToolPane extends Group
                 else
                 {
                     // light
-                    PropertyField lightProperty = attachedMapObject.getPropertyField("light");
+                    PropertyField lightProperty = attachedMapObject.getLightPropertyField();
                     if (lightProperty == null)
                     {
                         attachedMapObject.removeLight();
@@ -200,7 +204,7 @@ public class PropertyToolPane extends Group
                     else
                     {
                         // light
-                        PropertyField lightProperty = mapObject.getPropertyField("light");
+                        PropertyField lightProperty = mapObject.getLightPropertyField();
                         if (lightProperty == null)
                         {
                             mapObject.removeLight();
