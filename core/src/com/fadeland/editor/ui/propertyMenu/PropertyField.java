@@ -233,11 +233,11 @@ public class PropertyField extends Group
             float removeable = 0;
             if(this.removeable)
                 removeable = height;
-            float distanceRayAmountWidth = ((((width - removeable) / 2)) / 4);
-            float distanceRayAmountLabelWidth = ((((width - removeable) / 2)) / 4) * .75f;
-            float distanceRayAmountValueWidth = ((((width - removeable) / 2)) / 4) * 1.25f;
-            float rgbaLabelWidth = ((width - removeable - distanceRayAmountWidth * 4) / 5) * .55f;
-            float rgbaValueWidth = ((width - removeable - distanceRayAmountWidth * 4) / 5) * 1.1125f;
+            float distanceRayAmountWidth = ((((width - removeable) / 1.88f)) / 4);
+            float distanceRayAmountLabelWidth = ((((width - removeable) / 1.88f)) / 4) * .6f;
+            float distanceRayAmountValueWidth = ((((width - removeable) / 1.88f)) / 4) * 1.4f;
+            float rgbaLabelWidth = ((width - removeable - distanceRayAmountWidth * 4) / 5) * .4f;
+            float rgbaValueWidth = ((width - removeable - distanceRayAmountWidth * 4) / 5) * 1.15f;
             this.table.getCell(this.rValue).size(rgbaValueWidth, height);
             this.table.getCell(this.gValue).size(rgbaValueWidth, height);
             this.table.getCell(this.bValue).size(rgbaValueWidth, height);

@@ -67,7 +67,7 @@ public class GameAssets
      * The fonts will be sized according to window size.*/
     private static void initFonts()
     {
-        int size = 15;
+        int size = 13;
 
         FreeTypeFontGenerator.setMaxTextureSize(2048);
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/sitka.ttf"));
