@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.map.TileMap;
-import com.fadeland.editor.map.TileMapData;
+import com.fadeland.editor.map.mapdata.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -102,7 +102,7 @@ public class FileMenu extends Group
                                 {
                                     File file = chooser.getSelectedFile();
                                     String content = new Scanner(file).useDelimiter("\\Z").next();
-                                    Json json = new Json();
+                                    Json json = createJson();
                                     TileMapData tileMapData = json.fromJson(TileMapData.class, content);
                                     TileMap newMap = new TileMap(editor, tileMapData);
                                     newMap.file = file;
@@ -181,7 +181,8 @@ public class FileMenu extends Group
             return;
         }
         TileMapData tileMapData = new TileMapData(tileMap);
-        Json json = new Json();
+
+        Json json = createJson();
 
         File file = tileMap.file;
         try
@@ -241,7 +242,7 @@ public class FileMenu extends Group
                     {
                         map.setName(chooser.getSelectedFile().getName());
                         TileMapData tileMapData = new TileMapData(map);
-                        Json json = new Json();
+                        Json json = createJson();
 
                         File file = chooser.getSelectedFile();
                         map.file = file;
@@ -297,5 +298,26 @@ public class FileMenu extends Group
     public void setPosition (float x, float y)
     {
         super.setPosition(x + getWidth() / 2, y + getHeight() / 2);
+    }
+
+    private Json createJson()
+    {
+        Json json = new Json();
+        json.addClassTag("colorPropertyData", ColorPropertyData.class);
+        json.addClassTag("layerData", LayerData.class);
+        json.addClassTag("lightPropertyData", LightPropertyData.class);
+        json.addClassTag("mapObjectData", MapObjectData.class);
+        json.addClassTag("mapObjectLayerData", MapObjectLayerData.class);
+        json.addClassTag("mapPointData", MapPointData.class);
+        json.addClassTag("mapPolygonData", MapPolygonData.class);
+        json.addClassTag("mapSpriteData", MapSpriteData.class);
+        json.addClassTag("mapSpriteLayerData", MapSpriteLayerData.class);
+        json.addClassTag("mapTileData", MapTileData.class);
+        json.addClassTag("nonColorPropertyData", NonColorPropertyData.class);
+        json.addClassTag("propertyData", PropertyData.class);
+        json.addClassTag("tileGroupData", TileGroupData.class);
+        json.addClassTag("tileLayerData", TileLayerData.class);
+        json.addClassTag("toolData", ToolData.class);
+        return json;
     }
 }

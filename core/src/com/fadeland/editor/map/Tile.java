@@ -9,7 +9,7 @@ import static com.fadeland.editor.map.TileMap.tileSize;
 public class Tile
 {
     protected TileMap map;
-    protected Sprite sprite;
+    public Sprite sprite;
     protected float width, height;
     public Vector2 position;
     public TileTool tool;

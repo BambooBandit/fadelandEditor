@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.Utils;
+import com.fadeland.editor.map.mapdata.*;
 import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.layerMenu.LayerMenu;
 import com.fadeland.editor.ui.layerMenu.LayerTypes;
@@ -108,6 +109,8 @@ public class TileMap implements Screen
         this.undo = new Stack<>();
         this.redo = new Stack<>();
 
+        b2dr = new Box2DDebugRenderer();
+
         this.layers = new Array<>();
         this.boxSelect = new BoxSelect(this);
         this.selectedSprites = new Array<>();
@@ -162,7 +165,6 @@ public class TileMap implements Screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         this.world.step(delta, 1, 1);
-        b2dr = new Box2DDebugRenderer();
 
         if(!editor.fileMenu.toolPane.parallax.selected)
             this.camera.zoom = this.zoom;
