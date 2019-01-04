@@ -69,7 +69,7 @@ public class MapObject extends Tile
     public void setPosition(float x, float y)
     {
         super.setPosition(x, y);
-        if(isPoint)
+        if(isPoint && this.attachedTile != null)
         {
             float centerX = attachedTile.position.x + attachedTile.width / 2;
             float centerY = attachedTile.position.y + attachedTile.height / 2;
