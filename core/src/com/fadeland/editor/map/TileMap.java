@@ -439,7 +439,9 @@ public class TileMap implements Screen
                 for(int k = 0; k < mapSprite.tool.mapObjects.size; k ++)
                 {
                     AttachedMapObject mapObject = mapSprite.tool.mapObjects.get(k);
-                    if (Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), boxSelect.getVertices(), null))
+                    boolean polygon = mapObject.polygon != null && Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), boxSelect.getVertices(), null);
+                    boolean point = Intersector.isPointInPolygon(boxSelect.getVertices(), 0, boxSelect.getVertices().length, mapObject.position.x, mapObject.position.y);
+                    if (polygon || point)
                     {
                         boolean selected = selectedObjects.contains(mapObject, true);
                         if (!selected)

@@ -174,7 +174,8 @@ public class MapSprite extends Tile
                 for (int k = 0; k < bodies.size; k++)
                     tool.mapObjects.get(i).bodies.get(k).setTransform(bodies.get(k).getPosition(), this.rotation);
             }
-            tool.mapObjects.get(i).polygon.rotate(degree);
+            if(tool.mapObjects.get(i).polygon != null)
+                tool.mapObjects.get(i).polygon.rotate(degree);
         }
 
         for(int i = 0; i < lockedProperties.size; i ++)
@@ -211,7 +212,20 @@ public class MapSprite extends Tile
                 for (int k = 0; k < bodies.size; k++)
                     tool.mapObjects.get(i).bodies.get(k).setTransform(bodies.get(k).getPosition(), this.rotation);
             }
-            tool.mapObjects.get(i).polygon.rotate(degree);
+            if(tool.mapObjects.get(i).polygon != null)
+                tool.mapObjects.get(i).polygon.rotate(degree);
+            else
+            {
+                AttachedMapObject attachedMapPoint = tool.mapObjects.get(i);
+                float centerX = attachedMapPoint.attachedTile.position.x + tool.mapObjects.get(i).attachedTile.width / 2;
+                float centerY = attachedMapPoint.attachedTile.position.y + tool.mapObjects.get(i).attachedTile.height / 2;
+                float angle = (float) Math.toRadians(degree); // Convert to radians
+
+                float rotatedX = (float) (Math.cos(angle) * (attachedMapPoint.position.x - centerX) - Math.sin(angle) * (attachedMapPoint.position.y - centerY) + centerX);
+
+                float rotatedY = (float) (Math.sin(angle) * (attachedMapPoint.position.x - centerX) + Math.cos(angle) * (attachedMapPoint.position.y - centerY) + centerY);
+                attachedMapPoint.setPosition(rotatedX, rotatedY);
+            }
         }
 
         for(int i = 0; i < lockedProperties.size; i ++)

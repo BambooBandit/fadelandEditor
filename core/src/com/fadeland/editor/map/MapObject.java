@@ -69,6 +69,19 @@ public class MapObject extends Tile
     public void setPosition(float x, float y)
     {
         super.setPosition(x, y);
+        if(isPoint)
+        {
+            float centerX = attachedTile.position.x + attachedTile.width / 2;
+            float centerY = attachedTile.position.y + attachedTile.height / 2;
+            float angle = (float) Math.toRadians(this.attachedTile.sprite.getRotation()); // Convert to radians
+
+            float rotatedX = (float) (Math.cos(angle) * (position.x - centerX) - Math.sin(angle) * (position.y - centerY) + centerX);
+
+            float rotatedY = (float) (Math.sin(angle) * (position.x - centerX) + Math.cos(angle) * (position.y - centerY) + centerY);
+            x = rotatedX;
+            y = rotatedY;
+            super.setPosition(rotatedX, rotatedY);
+        }
         if(!isPoint)
         {
             this.polygon.setPosition(x, y);
@@ -135,6 +148,7 @@ public class MapObject extends Tile
                 }
             }
         }
+
         if(indexOfSelectedVertice != -1)
             this.moveBox.setPosition(polygon.getTransformedVertices()[indexOfSelectedVertice], polygon.getTransformedVertices()[indexOfSelectedVertice + 1]);
         else
