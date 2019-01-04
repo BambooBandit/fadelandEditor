@@ -253,7 +253,8 @@ public class MapSprite extends Tile
         }
         for(int i = 0; i < tool.mapObjects.size; i ++)
         {
-            tool.mapObjects.get(i).polygon.setScale(scale, scale);
+            if(tool.mapObjects.get(i).polygon != null)
+                tool.mapObjects.get(i).polygon.setScale(scale, scale);
             tool.mapObjects.get(i).updateLightsAndBodies();
         }
 

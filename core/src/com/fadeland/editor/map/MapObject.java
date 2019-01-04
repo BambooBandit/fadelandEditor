@@ -80,7 +80,9 @@ public class MapObject extends Tile
             float rotatedY = (float) (Math.sin(angle) * (position.x - centerX) + Math.cos(angle) * (position.y - centerY) + centerY);
             x = rotatedX;
             y = rotatedY;
-            super.setPosition(rotatedX, rotatedY);
+            float scaledX = rotatedX + (centerX - rotatedX) * (1 - attachedTile.sprite.getScaleX());
+            float scaledY = rotatedY + (centerY - rotatedY) * (1 - attachedTile.sprite.getScaleY());
+            super.setPosition(scaledX, scaledY);
         }
         if(!isPoint)
         {
