@@ -770,7 +770,9 @@ public class MapInput implements InputProcessor
                 for (int i = 0; i < map.selectedLayer.tiles.size; i++)
                 {
                     MapObject mapObject = ((MapObject) map.selectedLayer.tiles.get(i));
-                    if (Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), map.boxSelect.getVertices(), null))
+                    boolean polygon = mapObject.polygon != null && Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), map.boxSelect.getVertices(), null);
+                    boolean point = Intersector.isPointInPolygon(map.boxSelect.getVertices(), 0, map.boxSelect.getVertices().length, mapObject.position.x, mapObject.position.y);
+                    if (polygon || point)
                     {
                         boolean selected = map.selectedObjects.contains(mapObject, true);
                         if (!selected)

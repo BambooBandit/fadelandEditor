@@ -288,7 +288,9 @@ public class TileMap implements Screen
                 for (int i = selectedLayer.tiles.size - 1; i >= 0; i--)
                 {
                     MapObject mapObject = ((MapObject) selectedLayer.tiles.get(i));
-                    if (Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), boxSelect.getVertices(), null))
+                    boolean polygon = mapObject.polygon != null && Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), boxSelect.getVertices(), null);
+                    boolean point = Intersector.isPointInPolygon(boxSelect.getVertices(), 0, boxSelect.getVertices().length, mapObject.position.x, mapObject.position.y);
+                    if (polygon || point)
                     {
                         boolean selected = selectedObjects.contains(mapObject, true);
                         if (!selected)
@@ -430,15 +432,44 @@ public class TileMap implements Screen
                 }
             }
         }
-        if(boxSelect.isDragging && selectedLayer != null && selectedLayer instanceof SpriteLayer && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT)
+        if(boxSelect.isDragging && selectedLayer != null && (selectedLayer instanceof SpriteLayer || selectedLayer instanceof ObjectLayer) && editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT)
         {
             for (int i = selectedLayer.tiles.size - 1; i >= 0; i--)
             {
-                MapSprite mapSprite = ((MapSprite)selectedLayer.tiles.get(i));
-
-                for(int k = 0; k < mapSprite.tool.mapObjects.size; k ++)
+                if(selectedLayer.tiles.get(i) instanceof MapSprite)
                 {
-                    AttachedMapObject mapObject = mapSprite.tool.mapObjects.get(k);
+                    MapSprite mapSprite = ((MapSprite) selectedLayer.tiles.get(i));
+
+                    for (int k = 0; k < mapSprite.tool.mapObjects.size; k++)
+                    {
+                        AttachedMapObject mapObject = mapSprite.tool.mapObjects.get(k);
+                        boolean polygon = mapObject.polygon != null && Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), boxSelect.getVertices(), null);
+                        boolean point = Intersector.isPointInPolygon(boxSelect.getVertices(), 0, boxSelect.getVertices().length, mapObject.position.x, mapObject.position.y);
+                        if (polygon || point)
+                        {
+                            boolean selected = selectedObjects.contains(mapObject, true);
+                            if (!selected)
+                            {
+                                this.editor.shapeRenderer.setColor(Color.YELLOW);
+                                mapObject.draw();
+                            }
+                        }
+                    }
+
+                    if (Intersector.overlapConvexPolygons(mapSprite.polygon.getTransformedVertices(), boxSelect.getVertices(), null))
+                    {
+                        boolean selected = selectedSprites.contains(mapSprite, true);
+                        if (!selected)
+                        {
+                            this.editor.shapeRenderer.setColor(Color.YELLOW);
+                            mapSprite.drawOutline();
+                        }
+                    }
+                }
+                else if(selectedLayer.tiles.get(i) instanceof MapObject)
+                {
+                    MapObject mapObject = ((MapObject) selectedLayer.tiles.get(i));
+
                     boolean polygon = mapObject.polygon != null && Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), boxSelect.getVertices(), null);
                     boolean point = Intersector.isPointInPolygon(boxSelect.getVertices(), 0, boxSelect.getVertices().length, mapObject.position.x, mapObject.position.y);
                     if (polygon || point)
@@ -449,16 +480,6 @@ public class TileMap implements Screen
                             this.editor.shapeRenderer.setColor(Color.YELLOW);
                             mapObject.draw();
                         }
-                    }
-                }
-
-                if(Intersector.overlapConvexPolygons(mapSprite.polygon.getTransformedVertices(), boxSelect.getVertices(), null))
-                {
-                    boolean selected = selectedSprites.contains(mapSprite, true);
-                    if(!selected)
-                    {
-                        this.editor.shapeRenderer.setColor(Color.YELLOW);
-                        mapSprite.drawOutline();
                     }
                 }
             }
