@@ -745,6 +745,7 @@ public class TileMap implements Screen
                         Utils.setCenterOrigin(mapSprite.position.x, mapSprite.position.y);
                         mapSprite.rotate(savedSpriteLayer.tiles.get(k).rotation);
                         mapSprite.setScale(savedSpriteLayer.tiles.get(k).scale);
+                        mapSprite.setZ(savedSpriteLayer.tiles.get(k).z);
                         layer.tiles.add(mapSprite);
                     }
                 }

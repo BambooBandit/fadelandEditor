@@ -222,6 +222,14 @@ public class MapSprite extends Tile
 
     public void setZ(float z)
     {
+        for(int i = 0; i < lockedProperties.size; i ++)
+        {
+            if(lockedProperties.get(i).getProperty().equals("Z"))
+            {
+                lockedProperties.get(i).value.setText(Float.toString(z));
+                break;
+            }
+        }
         this.z = z;
     }
 

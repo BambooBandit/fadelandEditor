@@ -1175,7 +1175,7 @@ public class MapInput implements InputProcessor
                     if (keycode == Input.Keys.ENTER)
                     {
                         for(int i = 0; i < map.selectedSprites.size; i ++)
-                            map.selectedSprites.get(i).setZ(Float.parseFloat(zField.value.getText()));
+                            map.selectedSprites.get(i).z = Float.parseFloat(zField.value.getText());
                     }
                 }
                 catch (NumberFormatException e){}
