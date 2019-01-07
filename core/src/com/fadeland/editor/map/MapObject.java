@@ -122,9 +122,14 @@ public class MapObject extends Tile
                             }
                             Utils.positionDifference.set(attachedMapObject.positionOffset);
                             Utils.positionDifference.sub(attachedMapObject.oldPositionOffset);
-                            bodies.get(bodyIndex).setTransform(Utils.positionDifference.x + map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2, Utils.positionDifference.y + map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2, rotation2);
+                            Vector2 bodyPosition = bodies.get(bodyIndex).getPosition();
+                            boolean changed = !(bodyPosition.x == Utils.positionDifference.x + map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2 && bodyPosition.y == Utils.positionDifference.y + map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2 && bodies.get(bodyIndex).getAngle() == rotation2);
+                            if(changed)
+                            {
+                                bodies.get(bodyIndex).setTransform(Utils.positionDifference.x + map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2, Utils.positionDifference.y + map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2, rotation2);
+                                searchForBlocked = true;
+                            }
                             bodyIndex ++;
-                            searchForBlocked = true;
                         }
                     }
                 }
