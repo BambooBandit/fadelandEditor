@@ -1107,7 +1107,7 @@ public class MapInput implements InputProcessor
     public static MapSprite newMapSprite(TileMap map, TileTool tileTool, float x, float y)
     {
         MapSprite mapSprite = new MapSprite(map, tileTool,
-                x - tileTool.textureRegion.getRegionWidth() / 2, y - tileTool.textureRegion.getRegionHeight() / 2);
+                x, y);
 
         TextField.TextFieldFilter valueFilter = new TextField.TextFieldFilter()
         {

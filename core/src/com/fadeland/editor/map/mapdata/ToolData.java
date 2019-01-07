@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class ToolData
 {
     public int id;
+    public String name;
     public String type;
     public ArrayList<PropertyData> propertyData;
     public ArrayList<PropertyData> lockedPropertyData;
@@ -17,6 +18,7 @@ public class ToolData
     public ToolData(TileTool tileTool)
     {
         this.id = tileTool.id;
+        this.name = tileTool.name;
         this.type = tileTool.tool.type;
 
         this.propertyData = new ArrayList<>();

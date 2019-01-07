@@ -1,6 +1,7 @@
 package com.fadeland.editor.ui.tileMenu;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -114,7 +115,7 @@ public class TileMenu extends Group
             {
                 TextureRegion tileRegion = new TextureRegion(tileSheet, x, y, tileSize, tileSize);
 
-                TileTool tile = new TileTool(TileMenuTools.TILE, new Image(tileRegion), tileRegion, id, tileSheet.getWidth() - x - tileSize, y, toolPane, skin);
+                TileTool tile = new TileTool(TileMenuTools.TILE, new Image(tileRegion), tileRegion, "", id, tileSheet.getWidth() - x - tileSize, y, toolPane, skin);
                 id ++;
                 tileTable.add(tile);
             }
@@ -127,9 +128,9 @@ public class TileMenu extends Group
         id = 0;
         for(int i = 0; i < GameAssets.getGameAtlas().getRegions().size; i ++)
         {
-            TextureRegion spriteRegion = GameAssets.getGameAtlas().getRegions().get(i);
+            TextureAtlas.AtlasRegion spriteRegion = GameAssets.getGameAtlas().getRegions().get(i);
 
-            TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion, id, 0, 0, toolPane, skin);
+            TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion, spriteRegion.name, id, 0, 0, toolPane, skin);
             float newWidth = sprite.image.getWidth() / 5;
             float newHeight = sprite.image.getHeight() / 5;
             sprite.image.setSize(newWidth, newHeight);
@@ -184,7 +185,21 @@ public class TileMenu extends Group
         return null;
     }
 
-    public TileTool getTileTool(String type, int id)
+    public TileTool getSpriteTool(TileMenuTools tileMenuTools, String name)
+    {
+        if(tileMenuTools == TileMenuTools.SPRITE)
+        {
+            for(int i = 0; i < spriteTable.getChildren().size; i ++)
+            {
+                TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
+                if(tileTool.name.equals(name))
+                    return tileTool;
+            }
+        }
+        return null;
+    }
+
+    public TileTool getTileTool(String type, int id, String name)
     {
         TileMenuTools tileMenuTools = null;
         if(type.equals("tile"))
@@ -206,7 +221,7 @@ public class TileMenu extends Group
             for(int i = 0; i < spriteTable.getChildren().size; i ++)
             {
                 TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
-                if(tileTool.id == id)
+                if(tileTool.name.equals(name))
                     return tileTool;
             }
         }

@@ -2,6 +2,7 @@ package com.fadeland.editor.ui.tileMenu;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -19,20 +20,25 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
     public Array<AttachedMapObject> mapObjects; // For Tiles and MapSprites with MapObjects attached to them
 
     public int id, x, y;
+    public String name;
 
     public TextureRegion textureRegion;
 
     public Array<Sprite> previewSprites;
-    public Array<Sprite> topSprites;
+    public Array<TextureAtlas.AtlasSprite> topSprites;
 
-    public TileTool(TileMenuTools tool, Image image, TextureRegion textureRegion, int id, int x, int y, TileMenuToolPane tileMenuToolPane, Skin skin)
+    public TileTool(TileMenuTools tool, Image image, TextureRegion textureRegion, String name, int id, int x, int y, TileMenuToolPane tileMenuToolPane, Skin skin)
     {
         super(tool, image, tileMenuToolPane, skin);
         this.textureRegion = textureRegion;
         this.previewSprites = new Array();
-        this.previewSprites.add(new Sprite(textureRegion));
+        if(textureRegion instanceof TextureAtlas.AtlasRegion)
+            this.previewSprites.add(new TextureAtlas.AtlasSprite((TextureAtlas.AtlasRegion) textureRegion));
+        else
+            this.previewSprites.add(new Sprite(textureRegion));
         this.lockedProperties = new Array<>();
         this.properties = new Array<>();
+        this.name = name;
         this.id = id;
         this.x = x;
         this.y = y;
@@ -113,8 +119,8 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
             TextureRegion textureRegion = GameAssets.getTextureRegion(topSpriteName);
             if (textureRegion == null)
                 return;
-            Sprite sprite = new Sprite(textureRegion);
-            this.topSprites.add(sprite);
+            Sprite sprite = new TextureAtlas.AtlasSprite((TextureAtlas.AtlasRegion) textureRegion);
+            this.topSprites.add((TextureAtlas.AtlasSprite) sprite);
             this.previewSprites.add(sprite);
         }
         else
@@ -124,8 +130,8 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
             TextureRegion textureRegion = GameAssets.getTextureRegion(topSpriteName);
             while(textureRegion != null)
             {
-                this.topSprites.add(new Sprite(textureRegion));
-                this.previewSprites.add(new Sprite(textureRegion));
+                this.topSprites.add(new TextureAtlas.AtlasSprite((TextureAtlas.AtlasRegion) textureRegion));
+                this.previewSprites.add(new TextureAtlas.AtlasSprite((TextureAtlas.AtlasRegion) textureRegion));
                 number ++;
                 textureRegion = GameAssets.getTextureRegion(topSpriteNoDigits + number);
             }

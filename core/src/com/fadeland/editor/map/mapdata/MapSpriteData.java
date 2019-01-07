@@ -6,6 +6,7 @@ public class MapSpriteData
 {
     public float x, y, z;
     public int id;
+    public String name;
     public float width, height, rotation, scale;
     public MapSpriteData(){}
     public MapSpriteData(MapSprite mapSprite)
@@ -14,6 +15,7 @@ public class MapSpriteData
         this.y = mapSprite.position.y;
         this.z = mapSprite.z;
         this.id = mapSprite.tool.id;
+        this.name = mapSprite.tool.name;
         this.width = mapSprite.sprite.getWidth();
         this.height = mapSprite.sprite.getHeight();
         this.rotation = mapSprite.sprite.getRotation();

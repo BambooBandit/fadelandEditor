@@ -738,7 +738,8 @@ public class TileMap implements Screen
                     for(int k = 0; k < savedSpriteLayer.tiles.size(); k ++)
                     {
                         int id = savedSpriteLayer.tiles.get(k).id;
-                        TileTool tileTool = tileMenu.getTileTool(TileMenuTools.SPRITE, id);
+                        String name = savedSpriteLayer.tiles.get(k).name;
+                        TileTool tileTool = tileMenu.getSpriteTool(TileMenuTools.SPRITE, name);
                         MapSprite mapSprite = input.newMapSprite(this, tileTool, savedSpriteLayer.tiles.get(k).x + savedSpriteLayer.tiles.get(k).width / 2, savedSpriteLayer.tiles.get(k).y + savedSpriteLayer.tiles.get(k).height / 2);
                         mapSprite.setZ(savedSpriteLayer.tiles.get(k).z);
                         Utils.setCenterOrigin(mapSprite.position.x, mapSprite.position.y);
@@ -797,7 +798,7 @@ public class TileMap implements Screen
         for(int i = 0; i < tileMapData.tileTools.size(); i ++)
         {
             ToolData toolData = tileMapData.tileTools.get(i);
-            TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id);
+            TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
             for(int k = 0; k < toolData.lockedPropertyData.size(); k ++)
             {
                 NonColorPropertyData propertyData = (NonColorPropertyData) toolData.lockedPropertyData.get(k);
@@ -869,7 +870,7 @@ public class TileMap implements Screen
         for(int i = 0; i < tileMapData.spriteTools.size(); i ++)
         {
             ToolData toolData = tileMapData.spriteTools.get(i);
-            TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id);
+            TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
             for(int k = 0; k < toolData.lockedPropertyData.size(); k ++)
             {
                 NonColorPropertyData property = (NonColorPropertyData) toolData.lockedPropertyData.get(k);

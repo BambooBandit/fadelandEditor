@@ -2,8 +2,8 @@ package com.fadeland.editor.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
@@ -29,7 +29,10 @@ public class MapSprite extends Tile
     {
         super(map, tool, x, y);
         this.lockedProperties = new Array<>();
-        this.sprite = new Sprite(tool.textureRegion);
+        this.sprite = new TextureAtlas.AtlasSprite((TextureAtlas.AtlasRegion) tool.textureRegion);
+        x -= this.sprite.getWidth() / 2;
+        y -= this.sprite.getHeight() / 2;
+        this.position.set(x, y);
         this.sprite.setPosition(x, y);
         this.width = this.sprite.getWidth();
         this.height = this.sprite.getHeight();
@@ -63,6 +66,18 @@ public class MapSprite extends Tile
 
     public void draw()
     {
+        float lowestYOffset = -1;
+        float tinyHeight = -1;
+        if(sprite instanceof TextureAtlas.AtlasSprite)
+            lowestYOffset = ((TextureAtlas.AtlasSprite) sprite).getAtlasRegion().offsetY;
+        if(tool.topSprites != null)
+            for (int i = 0; i < tool.topSprites.size; i++)
+                if(tool.topSprites.get(i).getAtlasRegion().offsetY < lowestYOffset)
+                    lowestYOffset = tool.topSprites.get(i).getAtlasRegion().offsetY;
+        if(sprite instanceof TextureAtlas.AtlasSprite)
+            tinyHeight = ((TextureAtlas.AtlasSprite) sprite).getAtlasRegion().offsetY - lowestYOffset;
+
+
         float u = sprite.getU();
         float v = sprite.getV();
         float u2 = sprite.getU2();
@@ -73,38 +88,47 @@ public class MapSprite extends Tile
         float ySprite = Utils.project(map.camera,sprite.getX(), sprite.getY()).y;
         float xSkewAmount = ((xCenterSprite - xCenterScreen) / 3) * z;
         float ySkewAmount = ((ySprite - yCenterScreen) / 5) * z;
+        float xOffset = xSkewAmount * (tinyHeight / sprite.getHeight());
+        float yOffset = ySkewAmount * (tinyHeight / sprite.getHeight());
+        float heightDifferencePercentage = sprite.getRegionHeight() / sprite.getHeight();
+        xSkewAmount *= heightDifferencePercentage;
+        ySkewAmount *= heightDifferencePercentage;
+
         if(!map.editor.fileMenu.toolPane.parallax.selected)
         {
             xSkewAmount = 0;
             ySkewAmount = 0;
+            xOffset = 0;
+            yOffset = 0;
         }
         float[] vertices = sprite.getVertices();
 
-        verts[0] = vertices[SpriteBatch.X2] + xSkewAmount;
-        verts[1] = vertices[SpriteBatch.Y2] + ySkewAmount;
+        verts[0] = vertices[SpriteBatch.X2] + xSkewAmount + xOffset;
+        verts[1] = vertices[SpriteBatch.Y2] + ySkewAmount + yOffset;
         verts[2] = Color.toFloatBits(255, 255, 255, 255);
         verts[3] = u;
         verts[4] = v;
 
-        verts[5] = vertices[SpriteBatch.X3] + xSkewAmount;
-        verts[6] = vertices[SpriteBatch.Y3] + ySkewAmount;
+        verts[5] = vertices[SpriteBatch.X3] + xSkewAmount + xOffset;
+        verts[6] = vertices[SpriteBatch.Y3] + ySkewAmount + yOffset ;
         verts[7] = Color.toFloatBits(255, 255, 255, 255);
         verts[8] = u2;
         verts[9] = v;
 
-        verts[10] = vertices[SpriteBatch.X4];
-        verts[11] = vertices[SpriteBatch.Y4];
+        verts[10] = vertices[SpriteBatch.X4] + xOffset;
+        verts[11] = vertices[SpriteBatch.Y4] + yOffset;
         verts[12] = Color.toFloatBits(255, 255, 255, 255);
         verts[13] = u2;
         verts[14] = v2;
 
-        verts[15] = vertices[SpriteBatch.X1];
-        verts[16] = vertices[SpriteBatch.Y1];
+        verts[15] = vertices[SpriteBatch.X1] + xOffset;
+        verts[16] = vertices[SpriteBatch.Y1] + yOffset;
         verts[17] = Color.toFloatBits(255, 255, 255, 255);
         verts[18] = u;
         verts[19] = v2;
 
         map.editor.batch.draw(sprite.getTexture(), verts, 0, verts.length);
+//        sprite.draw(map.editor.batch);
 
         if(tool.topSprites != null)
         {
@@ -113,16 +137,61 @@ public class MapSprite extends Tile
                 tool.topSprites.get(i).setPosition(sprite.getX(), sprite.getY());
                 tool.topSprites.get(i).setRotation(sprite.getRotation());
 
-                verts[3] = tool.topSprites.get(i).getU();
-                verts[4] = tool.topSprites.get(i).getV();
-                verts[8] = tool.topSprites.get(i).getU2();
-                verts[9] = tool.topSprites.get(i).getV();
-                verts[13] = tool.topSprites.get(i).getU2();
-                verts[14] = tool.topSprites.get(i).getV2();
-                verts[18] = tool.topSprites.get(i).getU();
-                verts[19] = tool.topSprites.get(i).getV2();
+                tinyHeight = tool.topSprites.get(i).getAtlasRegion().offsetY - lowestYOffset;
+
+                u = tool.topSprites.get(i).getU();
+                v = tool.topSprites.get(i).getV();
+                u2 = tool.topSprites.get(i).getU2();
+                v2 = tool.topSprites.get(i).getV2();
+                xCenterScreen = Gdx.graphics.getWidth() / 2;
+                xCenterSprite = Utils.project(map.camera,tool.topSprites.get(i).getX() + tool.topSprites.get(i).getWidth() / 2, tool.topSprites.get(i).getY()).x;
+                yCenterScreen = Gdx.graphics.getHeight() / 2;
+                ySprite = Utils.project(map.camera,tool.topSprites.get(i).getX(), tool.topSprites.get(i).getY()).y;
+                xSkewAmount = ((xCenterSprite - xCenterScreen) / 3) * z;
+                ySkewAmount = ((ySprite - yCenterScreen) / 5) * z;
+                xOffset = xSkewAmount * (tinyHeight / tool.topSprites.get(i).getHeight());
+                yOffset = ySkewAmount * (tinyHeight / tool.topSprites.get(i).getHeight());
+
+                heightDifferencePercentage = tool.topSprites.get(i).getRegionHeight() / tool.topSprites.get(i).getHeight();
+
+                xSkewAmount *= heightDifferencePercentage;
+                ySkewAmount *= heightDifferencePercentage;
+
+                if(!map.editor.fileMenu.toolPane.parallax.selected)
+                {
+                    xSkewAmount = 0;
+                    ySkewAmount = 0;
+                    xOffset = 0;
+                    yOffset = 0;
+                }
+                vertices = tool.topSprites.get(i).getVertices();
+
+                verts[0] = vertices[SpriteBatch.X2] + xSkewAmount + xOffset;
+                verts[1] = vertices[SpriteBatch.Y2] + ySkewAmount + yOffset;
+                verts[2] = Color.toFloatBits(255, 255, 255, 255);
+                verts[3] = u;
+                verts[4] = v;
+
+                verts[5] = vertices[SpriteBatch.X3] + xSkewAmount + xOffset;
+                verts[6] = vertices[SpriteBatch.Y3] + ySkewAmount + yOffset;
+                verts[7] = Color.toFloatBits(255, 255, 255, 255);
+                verts[8] = u2;
+                verts[9] = v;
+
+                verts[10] = vertices[SpriteBatch.X4] + xOffset;
+                verts[11] = vertices[SpriteBatch.Y4] + yOffset;
+                verts[12] = Color.toFloatBits(255, 255, 255, 255);
+                verts[13] = u2;
+                verts[14] = v2;
+
+                verts[15] = vertices[SpriteBatch.X1] + xOffset;
+                verts[16] = vertices[SpriteBatch.Y1] + yOffset;
+                verts[17] = Color.toFloatBits(255, 255, 255, 255);
+                verts[18] = u;
+                verts[19] = v2;
 
                 map.editor.batch.draw(tool.topSprites.get(i).getTexture(), verts, 0, verts.length);
+//                tool.topSprites.get(i).draw(map.editor.batch);
             }
         }
     }
