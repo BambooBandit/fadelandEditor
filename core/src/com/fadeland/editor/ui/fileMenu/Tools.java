@@ -2,7 +2,7 @@ package com.fadeland.editor.ui.fileMenu;
 
 public enum Tools
 {
-    BRUSH("brush"), RANDOM("random"), ERASER("eraser"), FILL("fill"), BIND("bind"), STAMP("stamp"), DRAWPOINT("point"), DRAWOBJECT("drawObject"), OBJECTVERTICESELECT("objectVerticeSelect"), BOXSELECT("boxSelect"), SELECT("select"), GRAB("grab"), BLOCKED("blocked"), PARALLAX("parallaxScrolling"), LINES("lines");
+    BRUSH("brush"), RANDOM("random"), ERASER("eraser"), FILL("fill"), BIND("bind"), STAMP("stamp"), DRAWPOINT("point"), DRAWOBJECT("drawObject"), OBJECTVERTICESELECT("objectVerticeSelect"), BOXSELECT("boxSelect"), SELECT("select"), GRAB("grab"), BLOCKED("blocked"), PARALLAX("parallaxScrolling"), TOP("top"), LINES("lines");
 
     public String name;
     Tools(String name)
