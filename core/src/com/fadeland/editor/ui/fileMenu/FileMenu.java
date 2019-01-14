@@ -318,6 +318,9 @@ public class FileMenu extends Group
         json.addClassTag("tileGroupData", TileGroupData.class);
         json.addClassTag("tileLayerData", TileLayerData.class);
         json.addClassTag("toolData", ToolData.class);
+        json.addClassTag("sheetData", SheetData.class);
+        json.addClassTag("tileSheetData", TileSheetData.class);
+        json.addClassTag("spriteSheetData", SpriteSheetData.class);
         return json;
     }
 }
