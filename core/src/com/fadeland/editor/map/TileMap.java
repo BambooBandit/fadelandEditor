@@ -33,6 +33,7 @@ import com.fadeland.editor.undoredo.Action;
 import com.fadeland.editor.undoredo.PerformableAction;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class TileMap implements Screen
@@ -796,148 +797,156 @@ public class TileMap implements Screen
             }
         }
 
-        for(int i = 0; i < tileMapData.tileTools.size(); i ++)
+        for(int i = 0; i < tileMapData.sheets.size(); i ++)
         {
-            ToolData toolData = tileMapData.tileTools.get(i);
-            TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
-            for(int k = 0; k < toolData.lockedPropertyData.size(); k ++)
+            if(tileMapData.sheets.get(i) instanceof TileSheetData)
             {
-                NonColorPropertyData propertyData = (NonColorPropertyData) toolData.lockedPropertyData.get(k);
-                tileTool.getPropertyField(propertyData.property).value.setText(propertyData.value);
-            }
-            for(int k = 0; k < toolData.propertyData.size(); k ++)
-            {
-                tileMenu.selectedTiles.clear();
-                tileMenu.selectedTiles.add(tileTool);
-                PropertyData property = toolData.propertyData.get(k);
-                if(property instanceof LightPropertyData)
+                TileSheetData tileSheetData = (TileSheetData) tileMapData.sheets.get(i);
+                ArrayList<ToolData> tileTools = tileSheetData.tools;
+                for (int k = 0; k < tileTools.size(); k++)
                 {
-                    LightPropertyData lightPropertyData = (LightPropertyData) property;
-                    propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
-                }
-                else if(property instanceof ColorPropertyData)
-                {
-                    ColorPropertyData colorPropertyData = (ColorPropertyData) property;
-                    propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
-                }
-                else
-                {
-                    NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
-                    propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
-                }
-                tileMenu.selectedTiles.clear();
-            }
-            for(int k = 0; k < toolData.attachedObjects.size(); k ++)
-            {
-                MapObjectData attachedObject = toolData.attachedObjects.get(k);
-                AttachedMapObject attachedMapObject = null;
-                if(attachedObject instanceof MapPolygonData)
-                {
-                    MapPolygonData polygonData = (MapPolygonData) attachedObject;
-                    attachedMapObject = new AttachedMapObject(this, null, polygonData.vertices, polygonData.xOffset, polygonData.yOffset, polygonData.width, polygonData.height, polygonData.x, polygonData.y);
-                }
-                else if(attachedObject instanceof MapPointData)
-                {
-                    MapPointData pointData = (MapPointData) attachedObject;
-                    attachedMapObject = new AttachedMapObject(this, null, pointData.xOffset, pointData.yOffset, pointData.x, pointData.y);
-                }
+                    ToolData toolData = tileTools.get(k);
+                    TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
+                    for (int h = 0; h < toolData.lockedPropertyData.size(); h++)
+                    {
+                        NonColorPropertyData propertyData = (NonColorPropertyData) toolData.lockedPropertyData.get(h);
+                        tileTool.getPropertyField(propertyData.property).value.setText(propertyData.value);
+                    }
+                    for (int h = 0; h < toolData.propertyData.size(); h++)
+                    {
+                        tileMenu.selectedTiles.clear();
+                        tileMenu.selectedTiles.add(tileTool);
+                        PropertyData property = toolData.propertyData.get(h);
+                        if (property instanceof LightPropertyData)
+                        {
+                            LightPropertyData lightPropertyData = (LightPropertyData) property;
+                            propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                        } else if (property instanceof ColorPropertyData)
+                        {
+                            ColorPropertyData colorPropertyData = (ColorPropertyData) property;
+                            propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                        } else
+                        {
+                            NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
+                            propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                        }
+                        tileMenu.selectedTiles.clear();
+                    }
+                    for (int h = 0; h < toolData.attachedObjects.size(); h++)
+                    {
+                        MapObjectData attachedObject = toolData.attachedObjects.get(h);
+                        AttachedMapObject attachedMapObject = null;
+                        if (attachedObject instanceof MapPolygonData)
+                        {
+                            MapPolygonData polygonData = (MapPolygonData) attachedObject;
+                            attachedMapObject = new AttachedMapObject(this, null, polygonData.vertices, polygonData.xOffset, polygonData.yOffset, polygonData.width, polygonData.height, polygonData.x, polygonData.y);
+                        } else if (attachedObject instanceof MapPointData)
+                        {
+                            MapPointData pointData = (MapPointData) attachedObject;
+                            attachedMapObject = new AttachedMapObject(this, null, pointData.xOffset, pointData.yOffset, pointData.x, pointData.y);
+                        }
 
-                for(int s = 0; s < toolData.attachedObjects.get(k).propertyData.size(); s ++)
-                {
-                    selectedObjects.clear();
-                    selectedObjects.add(attachedMapObject);
-                    PropertyData property = toolData.attachedObjects.get(k).propertyData.get(s);
-                    if(property instanceof LightPropertyData)
-                    {
-                        LightPropertyData lightPropertyData = (LightPropertyData) property;
-                        propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                        for (int s = 0; s < toolData.attachedObjects.get(h).propertyData.size(); s++)
+                        {
+                            selectedObjects.clear();
+                            selectedObjects.add(attachedMapObject);
+                            PropertyData property = toolData.attachedObjects.get(h).propertyData.get(s);
+                            if (property instanceof LightPropertyData)
+                            {
+                                LightPropertyData lightPropertyData = (LightPropertyData) property;
+                                propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                            } else if (property instanceof ColorPropertyData)
+                            {
+                                ColorPropertyData colorPropertyData = (ColorPropertyData) property;
+                                propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                            } else
+                            {
+                                NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
+                                propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                            }
+                            selectedObjects.clear();
+                        }
+                        if (attachedMapObject != null)
+                            tileTool.mapObjects.add(attachedMapObject);
                     }
-                    else if(property instanceof ColorPropertyData)
+                }
+            }
+            else
+            {
+                SpriteSheetData spriteSheetData = (SpriteSheetData) tileMapData.sheets.get(i);
+                ArrayList<ToolData> spriteTools = spriteSheetData.tools;
+                for(int k = 0; k < spriteTools.size(); k ++)
+                {
+                    ToolData toolData = spriteTools.get(k);
+                    TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
+                    for(int h = 0; h < toolData.lockedPropertyData.size(); h ++)
                     {
-                        ColorPropertyData colorPropertyData = (ColorPropertyData) property;
-                        propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                        NonColorPropertyData property = (NonColorPropertyData) toolData.lockedPropertyData.get(h);
+                        tileTool.getPropertyField(property.property).value.setText(property.value);
                     }
-                    else
+                    for(int h = 0; h < toolData.propertyData.size(); h ++)
                     {
-                        NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
-                        propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                        tileMenu.selectedTiles.clear();
+                        tileMenu.selectedTiles.add(tileTool);
+                        PropertyData property = toolData.propertyData.get(h);
+                        if(property instanceof LightPropertyData)
+                        {
+                            LightPropertyData lightPropertyData = (LightPropertyData) property;
+                            propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                        }
+                        else if(property instanceof ColorPropertyData)
+                        {
+                            ColorPropertyData colorPropertyData = (ColorPropertyData) property;
+                            propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                        }
+                        else
+                        {
+                            NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
+                            propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                        }
+                        tileMenu.selectedTiles.clear();
                     }
-                    selectedObjects.clear();
-                }
-                if(attachedMapObject != null)
-                    tileTool.mapObjects.add(attachedMapObject);
-            }
-        }
-        for(int i = 0; i < tileMapData.spriteTools.size(); i ++)
-        {
-            ToolData toolData = tileMapData.spriteTools.get(i);
-            TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
-            for(int k = 0; k < toolData.lockedPropertyData.size(); k ++)
-            {
-                NonColorPropertyData property = (NonColorPropertyData) toolData.lockedPropertyData.get(k);
-                tileTool.getPropertyField(property.property).value.setText(property.value);
-            }
-            for(int k = 0; k < toolData.propertyData.size(); k ++)
-            {
-                tileMenu.selectedTiles.clear();
-                tileMenu.selectedTiles.add(tileTool);
-                PropertyData property = toolData.propertyData.get(k);
-                if(property instanceof LightPropertyData)
-                {
-                    LightPropertyData lightPropertyData = (LightPropertyData) property;
-                    propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
-                }
-                else if(property instanceof ColorPropertyData)
-                {
-                    ColorPropertyData colorPropertyData = (ColorPropertyData) property;
-                    propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
-                }
-                else
-                {
-                    NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
-                    propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
-                }
-                tileMenu.selectedTiles.clear();
-            }
-            for(int k = 0; k < toolData.attachedObjects.size(); k ++)
-            {
-                MapObjectData attachedObject = toolData.attachedObjects.get(k);
-                AttachedMapObject attachedMapObject = null;
-                if(attachedObject instanceof MapPolygonData)
-                {
-                    MapPolygonData polygonData = (MapPolygonData) attachedObject;
-                    attachedMapObject = new AttachedMapObject(this, null, polygonData.vertices, polygonData.xOffset, polygonData.yOffset, polygonData.width, polygonData.height, polygonData.x, polygonData.y);
-                }
-                else if(attachedObject instanceof MapPointData)
-                {
-                    MapPointData pointData = (MapPointData) attachedObject;
-                    attachedMapObject = new AttachedMapObject(this, null, pointData.xOffset, pointData.yOffset, pointData.x, pointData.y);
-                }
+                    for(int h = 0; h < toolData.attachedObjects.size(); h ++)
+                    {
+                        MapObjectData attachedObject = toolData.attachedObjects.get(h);
+                        AttachedMapObject attachedMapObject = null;
+                        if(attachedObject instanceof MapPolygonData)
+                        {
+                            MapPolygonData polygonData = (MapPolygonData) attachedObject;
+                            attachedMapObject = new AttachedMapObject(this, null, polygonData.vertices, polygonData.xOffset, polygonData.yOffset, polygonData.width, polygonData.height, polygonData.x, polygonData.y);
+                        }
+                        else if(attachedObject instanceof MapPointData)
+                        {
+                            MapPointData pointData = (MapPointData) attachedObject;
+                            attachedMapObject = new AttachedMapObject(this, null, pointData.xOffset, pointData.yOffset, pointData.x, pointData.y);
+                        }
 
-                for(int s = 0; s < toolData.attachedObjects.get(k).propertyData.size(); s ++)
-                {
-                    selectedObjects.clear();
-                    selectedObjects.add(attachedMapObject);
-                    PropertyData property = toolData.attachedObjects.get(k).propertyData.get(s);
-                    if(property instanceof LightPropertyData)
-                    {
-                        LightPropertyData lightPropertyData = (LightPropertyData) property;
-                        propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                        for(int s = 0; s < toolData.attachedObjects.get(h).propertyData.size(); s ++)
+                        {
+                            selectedObjects.clear();
+                            selectedObjects.add(attachedMapObject);
+                            PropertyData property = toolData.attachedObjects.get(h).propertyData.get(s);
+                            if(property instanceof LightPropertyData)
+                            {
+                                LightPropertyData lightPropertyData = (LightPropertyData) property;
+                                propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                            }
+                            else if(property instanceof ColorPropertyData)
+                            {
+                                ColorPropertyData colorPropertyData = (ColorPropertyData) property;
+                                propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                            }
+                            else
+                            {
+                                NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
+                                propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                            }
+                            selectedObjects.clear();
+                        }
+                        if(attachedMapObject != null)
+                            tileTool.mapObjects.add(attachedMapObject);
                     }
-                    else if(property instanceof ColorPropertyData)
-                    {
-                        ColorPropertyData colorPropertyData = (ColorPropertyData) property;
-                        propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
-                    }
-                    else
-                    {
-                        NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
-                        propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
-                    }
-                    selectedObjects.clear();
                 }
-                if(attachedMapObject != null)
-                    tileTool.mapObjects.add(attachedMapObject);
             }
         }
         propertyMenu.rebuild();

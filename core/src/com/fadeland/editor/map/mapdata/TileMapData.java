@@ -6,7 +6,6 @@ import com.fadeland.editor.map.SpriteLayer;
 import com.fadeland.editor.map.TileLayer;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
-import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import java.util.ArrayList;
 
@@ -16,8 +15,6 @@ public class TileMapData
     public int tileSize;
     public float r, g, b, a;
     public ArrayList<SheetData> sheets;
-    public ArrayList<ToolData> tileTools;
-    public ArrayList<ToolData> spriteTools;
     public ArrayList<LayerData> layers;
     public ArrayList<TileGroupData> tileGroups;
 
@@ -31,14 +28,8 @@ public class TileMapData
         this.b = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.bValue.getText());
         this.a = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.aValue.getText());
         this.sheets = new ArrayList<>(2);
-        this.sheets.add(new TileSheetData("tiles.png", TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
-        this.sheets.add(new SpriteSheetData("map.png", GameAssets.getGameAtlas().getRegions()));
-        this.tileTools = new ArrayList<>();
-        for(int i = 0; i < tileMap.tileMenu.tileTable.getChildren().size; i ++)
-            this.tileTools.add(new ToolData((TileTool) tileMap.tileMenu.tileTable.getChildren().get(i)));
-        this.spriteTools = new ArrayList<>();
-        for(int i = 0; i < tileMap.tileMenu.spriteTable.getChildren().size; i ++)
-            this.spriteTools.add(new ToolData((TileTool) tileMap.tileMenu.spriteTable.getChildren().get(i)));
+        this.sheets.add(new TileSheetData(tileMap, "tiles.png", TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
+        this.sheets.add(new SpriteSheetData(tileMap, "map.png", GameAssets.getGameAtlas().getRegions()));
         this.layers = new ArrayList<>();
         for(int i = 0; i < tileMap.layers.size; i ++)
         {
