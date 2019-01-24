@@ -325,7 +325,7 @@ public class MapObject extends Tile
                 }
             }
         }
-        else if(this.body == null)
+        else if(this.body == null && !(this instanceof AttachedMapObject))
         {
             BodyDef bodyDef = new BodyDef();
             bodyDef.position.set(this.position);

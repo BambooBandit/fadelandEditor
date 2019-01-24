@@ -63,7 +63,7 @@ public class MoveObject extends PerformableAction
     {
         super.undo();
         if(this.mapObject != null)
-            this.mapObject.setPosition(oldXofDragMap.get(mapObject), oldYofDragMap.get(mapObject));
+            this.mapObject.setPosition(oldXofDragMap.get(mapObject), oldYofDragMap.get(mapObject)); // TODO nullpointer
         else
             for(int i = 0; i < mapObjects.size; i ++)
                 mapObjects.get(i).setPosition(oldXofDragMap.get(mapObjects.get(i)), oldYofDragMap.get(mapObjects.get(i)));
