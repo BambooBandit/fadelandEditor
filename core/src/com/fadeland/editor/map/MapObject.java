@@ -37,6 +37,8 @@ public class MapObject extends Tile
 
     public boolean isPoint;
 
+    float centroidX, centroidY; // Used for polygons
+
     // Polygon
     public MapObject(TileMap map, float[] vertices, float x, float y)
     {
@@ -49,6 +51,7 @@ public class MapObject extends Tile
         this.moveBox = new MoveBox();
         this.moveBox.setPosition(x, y);
         this.isPoint = false;
+        computeCentroid();
     }
 
     // Point
@@ -136,6 +139,7 @@ public class MapObject extends Tile
                 if(searchForBlocked)
                     map.searchForBlockedTiles();
             }
+            computeCentroid();
         }
         else if(this.pointLight != null)
             this.pointLight.setPosition(this.position);
@@ -212,7 +216,23 @@ public class MapObject extends Tile
             map.editor.shapeRenderer.polygon(pointShape);
         }
         else
+        {
             map.editor.shapeRenderer.polygon(this.polygon.getTransformedVertices());
+
+            for(int i = 0; i < properties.size; i ++)
+            {
+                if (properties.get(i).getProperty().equals("angle"))
+                {
+                    try
+                    {
+                        float angle = (float) Math.toRadians(Float.parseFloat(properties.get(i).getValue()));
+                        drawCentroidAndAngle(angle);
+                        return;
+                    }
+                    catch (NumberFormatException e){return;}
+                }
+            }
+        }
     }
 
     public void drawSelectedVertices()
@@ -225,6 +245,12 @@ public class MapObject extends Tile
     {
         if(indexOfHoveredVertice != -1)
             map.editor.shapeRenderer.circle(polygon.getTransformedVertices()[indexOfHoveredVertice], polygon.getTransformedVertices()[indexOfHoveredVertice + 1], 5);
+    }
+
+    private void drawCentroidAndAngle(float angle)
+    {
+        map.editor.shapeRenderer.circle(centroidX, centroidY, 5);
+        map.editor.shapeRenderer.line(centroidX, centroidY, (float) (centroidX + Math.cos(angle) * 25), (float) (centroidY + Math.sin(angle) * 25));
     }
 
     public void drawMoveBox()
@@ -450,5 +476,45 @@ public class MapObject extends Tile
         }
         else
             return this.polygon.contains(x, y);
+    }
+
+    private void computeCentroid()
+    {
+        float[] vertices = polygon.getTransformedVertices();
+        float signedArea = 0;
+        float x0; // Current vertex X
+        float y0; // Current vertex Y
+        float x1; // Next vertex X
+        float y1; // Next vertex Y
+        float a;  // Partial signed area
+
+        // For all vertices except last
+        int i;
+        for (i = 0; i < vertices.length - 2; i += 2)
+        {
+            x0 = vertices[i];
+            y0 = vertices[i + 1];
+            x1 = vertices[i + 2];
+            y1 = vertices[i + 3];
+            a = x0 * y1 - x1 * y0;
+            signedArea += a;
+            centroidX += (x0 + x1) * a;
+            centroidY += (y0 + y1) * a;
+        }
+
+        // Do last vertex separately to avoid performing an expensive
+        // modulus operation in each iteration.
+        x0 = vertices[i];
+        y0 = vertices[i + 1];
+        x1 = vertices[0];
+        y1 = vertices[1];
+        a = x0 * y1 - x1 * y0;
+        signedArea += a;
+        centroidX += (x0 + x1) * a;
+        centroidY += (y0 + y1) * a;
+
+        signedArea *= 0.5;
+        centroidX /= (6.0 * signedArea);
+        centroidY /= (6.0 * signedArea);
     }
 }
