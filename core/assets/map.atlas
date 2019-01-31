@@ -118,7 +118,7 @@ repeat: none
   index: -1
 3pumpkin
   rotate: false
-  xy: 927, 1390
+  xy: 1484, 686
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
@@ -150,4 +150,11 @@ repeat: none
   size: 761, 844
   orig: 768, 896
   offset: 5, 31
+  index: -1
+flower0001
+  rotate: false
+  xy: 927, 1374
+  size: 39, 56
+  orig: 50, 68
+  offset: 7, 6
   index: -1

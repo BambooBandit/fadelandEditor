@@ -183,7 +183,7 @@ public class MapInput implements InputProcessor
                 createOrRemoveObject.addObjects();
                 map.performAction(createOrRemoveObject);
             }
-            else if(map.selectedLayer instanceof SpriteLayer)
+            else if(map.selectedLayer instanceof SpriteLayer && map.selectedSprites.size > 0)
             {
                 CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                 MapSprite mapSprite = map.selectedSprites.first();
@@ -192,7 +192,7 @@ public class MapInput implements InputProcessor
                 createOrRemoveAttachedObject.addAttachedObjects();
                 map.performAction(createOrRemoveAttachedObject);
             }
-            else if(map.selectedLayer instanceof TileLayer)
+            else if(map.selectedLayer instanceof TileLayer && map.selectedTile != null)
             {
                 CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                 Tile selectedTile = map.selectedTile;

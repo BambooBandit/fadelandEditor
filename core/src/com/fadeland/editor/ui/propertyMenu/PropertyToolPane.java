@@ -111,6 +111,7 @@ public class PropertyToolPane extends Group
                 tileTool.setTopSprites(topValue);
             }
         }
+
         updateLightsAndBlocked(map);
     }
 
@@ -195,22 +196,30 @@ public class PropertyToolPane extends Group
                         // blocked
                         PropertyField blockedProperty = mapObject.getPropertyField("blocked");
                         if (blockedProperty == null)
+//                        {
+                            mapObject.removeBody();
+//                            continue;
+//                        }
+                        else
                         {
                             mapObject.removeBody();
-                            continue;
+                            mapObject.createBody();
                         }
-                        mapObject.createBody();
                     }
                     else
                     {
                         // light
                         PropertyField lightProperty = mapObject.getLightPropertyField();
                         if (lightProperty == null)
+//                        {
+                            mapObject.removeLight();
+//                            continue;
+//                        }
+                        else
                         {
                             mapObject.removeLight();
-                            continue;
+                            mapObject.createLight();
                         }
-                        mapObject.createLight();
                     }
                 }
             }
