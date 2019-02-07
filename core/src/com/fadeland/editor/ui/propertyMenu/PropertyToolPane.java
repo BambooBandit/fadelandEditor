@@ -113,6 +113,7 @@ public class PropertyToolPane extends Group
         }
 
         updateLightsAndBlocked(map);
+        map.searchForBlockedTiles();
     }
 
     public static void updateLightsAndBlocked(TileMap map)

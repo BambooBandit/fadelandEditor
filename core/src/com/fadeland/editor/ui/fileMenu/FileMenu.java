@@ -175,6 +175,7 @@ public class FileMenu extends Group
 
     public void save(TileMap tileMap, boolean removeMapAfterSaving, boolean closeApplicationAfterSaving)
     {
+        tileMap.searchForBlockedTiles();
         if (tileMap.file == null)
         {
             saveAs(tileMap, removeMapAfterSaving, closeApplicationAfterSaving);

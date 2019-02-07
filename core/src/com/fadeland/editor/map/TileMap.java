@@ -509,6 +509,8 @@ public class TileMap implements Screen
         this.editor.shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
+        b2dr.render(this.world, camera.combined);
+
         this.stage.act();
         this.stage.draw();
 
@@ -530,7 +532,6 @@ public class TileMap implements Screen
                 mapObject.setPosition(selectedSprites.first().position.x + mapObject.positionOffset.x, selectedSprites.first().position.y + mapObject.positionOffset.y);
             }
         }
-        b2dr.render(this.world, camera.combined);
         if(apply)
         {
             apply = false;
@@ -989,7 +990,12 @@ public class TileMap implements Screen
                         {
                             for(int w = 0; w < attachedMapObject.bodies.size; w++)
                             {
-                                if (!attachedMapObject.isPoint && attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY))
+                                if (!attachedMapObject.isPoint && (
+                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY) ||
+                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
+                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
+                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
+                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
                                 {
                                     tile.hasBlockedObjectOnTop = true;
                                     continue tile;
@@ -998,7 +1004,12 @@ public class TileMap implements Screen
                         }
                         else if(attachedMapObject.bodies == null && attachedMapObject.body != null)
                         {
-                            if (!attachedMapObject.isPoint && attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY))
+                            if (!attachedMapObject.isPoint && (
+                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY) ||
+                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
+                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
+                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
+                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
                             {
                                 tile.hasBlockedObjectOnTop = true;
                                 continue tile;
@@ -1018,7 +1029,12 @@ public class TileMap implements Screen
                         {
                             for(int w = 0; w < attachedMapObject.bodies.size; w++)
                             {
-                                if (!attachedMapObject.isPoint && attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY))
+                                if (!attachedMapObject.isPoint && (
+                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY) ||
+                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
+                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
+                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
+                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
                                 {
                                     tile.hasBlockedObjectOnTop = true;
                                     continue tile;
@@ -1027,7 +1043,12 @@ public class TileMap implements Screen
                         }
                         else if(attachedMapObject.bodies == null && attachedMapObject.body != null)
                         {
-                            if (!attachedMapObject.isPoint && attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY))
+                            if (!attachedMapObject.isPoint && (
+                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY) ||
+                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
+                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
+                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
+                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
                             {
                                 tile.hasBlockedObjectOnTop = true;
                                 continue tile;
@@ -1046,7 +1067,12 @@ public class TileMap implements Screen
                         MapObject mapObject = (MapObject) layers.get(s).tiles.get(d);
                         if(mapObject.body == null)
                             continue;
-                        if(!mapObject.isPoint && mapObject.body.getFixtureList().first().testPoint(centerX, centerY))
+                        if (!mapObject.isPoint && (
+                                mapObject.body.getFixtureList().first().testPoint(centerX, centerY) ||
+                                mapObject.body.getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
+                                mapObject.body.getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
+                                mapObject.body.getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
+                                mapObject.body.getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
                         {
                             tile.hasBlockedObjectOnTop = true;
                             continue tile;

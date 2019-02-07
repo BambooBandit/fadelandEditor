@@ -34,7 +34,7 @@ repeat: none
   index: -1
 0tree5
   rotate: false
-  xy: 1856, 1407
+  xy: 1856, 1290
   size: 166, 89
   orig: 192, 320
   offset: 11, 36
@@ -104,7 +104,7 @@ repeat: none
   index: -1
 2tree0
   rotate: false
-  xy: 1856, 1354
+  xy: 1856, 1237
   size: 57, 51
   orig: 448, 896
   offset: 196, 0
@@ -150,6 +150,13 @@ repeat: none
   size: 761, 844
   orig: 768, 896
   offset: 5, 31
+  index: -1
+bush0001
+  rotate: false
+  xy: 1856, 1381
+  size: 182, 115
+  orig: 250, 167
+  offset: 35, 18
   index: -1
 flower0001
   rotate: false

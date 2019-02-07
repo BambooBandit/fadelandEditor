@@ -101,15 +101,11 @@ public class MapObject extends Tile
                 polygon.setRotation(mapSprite.rotation);
             }
             if (this.body != null)
-            {
                 this.body.setTransform(this.position.x + (width / 2), this.position.y + (height / 2), rotation);
-                map.searchForBlockedTiles();
-            }
             else if(this.bodies != null && this.bodies.size > 0)
             {
                 int bodyIndex = 0;
                 AttachedMapObject attachedMapObject = (AttachedMapObject) this;
-                boolean searchForBlocked = false;
                 for (int i = 0; i < map.layers.size; i++)
                 {
                     for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
@@ -125,19 +121,11 @@ public class MapObject extends Tile
                             }
                             Utils.positionDifference.set(attachedMapObject.positionOffset);
                             Utils.positionDifference.sub(attachedMapObject.oldPositionOffset);
-                            Vector2 bodyPosition = bodies.get(bodyIndex).getPosition();
-                            boolean changed = !(bodyPosition.x == Utils.positionDifference.x + map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2 && bodyPosition.y == Utils.positionDifference.y + map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2 && bodies.get(bodyIndex).getAngle() == rotation2);
-                            if(changed)
-                            {
-                                bodies.get(bodyIndex).setTransform(Utils.positionDifference.x + map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2, Utils.positionDifference.y + map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2, rotation2);
-                                searchForBlocked = true;
-                            }
+                            bodies.get(bodyIndex).setTransform(Utils.positionDifference.x + map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2, Utils.positionDifference.y + map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2, rotation2);
                             bodyIndex ++;
                         }
                     }
                 }
-                if(searchForBlocked)
-                    map.searchForBlockedTiles();
             }
             computeCentroid();
         }
@@ -183,7 +171,6 @@ public class MapObject extends Tile
         }
         this.polygon.setVertices(vertices);
         setPosition(polygon.getX(), polygon.getY());
-        map.searchForBlockedTiles();
     }
 
     public float getVerticeX()
@@ -334,7 +321,6 @@ public class MapObject extends Tile
                 this.map.world.destroyBody(this.bodies.get(i));
             this.bodies.clear();
         }
-        map.searchForBlockedTiles();
     }
 
     public void createBody()
@@ -366,7 +352,6 @@ public class MapObject extends Tile
             this.body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
             this.body.setTransform(this.position, 0);
             shape.dispose();
-            map.searchForBlockedTiles();
         }
     }
 
@@ -402,7 +387,6 @@ public class MapObject extends Tile
 
         body.setUserData(tile);
         bodies.add(body);
-        map.searchForBlockedTiles();
     }
 
     public void createLight()
