@@ -1,9 +1,6 @@
 package com.fadeland.editor;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -34,6 +31,8 @@ public class FadelandEditor extends Game
 
 	public static boolean fileChooserOpen = false;
 
+	public static Preferences prefs;
+
 	@Override
 	public void create ()
 	{
@@ -55,6 +54,8 @@ public class FadelandEditor extends Game
 		this.inputMultiplexer.addProcessor(this.stage);
 
 		Gdx.input.setInputProcessor(this.inputMultiplexer);
+
+		prefs = Gdx.app.getPreferences("Editor preferences");
 	}
 
 	@Override

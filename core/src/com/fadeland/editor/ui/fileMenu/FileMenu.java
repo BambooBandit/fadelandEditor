@@ -21,6 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import static com.fadeland.editor.FadelandEditor.prefs;
 import static com.fadeland.editor.map.TileMap.untitledCount;
 
 public class FileMenu extends Group
@@ -86,6 +87,9 @@ public class FileMenu extends Group
                         FileNameExtensionFilter flmFilter = new FileNameExtensionFilter(
                                 "flm files (*.flm)", "flm");
                         chooser.setFileFilter(flmFilter);
+                        String path = prefs.getString("lastSave", "null");
+                        if(!path.equals("null"))
+                            chooser.setSelectedFile(new File(path));
                         JFrame f = new JFrame();
                         f.setVisible(true);
                         f.setAlwaysOnTop(true);
@@ -251,6 +255,8 @@ public class FileMenu extends Group
                         {
                             //Create the file
                             file.createNewFile();
+                            prefs.putString("lastSave", file.getAbsolutePath());
+                            prefs.flush();
 
                             //Write Content
                             FileWriter writer = new FileWriter(file);
