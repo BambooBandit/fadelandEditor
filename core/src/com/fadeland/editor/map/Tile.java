@@ -15,11 +15,13 @@ public class Tile
     public TileTool tool;
     public boolean hasBeenPainted = false;
     public boolean hasBlockedObjectOnTop = false;
+    public Layer layer;
 
     // For Tiles, and objects
-    public Tile(TileMap map, float x, float y)
+    public Tile(TileMap map, Layer layer, float x, float y)
     {
         this.map = map;
+        this.layer = layer;
         this.position = new Vector2(x, y);
         this.width = tileSize;
         this.height = tileSize;

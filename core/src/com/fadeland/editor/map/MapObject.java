@@ -40,9 +40,9 @@ public class MapObject extends Tile
     float centroidX, centroidY; // Used for polygons
 
     // Polygon
-    public MapObject(TileMap map, float[] vertices, float x, float y)
+    public MapObject(TileMap map, Layer layer, float[] vertices, float x, float y)
     {
-        super(map, x, y);
+        super(map, layer, x, y);
         this.vertices = vertices;
         this.properties = new Array<>();
         this.polygon = new EditorPolygon(vertices);
@@ -55,9 +55,9 @@ public class MapObject extends Tile
     }
 
     // Point
-    public MapObject(TileMap map, float x, float y)
+    public MapObject(TileMap map, Layer layer, float x, float y)
     {
-        super(map, x, y);
+        super(map, layer, x, y);
         this.properties = new Array<>();
         this.position.set(x, y);
         this.moveBox = new MoveBox();

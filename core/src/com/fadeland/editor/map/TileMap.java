@@ -742,7 +742,7 @@ public class TileMap implements Screen
                         int id = savedSpriteLayer.tiles.get(k).id;
                         String name = savedSpriteLayer.tiles.get(k).name;
                         TileTool tileTool = tileMenu.getSpriteTool(TileMenuTools.SPRITE, name);
-                        MapSprite mapSprite = input.newMapSprite(this, tileTool, savedSpriteLayer.tiles.get(k).x + savedSpriteLayer.tiles.get(k).width / 2, savedSpriteLayer.tiles.get(k).y + savedSpriteLayer.tiles.get(k).height / 2);
+                        MapSprite mapSprite = input.newMapSprite(this, tileTool, layer,savedSpriteLayer.tiles.get(k).x + savedSpriteLayer.tiles.get(k).width / 2, savedSpriteLayer.tiles.get(k).y + savedSpriteLayer.tiles.get(k).height / 2);
                         mapSprite.setZ(savedSpriteLayer.tiles.get(k).z);
                         Utils.setCenterOrigin(mapSprite.position.x, mapSprite.position.y);
                         mapSprite.rotate(savedSpriteLayer.tiles.get(k).rotation);
@@ -760,12 +760,12 @@ public class TileMap implements Screen
                         if(savedObjectLayer.tiles.get(k) instanceof MapPolygonData)
                         {
                             MapPolygonData mapPolygonData = (MapPolygonData) savedObjectLayer.tiles.get(k);
-                            mapObject = new MapObject(this, mapPolygonData.vertices, mapPolygonData.x, mapPolygonData.y);
+                            mapObject = new MapObject(this, layer, mapPolygonData.vertices, mapPolygonData.x, mapPolygonData.y);
                         }
                         else if(savedObjectLayer.tiles.get(k) instanceof MapPointData)
                         {
                             MapPointData mapPointData = (MapPointData) savedObjectLayer.tiles.get(k);
-                            mapObject = new MapObject(this, mapPointData.x, mapPointData.y);
+                            mapObject = new MapObject(this, layer, mapPointData.x, mapPointData.y);
                         }
                         if(mapObject != null)
                         {
@@ -840,11 +840,11 @@ public class TileMap implements Screen
                         if (attachedObject instanceof MapPolygonData)
                         {
                             MapPolygonData polygonData = (MapPolygonData) attachedObject;
-                            attachedMapObject = new AttachedMapObject(this, null, polygonData.vertices, polygonData.xOffset, polygonData.yOffset, polygonData.width, polygonData.height, polygonData.x, polygonData.y);
+                            attachedMapObject = new AttachedMapObject(this, null, null, polygonData.vertices, polygonData.xOffset, polygonData.yOffset, polygonData.width, polygonData.height, polygonData.x, polygonData.y);
                         } else if (attachedObject instanceof MapPointData)
                         {
                             MapPointData pointData = (MapPointData) attachedObject;
-                            attachedMapObject = new AttachedMapObject(this, null, pointData.xOffset, pointData.yOffset, pointData.x, pointData.y);
+                            attachedMapObject = new AttachedMapObject(this, null, null, pointData.xOffset, pointData.yOffset, pointData.x, pointData.y);
                         }
 
                         for (int s = 0; s < toolData.attachedObjects.get(h).propertyData.size(); s++)
@@ -914,12 +914,12 @@ public class TileMap implements Screen
                         if(attachedObject instanceof MapPolygonData)
                         {
                             MapPolygonData polygonData = (MapPolygonData) attachedObject;
-                            attachedMapObject = new AttachedMapObject(this, null, polygonData.vertices, polygonData.xOffset, polygonData.yOffset, polygonData.width, polygonData.height, polygonData.x, polygonData.y);
+                            attachedMapObject = new AttachedMapObject(this, null, null, polygonData.vertices, polygonData.xOffset, polygonData.yOffset, polygonData.width, polygonData.height, polygonData.x, polygonData.y);
                         }
                         else if(attachedObject instanceof MapPointData)
                         {
                             MapPointData pointData = (MapPointData) attachedObject;
-                            attachedMapObject = new AttachedMapObject(this, null, pointData.xOffset, pointData.yOffset, pointData.x, pointData.y);
+                            attachedMapObject = new AttachedMapObject(this, null, null, pointData.xOffset, pointData.yOffset, pointData.x, pointData.y);
                         }
 
                         for(int s = 0; s < toolData.attachedObjects.get(h).propertyData.size(); s ++)
@@ -1029,6 +1029,8 @@ public class TileMap implements Screen
                         {
                             for(int w = 0; w < attachedMapObject.bodies.size; w++)
                             {
+                                if(((MapSprite)attachedMapObject.bodies.get(w).getUserData()).layer.z != tile.layer.z)
+                                    continue;
                                 if (!attachedMapObject.isPoint && (
                                         attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY) ||
                                         attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||

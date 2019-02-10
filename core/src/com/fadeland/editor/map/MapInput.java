@@ -142,7 +142,7 @@ public class MapInput implements InputProcessor
                 if(map.selectedLayer instanceof ObjectLayer)
                 {
                     CreateOrRemoveObject createOrRemoveObject = new CreateOrRemoveObject(map, map.selectedLayer.tiles, null);
-                    mapObject = new MapObject(map, objectVertices.toArray(), objectVerticePosition.x, objectVerticePosition.y);
+                    mapObject = new MapObject(map, map.selectedLayer, objectVertices.toArray(), objectVerticePosition.x, objectVerticePosition.y);
                     ((ObjectLayer) map.selectedLayer).tiles.add(mapObject);
                     createOrRemoveObject.addObjects();
                     map.performAction(createOrRemoveObject);
@@ -154,7 +154,7 @@ public class MapInput implements InputProcessor
                     EditorPolygon antiRotatePolygon = new EditorPolygon(objectVertices.toArray());
                     antiRotatePolygon.setOrigin(-(objectVerticePosition.x - mapSprite.position.x) + mapSprite.width / 2, -(objectVerticePosition.y - mapSprite.position.y) + mapSprite.height / 2);
                     antiRotatePolygon.rotate(-mapSprite.sprite.getRotation());
-                    mapObject = new AttachedMapObject(map, mapSprite, antiRotatePolygon.getTransformedVertices(), objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
+                    mapObject = new AttachedMapObject(map, map.selectedLayer, mapSprite, antiRotatePolygon.getTransformedVertices(), objectVerticePosition.x - mapSprite.position.x, objectVerticePosition.y - mapSprite.position.y, mapSprite.sprite.getWidth(), mapSprite.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     mapSprite.addMapObject((AttachedMapObject) mapObject);
                     createOrRemoveAttachedObject.addAttachedObjects();
                     map.performAction(createOrRemoveAttachedObject);
@@ -163,7 +163,7 @@ public class MapInput implements InputProcessor
                 {
                     CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                     Tile selectedTile = map.selectedTile;
-                    mapObject = new AttachedMapObject(map, selectedTile, objectVertices.toArray(), objectVerticePosition.x - selectedTile.position.x, objectVerticePosition.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
+                    mapObject = new AttachedMapObject(map, map.selectedLayer, selectedTile, objectVertices.toArray(), objectVerticePosition.x - selectedTile.position.x, objectVerticePosition.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     selectedTile.addMapObject((AttachedMapObject) mapObject);
                     createOrRemoveAttachedObject.addAttachedObjects();
                     map.performAction(createOrRemoveAttachedObject);
@@ -178,7 +178,7 @@ public class MapInput implements InputProcessor
             if(map.selectedLayer instanceof ObjectLayer)
             {
                 CreateOrRemoveObject createOrRemoveObject = new CreateOrRemoveObject(map, map.selectedLayer.tiles, null);
-                mapObject = new MapObject(map, coords.x, coords.y);
+                mapObject = new MapObject(map, map.selectedLayer, coords.x, coords.y);
                 ((ObjectLayer) map.selectedLayer).tiles.add(mapObject);
                 createOrRemoveObject.addObjects();
                 map.performAction(createOrRemoveObject);
@@ -187,7 +187,7 @@ public class MapInput implements InputProcessor
             {
                 CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                 MapSprite mapSprite = map.selectedSprites.first();
-                mapObject = new AttachedMapObject(map, mapSprite, coords.x - mapSprite.position.x, coords.y - mapSprite.position.y, coords.x, coords.y);
+                mapObject = new AttachedMapObject(map, map.selectedLayer, mapSprite, coords.x - mapSprite.position.x, coords.y - mapSprite.position.y, coords.x, coords.y);
                 mapSprite.addMapObject((AttachedMapObject) mapObject);
                 createOrRemoveAttachedObject.addAttachedObjects();
                 map.performAction(createOrRemoveAttachedObject);
@@ -196,7 +196,7 @@ public class MapInput implements InputProcessor
             {
                 CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
                 Tile selectedTile = map.selectedTile;
-                mapObject = new AttachedMapObject(map, selectedTile, coords.x - selectedTile.position.x, coords.y - selectedTile.position.y, coords.x, coords.y);
+                mapObject = new AttachedMapObject(map, map.selectedLayer, selectedTile, coords.x - selectedTile.position.x, coords.y - selectedTile.position.y, coords.x, coords.y);
                 selectedTile.addMapObject((AttachedMapObject) mapObject);
                 createOrRemoveAttachedObject.addAttachedObjects();
                 map.performAction(createOrRemoveAttachedObject);
@@ -672,7 +672,7 @@ public class MapInput implements InputProcessor
                         coords.x > map.selectedLayer.x && coords.y > map.selectedLayer.y && coords.x < map.selectedLayer.x + (map.selectedLayer.width * tileSize) && coords.y < map.selectedLayer.y + (map.selectedLayer.height * tileSize))
                 {
                     CreateOrRemoveSprite createOrRemoveSprite = new CreateOrRemoveSprite(map, ((SpriteLayer) map.selectedLayer).tiles, null);
-                    MapSprite mapSprite = newMapSprite(map, editor.getSpriteTool(), coords.x, coords.y);
+                    MapSprite mapSprite = newMapSprite(map, editor.getSpriteTool(), map.selectedLayer, coords.x, coords.y);
 
                     ((SpriteLayer) map.selectedLayer).tiles.add(mapSprite);
                     createOrRemoveSprite.addSprites();
@@ -1104,10 +1104,11 @@ public class MapInput implements InputProcessor
         }
     }
 
-    public static MapSprite newMapSprite(TileMap map, TileTool tileTool, float x, float y)
+    public static MapSprite newMapSprite(TileMap map, TileTool tileTool, Layer layer, float x, float y)
     {
         MapSprite mapSprite = new MapSprite(map, tileTool,
                 x, y);
+        mapSprite.layer = layer;
 
         TextField.TextFieldFilter valueFilter = new TextField.TextFieldFilter()
         {
