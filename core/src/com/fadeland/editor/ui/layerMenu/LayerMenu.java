@@ -49,6 +49,7 @@ public class LayerMenu extends Group
         this.table.left().top();
 
         this.scrollPane = new ScrollPane(this.table, skin);
+        this.scrollPane.setPosition(0, toolHeight);
 
         this.stack.add(this.background);
         this.stack.setPosition(0, toolHeight);
@@ -69,7 +70,7 @@ public class LayerMenu extends Group
 
         this.table.invalidateHierarchy();
 
-        this.scrollPane.setSize(width, height);
+        this.scrollPane.setSize(width, height - toolHeight);
         this.scrollPane.invalidateHierarchy();
 
         this.stack.setSize(width, height - toolHeight);
