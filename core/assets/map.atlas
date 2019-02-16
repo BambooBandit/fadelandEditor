@@ -34,7 +34,7 @@ repeat: none
   index: -1
 0tree5
   rotate: false
-  xy: 1856, 1290
+  xy: 1856, 1125
   size: 166, 89
   orig: 192, 320
   offset: 11, 36
@@ -104,7 +104,7 @@ repeat: none
   index: -1
 2tree0
   rotate: false
-  xy: 1856, 1237
+  xy: 1856, 1072
   size: 57, 51
   orig: 448, 896
   offset: 196, 0
@@ -153,10 +153,17 @@ repeat: none
   index: -1
 bush0001
   rotate: false
-  xy: 1856, 1381
+  xy: 1856, 1216
   size: 182, 115
   orig: 250, 167
   offset: 35, 18
+  index: -1
+communalChest
+  rotate: false
+  xy: 1856, 1333
+  size: 144, 163
+  orig: 200, 200
+  offset: 29, 19
   index: -1
 flower0001
   rotate: false

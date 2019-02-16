@@ -22,6 +22,7 @@ public class MapSprite extends Tile
     public boolean selected;
     public Array<PropertyField> lockedProperties; // properties such as rotation. They belong to all sprites
     public float z;
+    public int id;
 
     float[] verts;
 
@@ -218,6 +219,19 @@ public class MapSprite extends Tile
     public void drawOutline()
     {
         map.editor.shapeRenderer.polygon(this.polygon.getTransformedVertices());
+    }
+
+    public void setID(int id)
+    {
+        for(int i = 0; i < lockedProperties.size; i ++)
+        {
+            if(lockedProperties.get(i).getProperty().equals("ID"))
+            {
+                lockedProperties.get(i).value.setText(Integer.toString(id));
+                break;
+            }
+        }
+        this.id = id;
     }
 
     public void setZ(float z)

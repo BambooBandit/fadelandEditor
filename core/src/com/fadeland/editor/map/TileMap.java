@@ -743,8 +743,8 @@ public class TileMap implements Screen
                         String name = savedSpriteLayer.tiles.get(k).name;
                         TileTool tileTool = tileMenu.getSpriteTool(TileMenuTools.SPRITE, name);
                         MapSprite mapSprite = input.newMapSprite(this, tileTool, layer,savedSpriteLayer.tiles.get(k).x + savedSpriteLayer.tiles.get(k).width / 2, savedSpriteLayer.tiles.get(k).y + savedSpriteLayer.tiles.get(k).height / 2);
-                        mapSprite.setZ(savedSpriteLayer.tiles.get(k).z);
                         Utils.setCenterOrigin(mapSprite.position.x, mapSprite.position.y);
+                        mapSprite.setID(savedSpriteLayer.tiles.get(k).spriteID);
                         mapSprite.rotate(savedSpriteLayer.tiles.get(k).rotation);
                         mapSprite.setScale(savedSpriteLayer.tiles.get(k).scale);
                         mapSprite.setZ(savedSpriteLayer.tiles.get(k).z);

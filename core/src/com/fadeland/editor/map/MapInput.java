@@ -1118,6 +1118,25 @@ public class MapInput implements InputProcessor
                 return c == '.' || c == '-' || Character.isDigit(c);
             }
         };
+
+        PropertyField idField = new PropertyField("ID", "0", GameAssets.getUISkin(), map.propertyMenu, false);
+        idField.value.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+        idField.value.getListeners().clear();
+        TextField.TextFieldClickListener idListener = idField.value.new TextFieldClickListener(){
+            @Override
+            public boolean keyUp (InputEvent event, int keycode)
+            {
+                try
+                {
+                    for(int i = 0; i < map.selectedSprites.size; i ++)
+                        map.selectedSprites.get(i).id = Integer.parseInt(idField.value.getText());
+                }
+                catch (NumberFormatException e){}
+                return true;
+            }
+        };
+        idField.value.addListener(idListener);
+        
         PropertyField rotationField = new PropertyField("Rotation", "0", GameAssets.getUISkin(), map.propertyMenu, false);
         rotationField.value.setTextFieldFilter(valueFilter);
         rotationField.value.getListeners().clear();
@@ -1186,6 +1205,7 @@ public class MapInput implements InputProcessor
         zField.value.addListener(zListener);
 
 
+        mapSprite.lockedProperties.add(idField);
         mapSprite.lockedProperties.add(rotationField);
         mapSprite.lockedProperties.add(scaleField);
         mapSprite.lockedProperties.add(zField);
