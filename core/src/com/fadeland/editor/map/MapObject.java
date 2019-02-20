@@ -65,12 +65,33 @@ public class MapObject extends Tile
         this.isPoint = true;
     }
 
+    // Attached
+    public MapObject(AttachedMapObject attachedMapObject)
+    {
+        super(attachedMapObject.map, attachedMapObject.layer, attachedMapObject.position.x, attachedMapObject.position.y);
+        if(!attachedMapObject.isPoint)
+        {
+            this.vertices = attachedMapObject.vertices;
+            this.properties = new Array<>();
+            this.polygon = new EditorPolygon(vertices);
+            this.polygon.setPosition(attachedMapObject.position.x, attachedMapObject.position.y);
+            polygon.setOrigin(attachedMapObject.polygon.getOriginX(), attachedMapObject.polygon.getOriginY());
+            computeCentroid();
+        }
+        this.properties = new Array<>();
+        this.position.set(attachedMapObject.position.x, attachedMapObject.position.y);
+        this.moveBox = new MoveBox();
+        this.moveBox.setPosition(attachedMapObject.position.x, attachedMapObject.position.y);
+        this.isPoint = attachedMapObject.isPoint;
+    }
+
     @Override
     public void setTool(TileTool tool) { }
 
     @Override
     public void setPosition(float x, float y)
     {
+        System.out.println("setposition");
         super.setPosition(x, y);
         if(isPoint && this.attachedTile != null)
         {
@@ -101,31 +122,36 @@ public class MapObject extends Tile
                 polygon.setRotation(mapSprite.rotation);
             }
             if (this.body != null)
+            {
+                System.out.println("oogoo");
                 this.body.setTransform(this.position.x + (width / 2), this.position.y + (height / 2), rotation);
+            }
             else if(this.bodies != null && this.bodies.size > 0)
             {
                 int bodyIndex = 0;
                 AttachedMapObject attachedMapObject = (AttachedMapObject) this;
-                for (int i = 0; i < map.layers.size; i++)
-                {
-                    for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
-                    {
-                        if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
-                        {
+//                for (int i = 0; i < map.layers.size; i++)
+//                {
+//                    for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
+//                    {
+//                        if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
+//                        {
                             Body body = bodies.get(bodyIndex);
                             float rotation2 = rotation;
                             if(body.getUserData() instanceof MapSprite)
                             {
                                 MapSprite mapSprite = (MapSprite) body.getUserData();
                                 rotation2 = (float) Math.toRadians(mapSprite.rotation);
+                                System.out.println(rotation2 + ", " + mapSprite.rotation);
                             }
                             Utils.positionDifference.set(attachedMapObject.positionOffset);
                             Utils.positionDifference.sub(attachedMapObject.oldPositionOffset);
-                            bodies.get(bodyIndex).setTransform(Utils.positionDifference.x + map.layers.get(i).tiles.get(k).position.x + map.layers.get(i).tiles.get(k).width / 2, Utils.positionDifference.y + map.layers.get(i).tiles.get(k).position.y + map.layers.get(i).tiles.get(k).height / 2, rotation2);
-                            bodyIndex ++;
-                        }
-                    }
-                }
+                System.out.println(rotation2 + " hmmm");
+                            bodies.get(bodyIndex).setTransform(Utils.positionDifference.x + attachedTile.position.x + attachedTile.width / 2, Utils.positionDifference.y + attachedTile.position.y + attachedTile.height / 2, rotation2);
+//                            bodyIndex ++;
+//                        }
+//                    }
+//                }
             }
             computeCentroid();
         }
@@ -135,17 +161,18 @@ public class MapObject extends Tile
         {
             int lightIndex = 0;
             AttachedMapObject attachedMapObject = (AttachedMapObject) this;
-            for (int i = 0; i < map.layers.size; i++)
-            {
-                for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
-                {
-                    if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
-                    {
-                        pointLights.get(lightIndex).setPosition(attachedMapObject.positionOffset.x + map.layers.get(i).tiles.get(k).position.x, attachedMapObject.positionOffset.y + map.layers.get(i).tiles.get(k).position.y);
-                        lightIndex ++;
-                    }
-                }
-            }
+//            for (int i = 0; i < map.layers.size; i++)
+//            {
+//                for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
+//                {
+//                    if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
+//                    {
+//                        System.out.println(attachedMapObject.positionOffset.x + map.layers.get(i).tiles.get(k).position.x + ", " + ((AttachedMapObject) this).attachedTile.position);
+                        pointLights.get(lightIndex).setPosition(attachedMapObject.parentAttached.positionOffset.x + attachedTile.position.x, attachedMapObject.parentAttached.positionOffset.y + attachedTile.position.y);
+//                        lightIndex ++;
+//                    }
+//                }
+//            }
         }
 
         if(indexOfSelectedVertice != -1)
@@ -328,14 +355,14 @@ public class MapObject extends Tile
         if(this.attachedTile != null)
         {
             removeBody();
-            for (int i = 0; i < map.layers.size; i++)
-            {
-                for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
-                {
-                    if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
-                        createBody(map.layers.get(i).tiles.get(k));
-                }
-            }
+//            for (int i = 0; i < map.layers.size; i++)
+//            {
+//                for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
+//                {
+//                    if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
+                        createBody(this.attachedTile);
+//                }
+//            }
         }
         else if(this.body == null && !(this instanceof AttachedMapObject))
         {
@@ -350,6 +377,7 @@ public class MapObject extends Tile
             fixtureDef.filter.categoryBits = PhysicsBits.WORLD_PHYSICS;
             fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
             this.body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
+            System.out.println("Sgaalaa");
             this.body.setTransform(this.position, 0);
             shape.dispose();
         }
@@ -382,7 +410,11 @@ public class MapObject extends Tile
         fixtureDef.filter.categoryBits = PhysicsBits.WORLD_PHYSICS;
         fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
         Body body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
-        body.setTransform(tile.position.x + tile.width / 2, tile.position.y + tile.height / 2, 0);
+        System.out.println(" jeejeee");
+        float rotation = 0;
+        if(tile instanceof MapSprite)
+            rotation = (float) Math.toRadians(((MapSprite) tile).rotation);
+        body.setTransform(tile.position.x + tile.width / 2, tile.position.y + tile.height / 2, rotation);
         shape.dispose();
 
         body.setUserData(tile);
@@ -394,14 +426,14 @@ public class MapObject extends Tile
         if(this.attachedTile != null)
         {
             removeLight();
-            for (int i = 0; i < map.layers.size; i++)
-            {
-                for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
-                {
-                    if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
-                        createLight(map.layers.get(i).tiles.get(k));
-                }
-            }
+//            for (int i = 0; i < map.layers.size; i++)
+//            {
+//                for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
+//                {
+//                    if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
+                        createLight(this.attachedTile);
+//                }
+//            }
         }
         else if(this.pointLight == null)
         {

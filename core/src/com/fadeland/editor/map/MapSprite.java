@@ -63,6 +63,11 @@ public class MapSprite extends Tile
         this.rotationBox.setPosition(x + this.width, y + this.height);
         this.moveBox.setPosition(x + this.width, y + this.height - 25);
         this.scaleBox.setPosition(x + this.width, y + this.height - 50);
+
+        for(int i = 0; i < drawableAttachedMapObjects.size; i++)
+        {
+            drawableAttachedMapObjects.get(i).setPosition(x + drawableAttachedMapObjects.get(i).parentAttached.positionOffset.x, y + drawableAttachedMapObjects.get(i).parentAttached.positionOffset.y);
+        }
     }
 
     public void draw()
@@ -249,6 +254,7 @@ public class MapSprite extends Tile
 
     public void setRotation(float degree)
     {
+        System.out.println(degree + " booboo");
         this.rotation = degree;
         this.sprite.setRotation(degree);
         this.polygon.setRotation(degree);
@@ -257,19 +263,32 @@ public class MapSprite extends Tile
             for(int i = 0; i < this.tool.topSprites.size; i++)
                 this.tool.topSprites.get(i).setRotation(degree);
         }
-        for(int i = 0; i < tool.mapObjects.size; i ++)
+        for(int i = 0; i < drawableAttachedMapObjects.size; i ++)
         {
-            Body body = tool.mapObjects.get(i).body;
-            Array<Body> bodies = tool.mapObjects.get(i).bodies;
+            Body body = drawableAttachedMapObjects.get(i).body;
+            Array<Body> bodies = drawableAttachedMapObjects.get(i).bodies;
             if(body != null)
-                tool.mapObjects.get(i).body.setTransform(body.getPosition(), this.rotation);
+                drawableAttachedMapObjects.get(i).body.setTransform(body.getPosition(), (float) Math.toRadians(this.rotation));
             if(bodies != null)
             {
                 for (int k = 0; k < bodies.size; k++)
-                    tool.mapObjects.get(i).bodies.get(k).setTransform(bodies.get(k).getPosition(), this.rotation);
+                    drawableAttachedMapObjects.get(i).bodies.get(k).setTransform(bodies.get(k).getPosition(), (float) Math.toRadians(this.rotation));
             }
-            if(tool.mapObjects.get(i).polygon != null)
-                tool.mapObjects.get(i).polygon.rotate(degree);
+            if(drawableAttachedMapObjects.get(i).polygon != null)
+                drawableAttachedMapObjects.get(i).polygon.rotate((float) Math.toRadians(degree));
+            else if(drawableAttachedMapObjects.get(i).isPoint)
+            {
+                float centerX = position.x + width / 2;
+                float centerY = position.y + height / 2;
+                float angle = (float) Math.toRadians(sprite.getRotation()); // Convert to radians
+
+                float rotatedX = (float) (Math.cos(angle) * (position.x - centerX) - Math.sin(angle) * (position.y - centerY) + centerX);
+
+                float rotatedY = (float) (Math.sin(angle) * (position.x - centerX) + Math.cos(angle) * (position.y - centerY) + centerY);
+                float scaledX = rotatedX + (centerX - rotatedX) * (1 - sprite.getScaleX());
+                float scaledY = rotatedY + (centerY - rotatedY) * (1 - sprite.getScaleY());
+                super.setPosition(scaledX, scaledY);
+            }
         }
 
         for(int i = 0; i < lockedProperties.size; i ++)
@@ -284,6 +303,7 @@ public class MapSprite extends Tile
 
     public void rotate(float degree)
     {
+        System.out.println(degree + " yuckkk");
         this.rotation += degree;
         Utils.tilePositionCopy.set(position);
         Vector2 endPos = Utils.tilePositionCopy.sub(Utils.centerOrigin).rotate(degree).add(Utils.centerOrigin); // TODO don't assume this was set in case rotate is used somewhere else
@@ -295,30 +315,32 @@ public class MapSprite extends Tile
             for(int i = 0; i < this.tool.topSprites.size; i ++)
                 this.tool.topSprites.get(i).rotate(degree);
         }
-        for(int i = 0; i < tool.mapObjects.size; i ++)
+        for(int i = 0; i < drawableAttachedMapObjects.size; i ++)
         {
-            Body body = tool.mapObjects.get(i).body;
-            Array<Body> bodies = tool.mapObjects.get(i).bodies;
+            Body body = drawableAttachedMapObjects.get(i).body;
+            Array<Body> bodies = drawableAttachedMapObjects.get(i).bodies;
             if(body != null)
-                tool.mapObjects.get(i).body.setTransform(body.getPosition(), this.rotation);
+                drawableAttachedMapObjects.get(i).body.setTransform(body.getPosition(), (float) Math.toRadians(this.rotation));
             if(bodies != null)
             {
                 for (int k = 0; k < bodies.size; k++)
-                    tool.mapObjects.get(i).bodies.get(k).setTransform(bodies.get(k).getPosition(), this.rotation);
+                    drawableAttachedMapObjects.get(i).bodies.get(k).setTransform(bodies.get(k).getPosition(), (float) Math.toRadians(this.rotation));
             }
-            if(tool.mapObjects.get(i).polygon != null)
-                tool.mapObjects.get(i).polygon.rotate(degree);
+            if(drawableAttachedMapObjects.get(i).polygon != null)
+                drawableAttachedMapObjects.get(i).polygon.rotate((float) Math.toRadians(degree));
             else
             {
-                AttachedMapObject attachedMapPoint = tool.mapObjects.get(i);
-                float centerX = attachedMapPoint.attachedTile.position.x + tool.mapObjects.get(i).attachedTile.width / 2;
-                float centerY = attachedMapPoint.attachedTile.position.y + tool.mapObjects.get(i).attachedTile.height / 2;
+                AttachedMapObject attachedMapPoint = drawableAttachedMapObjects.get(i);
+                float centerX = attachedMapPoint.attachedTile.position.x + drawableAttachedMapObjects.get(i).attachedTile.width / 2;
+                float centerY = attachedMapPoint.attachedTile.position.y + drawableAttachedMapObjects.get(i).attachedTile.height / 2;
                 float angle = (float) Math.toRadians(degree); // Convert to radians
 
                 float rotatedX = (float) (Math.cos(angle) * (attachedMapPoint.position.x - centerX) - Math.sin(angle) * (attachedMapPoint.position.y - centerY) + centerX);
 
                 float rotatedY = (float) (Math.sin(angle) * (attachedMapPoint.position.x - centerX) + Math.cos(angle) * (attachedMapPoint.position.y - centerY) + centerY);
-                attachedMapPoint.setPosition(rotatedX, rotatedY);
+                float scaledX = rotatedX + (centerX - rotatedX) * (1 - sprite.getScaleX());
+                float scaledY = rotatedY + (centerY - rotatedY) * (1 - sprite.getScaleY());
+                attachedMapPoint.setPosition(scaledX, scaledY);
             }
         }
 
@@ -345,11 +367,11 @@ public class MapSprite extends Tile
             for(int i = 0; i < this.tool.topSprites.size; i ++)
                 this.tool.topSprites.get(i).setScale(scale);
         }
-        for(int i = 0; i < tool.mapObjects.size; i ++)
+        for(int i = 0; i < drawableAttachedMapObjects.size; i ++)
         {
-            if(tool.mapObjects.get(i).polygon != null)
-                tool.mapObjects.get(i).polygon.setScale(scale, scale);
-            tool.mapObjects.get(i).updateLightsAndBodies();
+            if(drawableAttachedMapObjects.get(i).polygon != null)
+                drawableAttachedMapObjects.get(i).polygon.setScale(scale, scale);
+            drawableAttachedMapObjects.get(i).updateLightsAndBodies();
         }
 
         for(int i = 0; i < lockedProperties.size; i ++)

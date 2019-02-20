@@ -2,6 +2,7 @@ package com.fadeland.editor.map;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.map.TileMap.tileSize;
@@ -16,6 +17,7 @@ public class Tile
     public boolean hasBeenPainted = false;
     public boolean hasBlockedObjectOnTop = false;
     public Layer layer;
+    public Array<AttachedMapObject> drawableAttachedMapObjects;
 
     // For Tiles, and objects
     public Tile(TileMap map, Layer layer, float x, float y)
@@ -25,6 +27,8 @@ public class Tile
         this.position = new Vector2(x, y);
         this.width = tileSize;
         this.height = tileSize;
+
+        this.drawableAttachedMapObjects = new Array<>();
     }
 
     // For MapSprites
@@ -36,16 +40,30 @@ public class Tile
         this.width = tileSize;
         this.height = tileSize;
         this.tool = tool;
+
+        this.drawableAttachedMapObjects = new Array<>();
+
+        if(this.tool != null)
+        {
+            for (int i = 0; i < this.tool.mapObjects.size; i++)
+                this.drawableAttachedMapObjects.add(new AttachedMapObject(this.tool.mapObjects.get(i), this));
+        }
     }
 
     public void setTool(TileTool tool)
     {
+        this.drawableAttachedMapObjects.clear();
         TileTool oldTool = this.tool;
         if(tool == null)
             this.sprite = null;
         else
             this.sprite = new Sprite(tool.textureRegion);
         this.tool = tool;
+        if(this.tool != null)
+        {
+            for (int i = 0; i < this.tool.mapObjects.size; i++)
+                this.drawableAttachedMapObjects.add(new AttachedMapObject(this.tool.mapObjects.get(i), this));
+        }
         if(oldTool != null)
         {
             for(int i = 0; i < oldTool.mapObjects.size; i ++)
@@ -85,6 +103,7 @@ public class Tile
 
     public void addMapObject(AttachedMapObject mapObject)
     {
+        this.drawableAttachedMapObjects.add(new AttachedMapObject(mapObject, this));
         this.tool.mapObjects.add(mapObject);
     }
 }

@@ -316,11 +316,10 @@ public class TileMap implements Screen
             this.editor.shapeRenderer.rect(selectedTile.position.x, selectedTile.position.y, selectedTile.width, selectedTile.height);
 
             Vector3 mouseCoords = Utils.unproject(camera, Gdx.input.getX(), Gdx.input.getY());
-            for(int k = 0; k < selectedTile.tool.mapObjects.size; k ++)
+            for(int k = 0; k < selectedTile.drawableAttachedMapObjects.size; k ++)
             {
-                AttachedMapObject mapObject = selectedTile.tool.mapObjects.get(k);
+                AttachedMapObject mapObject = selectedTile.drawableAttachedMapObjects.get(k);
                 boolean selected = selectedObjects.contains(mapObject, true);
-                mapObject.setPosition(selectedTile.position.x + mapObject.positionOffset.x, selectedTile.position.y + mapObject.positionOffset.y);
                 boolean hoveredOver = mapObject.isHoveredOver(mouseCoords.x, mouseCoords.y);
                 if (hoveredOver || selected)
                 {
@@ -372,12 +371,12 @@ public class TileMap implements Screen
             {
                 MapSprite mapSprite = ((MapSprite) selectedLayer.tiles.get(i));
 
-                for(int k = 0; k < mapSprite.tool.mapObjects.size; k ++)
+                for(int k = 0; k < mapSprite.drawableAttachedMapObjects.size; k ++)
                 {
-                    AttachedMapObject mapObject = mapSprite.tool.mapObjects.get(k);
+                    AttachedMapObject mapObject = mapSprite.drawableAttachedMapObjects.get(k);
                     boolean selected = selectedObjects.contains(mapObject, true);
                     mapObject.attachedTile = mapSprite;
-                    mapObject.setPosition(mapSprite.position.x + mapObject.positionOffset.x, mapSprite.position.y + mapObject.positionOffset.y);
+//                    System.out.println("poop 3");
                     boolean hoveredOver = mapObject.isHoveredOver(mouseCoords.x, mouseCoords.y);
                     if (selected && editor.getFileTool().tool == Tools.BOXSELECT)
                     {
@@ -441,9 +440,9 @@ public class TileMap implements Screen
                 {
                     MapSprite mapSprite = ((MapSprite) selectedLayer.tiles.get(i));
 
-                    for (int k = 0; k < mapSprite.tool.mapObjects.size; k++)
+                    for (int k = 0; k < mapSprite.drawableAttachedMapObjects.size; k++)
                     {
-                        AttachedMapObject mapObject = mapSprite.tool.mapObjects.get(k);
+                        AttachedMapObject mapObject = mapSprite.drawableAttachedMapObjects.get(k);
                         boolean polygon = mapObject.polygon != null && Intersector.overlapConvexPolygons(mapObject.polygon.getTransformedVertices(), boxSelect.getVertices(), null);
                         boolean point = Intersector.isPointInPolygon(boxSelect.getVertices(), 0, boxSelect.getVertices().length, mapObject.position.x, mapObject.position.y);
                         if (polygon || point)
@@ -520,7 +519,8 @@ public class TileMap implements Screen
             for (int i = 0; i < selectedTile.tool.mapObjects.size; i++)
             {
                 AttachedMapObject mapObject = selectedTile.tool.mapObjects.get(i);
-                mapObject.setPosition(selectedTile.position.x + mapObject.positionOffset.x, selectedTile.position.y + mapObject.positionOffset.y);
+//                System.out.println("poop 2");
+//                mapObject.setPosition(selectedTile.position.x + mapObject.positionOffset.x, selectedTile.position.y + mapObject.positionOffset.y);
             }
         }
         if(selectedSprites.size == 1)
@@ -528,8 +528,9 @@ public class TileMap implements Screen
             for (int i = 0; i < selectedSprites.first().tool.mapObjects.size; i++)
             {
                 AttachedMapObject mapObject = selectedSprites.first().tool.mapObjects.get(i);
-                mapObject.attachedTile = selectedSprites.first();
-                mapObject.setPosition(selectedSprites.first().position.x + mapObject.positionOffset.x, selectedSprites.first().position.y + mapObject.positionOffset.y);
+//                mapObject.attachedTile = selectedSprites.first();
+//                System.out.println("poop 1");
+//                mapObject.setPosition(selectedSprites.first().position.x + mapObject.positionOffset.x, selectedSprites.first().position.y + mapObject.positionOffset.y);
             }
         }
         if(apply)
@@ -950,6 +951,8 @@ public class TileMap implements Screen
                 }
             }
         }
+        for(int i = 0; i < layers.size; i ++)
+            layers.get(i).createDrawableAttachableMapObjects();
         propertyMenu.rebuild();
         PropertyToolPane.apply(this);
         findAllTilesToBeGrouped();

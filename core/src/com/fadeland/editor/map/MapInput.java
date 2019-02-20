@@ -268,6 +268,7 @@ public class MapInput implements InputProcessor
                 }
             }
         }
+        System.out.println(map.selectedSprites.size + " pppppp");
         for(int i = 0; i < map.selectedSprites.size; i ++)
         {
             if(map.selectedSprites.get(i).rotationBox.contains(coords.x, coords.y))
@@ -381,10 +382,12 @@ public class MapInput implements InputProcessor
             MoveLayerPosition moveLayerPosition = new MoveLayerPosition(map, map.selectedLayer);
             map.performAction(moveLayerPosition);
         }
+        System.out.println(map.selectedObjects.size + " jejeje");
         for(int i = 0; i < map.selectedObjects.size; i ++)
         {
             if(map.selectedObjects.get(i).moveBox.contains(coords.x, coords.y))
             {
+                System.out.println("WOWOOW");
                 // If clicked moveBox with SELECT tool, ignore everything
                 this.draggingMoveBox = true;
 
@@ -462,7 +465,7 @@ public class MapInput implements InputProcessor
                 TileTool randomTile = randomTile();
                 if(randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
                 {
-                    map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, randomTile));
+                    map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, randomTile)); // TODO nullpointer
                     clickedTile.setTool(randomTile);
                 }
                 map.findAllTilesToBeGrouped();
@@ -471,9 +474,9 @@ public class MapInput implements InputProcessor
             {
                 if(map.selectedTile != null)
                 {
-                    for(int k = 0; k < map.selectedTile.tool.mapObjects.size; k ++)
+                    for(int k = 0; k < map.selectedTile.drawableAttachedMapObjects.size; k ++)
                     {
-                        AttachedMapObject attachedMapObject = map.selectedTile.tool.mapObjects.get(k);
+                        AttachedMapObject attachedMapObject = map.selectedTile.drawableAttachedMapObjects.get(k);
                         if (attachedMapObject.isHoveredOver(coords.x, coords.y))
                         {
                             if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
@@ -599,9 +602,9 @@ public class MapInput implements InputProcessor
                     for (int i = map.selectedLayer.tiles.size - 1; i >= 0; i--)
                     {
                         MapSprite mapSprite = ((MapSprite) map.selectedLayer.tiles.get(i));
-                        for(int k = 0; k < mapSprite.tool.mapObjects.size; k ++)
+                        for(int k = 0; k < mapSprite.drawableAttachedMapObjects.size; k ++)
                         {
-                            AttachedMapObject attachedMapObject = mapSprite.tool.mapObjects.get(k);
+                            AttachedMapObject attachedMapObject = mapSprite.drawableAttachedMapObjects.get(k);
                             if (attachedMapObject.isHoveredOver(coords.x, coords.y))
                             {
                                 SelectObject selectObject = new SelectObject(map, map.selectedObjects);
@@ -873,6 +876,7 @@ public class MapInput implements InputProcessor
         }
         else if(draggingMoveBox)
         {
+            System.out.println("hooooooo");
             for(int i = 0; i < map.selectedSprites.size; i ++)
             {
                 if(!this.oldXofDragMap.containsKey(map.selectedSprites.get(i)))
@@ -891,7 +895,28 @@ public class MapInput implements InputProcessor
                     if(!this.oldXofDragMap.containsKey(map.selectedObjects.get(i)))
                         break;
                     if(map.selectedObjects.get(i) instanceof AttachedMapObject)
-                        ((AttachedMapObject)map.selectedObjects.get(i)).positionOffset.set(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
+                    {
+                        System.out.println(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x);
+                        AttachedMapObject attached = ((AttachedMapObject) map.selectedObjects.get(i));
+                        attached.parentAttached.positionOffset.set(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
+                        attached.setPosition(attached.attachedTile.position.x + attached.parentAttached.positionOffset.x, attached.attachedTile.position.y + attached.parentAttached.positionOffset.y);
+                        TileTool tool = attached.attachedTile.tool;
+                        for(int a = 0; a < map.layers.size; a ++)
+                        {
+                            for(int k = 0; k < map.layers.get(a).tiles.size; k ++)
+                            {
+                                if(tool == map.layers.get(a).tiles.get(k).tool)
+                                {
+                                    Tile tile = map.layers.get(a).tiles.get(k);
+                                    for(int w = 0; w < tile.drawableAttachedMapObjects.size; w ++)
+                                    {
+                                        if(tile.drawableAttachedMapObjects.get(w).id == attached.id)
+                                            tile.drawableAttachedMapObjects.get(w).setPosition(tile.position.x + attached.parentAttached.positionOffset.x, tile.position.y + attached.parentAttached.positionOffset.y);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     else
                         map.selectedObjects.get(i).setPosition(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
                 }
