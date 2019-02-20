@@ -1,174 +1,216 @@
 
 map.png
-size: 2048,4096
+size: 4096,4096
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+0longGrass0001
+  rotate: false
+  xy: 1362, 2364
+  size: 27, 34
+  orig: 35, 35
+  offset: 7, 0
+  index: -1
 0pumpkin
   rotate: false
-  xy: 993, 1440
+  xy: 927, 1051
   size: 53, 56
   orig: 53, 56
   offset: 0, 0
   index: -1
 0tree0
   rotate: false
-  xy: 1048, 35
+  xy: 927, 1109
   size: 339, 227
   orig: 960, 1408
   offset: 320, 0
   index: -1
 0tree1
   rotate: false
-  xy: 2, 1015
+  xy: 2, 1030
   size: 923, 1366
   orig: 960, 1408
   offset: 21, 42
   index: -1
 0tree4
   rotate: false
-  xy: 1048, 438
+  xy: 927, 1338
   size: 413, 209
   orig: 768, 896
   offset: 7, 31
   index: -1
 0tree5
   rotate: false
-  xy: 1856, 1125
+  xy: 1697, 2683
   size: 166, 89
   orig: 192, 320
   offset: 11, 36
   index: -1
 0tree6
   rotate: false
-  xy: 1048, 264
+  xy: 1200, 2600
   size: 495, 172
   orig: 768, 896
   offset: 149, 31
   index: -1
+1flower0001
+  rotate: false
+  xy: 1298, 1872
+  size: 31, 44
+  orig: 40, 54
+  offset: 6, 5
+  index: -1
 1house0
   rotate: false
-  xy: 927, 1498
+  xy: 2246, 3211
   size: 1046, 883
   orig: 1216, 1920
   offset: 82, 40
   index: -1
 1house1
   rotate: false
-  xy: 2, 73
+  xy: 1200, 3154
   size: 1044, 940
   orig: 1216, 1920
   offset: 83, 441
   index: -1
 1house2
   rotate: false
-  xy: 2, 2383
+  xy: 2, 2398
   size: 1196, 1696
   orig: 1216, 1920
   offset: 15, 210
   index: -1
 1house3
   rotate: false
-  xy: 1963, 3599
+  xy: 1298, 1918
   size: 62, 480
   orig: 1216, 1920
   offset: 450, 40
   index: -1
 1pumpkin
   rotate: false
-  xy: 1419, 663
+  xy: 504, 2
   size: 63, 63
   orig: 63, 63
   offset: 0, 0
   index: -1
 1tree0
   rotate: false
-  xy: 927, 1432
+  xy: 765, 194
   size: 64, 64
   orig: 448, 768
   offset: 192, 0
   index: -1
 1tree1
   rotate: false
-  xy: 1419, 728
+  xy: 765, 260
   size: 435, 768
   orig: 448, 768
   offset: 6, 0
   index: -1
+2flower0001
+  rotate: false
+  xy: 3294, 3215
+  size: 45, 43
+  orig: 45, 45
+  offset: 0, 1
+  index: -1
+2longGrass0001
+  rotate: false
+  xy: 2077, 2870
+  size: 20, 20
+  orig: 28, 28
+  offset: 4, 4
+  index: -1
 2pumpkin
   rotate: false
-  xy: 1963, 3534
+  xy: 569, 2
   size: 59, 63
   orig: 59, 63
   offset: 0, 0
   index: -1
 2tree0
   rotate: false
-  xy: 1856, 1072
+  xy: 1268, 1285
   size: 57, 51
   orig: 448, 896
   offset: 196, 0
   index: -1
 2tree1
   rotate: false
-  xy: 1048, 649
+  xy: 927, 1549
   size: 369, 847
   orig: 448, 896
   offset: 37, 11
   index: -1
 3pumpkin
   rotate: false
-  xy: 1484, 686
+  xy: 4047, 4054
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 4pumpkin
   rotate: false
-  xy: 2, 10
+  xy: 1586, 2537
   size: 64, 61
   orig: 64, 61
   offset: 0, 0
   index: -1
 4tree1
   rotate: false
-  xy: 1200, 2399
+  xy: 3294, 3260
   size: 751, 834
   orig: 768, 896
   offset: 7, 31
   index: -1
 5tree1
   rotate: false
-  xy: 1389, 2
+  xy: 2077, 2892
   size: 167, 260
   orig: 192, 320
   offset: 10, 36
   index: -1
 6tree1
   rotate: false
-  xy: 1200, 3235
+  xy: 2, 184
   size: 761, 844
   orig: 768, 896
   offset: 5, 31
   index: -1
 bush0001
   rotate: false
-  xy: 1856, 1216
+  xy: 504, 67
   size: 182, 115
   orig: 250, 167
   offset: 35, 18
   index: -1
 communalChest
   rotate: false
-  xy: 1856, 1333
+  xy: 2246, 3046
   size: 144, 163
   orig: 200, 200
   offset: 29, 19
   index: -1
-flower0001
+grassPatch1
   rotate: false
-  xy: 927, 1374
-  size: 39, 56
-  orig: 50, 68
-  offset: 7, 6
+  xy: 1200, 2400
+  size: 384, 198
+  orig: 400, 214
+  offset: 7, 9
+  index: -1
+grassPatch2
+  rotate: false
+  xy: 2, 9
+  size: 500, 173
+  orig: 517, 203
+  offset: 9, 7
+  index: -1
+grassPatch3
+  rotate: false
+  xy: 1200, 2774
+  size: 875, 378
+  orig: 892, 390
+  offset: 10, 7
   index: -1
