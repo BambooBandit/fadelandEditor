@@ -1097,10 +1097,16 @@ public class TileMap implements Screen
             for (int w = 0; w < layer.tiles.size; w++)
             {
                 Tile tile = layer.tiles.get(w);
+                for(int s = 0; s < tile.drawableAttachedMapObjects.size; s++)
+                {
+                    tile.drawableAttachedMapObjects.get(s).removeBody();
+                    tile.drawableAttachedMapObjects.get(s).removeLight();
+                }
                 tile.drawableAttachedMapObjects.clear();
                 TileTool tileTool = tile.tool;
                 if (tileTool == null)
                     continue;
+                System.out.println(tileTool.mapObjects.size);
                 for (int k = 0; k < tileTool.mapObjects.size; k++)
                 {
                     AttachedMapObject drawable = new AttachedMapObject(tileTool.mapObjects.get(k), tile);
@@ -1218,6 +1224,8 @@ public class TileMap implements Screen
                 {
                     if(tile.drawableAttachedMapObjects.get(a).id == id)
                     {
+                        tile.drawableAttachedMapObjects.get(a).removeBody();
+                        tile.drawableAttachedMapObjects.get(a).removeLight();
                         tile.drawableAttachedMapObjects.removeIndex(a);
                         a--;
                     }

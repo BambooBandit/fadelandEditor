@@ -68,7 +68,7 @@ public class MapInput implements InputProcessor
                 boolean deletedAttached = false;
                 if(map.selectedLayer != null && (map.selectedLayer instanceof SpriteLayer || map.selectedLayer instanceof TileLayer))
                 {
-                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, map.selectedObjects);
+                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, map.selectedObjects, true);
                     for (int i = 0; i < map.selectedLayer.tiles.size; i++)
                     {
                         if(map.selectedLayer.tiles.get(i).tool != null)
@@ -152,7 +152,7 @@ public class MapInput implements InputProcessor
                 }
                 else if(map.selectedLayer instanceof SpriteLayer)
                 {
-                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
+                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null, false);
                     MapSprite mapSprite = map.selectedSprites.first();
                     EditorPolygon antiRotatePolygon = new EditorPolygon(objectVertices.toArray());
                     antiRotatePolygon.setOrigin(-(objectVerticePosition.x - mapSprite.position.x) + mapSprite.width / 2, -(objectVerticePosition.y - mapSprite.position.y) + mapSprite.height / 2);
@@ -164,7 +164,7 @@ public class MapInput implements InputProcessor
                 }
                 else if(map.selectedLayer instanceof TileLayer)
                 {
-                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
+                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null, false);
                     Tile selectedTile = map.selectedTile;
                     mapObject = new AttachedMapObject(map, map.selectedLayer, selectedTile, objectVertices.toArray(), objectVerticePosition.x - selectedTile.position.x, objectVerticePosition.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     selectedTile.addMapObject((AttachedMapObject) mapObject);
@@ -188,7 +188,7 @@ public class MapInput implements InputProcessor
             }
             else if(map.selectedLayer instanceof SpriteLayer && map.selectedSprites.size > 0)
             {
-                CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
+                CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null, false);
                 MapSprite mapSprite = map.selectedSprites.first();
                 mapObject = new AttachedMapObject(map, map.selectedLayer, mapSprite, coords.x - mapSprite.position.x, coords.y - mapSprite.position.y, coords.x, coords.y);
                 mapSprite.addMapObject((AttachedMapObject) mapObject);
@@ -197,7 +197,7 @@ public class MapInput implements InputProcessor
             }
             else if(map.selectedLayer instanceof TileLayer && map.selectedTile != null)
             {
-                CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
+                CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null, false);
                 Tile selectedTile = map.selectedTile;
                 mapObject = new AttachedMapObject(map, map.selectedLayer, selectedTile, coords.x - selectedTile.position.x, coords.y - selectedTile.position.y, coords.x, coords.y);
                 selectedTile.addMapObject((AttachedMapObject) mapObject);

@@ -15,10 +15,12 @@ public class CreateOrRemoveAttachedObject extends PerformableAction
     public Array<MapObject> selection;
     public Array<MapObject> oldSelection;
     public Array<MapObject> newSelection;
+    public boolean remove;
 
-    public CreateOrRemoveAttachedObject(TileMap map, Array<Tile> mapParents, Array<MapObject> selection)
+    public CreateOrRemoveAttachedObject(TileMap map, Array<Tile> mapParents, Array<MapObject> selection, boolean remove)
     {
         super(map);
+        this.remove = remove;
         this.mapParents = mapParents;
         this.selection = selection;
         if(selection != null)
@@ -59,9 +61,15 @@ public class CreateOrRemoveAttachedObject extends PerformableAction
             {
                 mapParents.get(i).tool.mapObjects.clear();
                 mapParents.get(i).tool.mapObjects.addAll(oldParents.get(i));
-                PropertyToolPane.updateLightsAndBlocked(map);
+//                for(int k = 0; k < oldParents.size; oldParents.get(k))
+//                {
+//                    map.createDrawableAttachableMapObjects(oldParents.get(i).get(k).);
+//                }
+
             }
         }
+        map.createDrawableAttachableMapObjects();
+        PropertyToolPane.updateLightsAndBlocked(map);
         if(this.selection != null)
         {
             this.selection.clear();
@@ -80,9 +88,10 @@ public class CreateOrRemoveAttachedObject extends PerformableAction
             {
                 mapParents.get(i).tool.mapObjects.clear();
                 mapParents.get(i).tool.mapObjects.addAll(newParents.get(i));
-                PropertyToolPane.updateLightsAndBlocked(map);
             }
         }
+        map.createDrawableAttachableMapObjects();
+        PropertyToolPane.updateLightsAndBlocked(map);
         if(this.selection != null)
         {
             this.selection.clear();
