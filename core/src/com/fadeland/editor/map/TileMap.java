@@ -1176,4 +1176,53 @@ public class TileMap implements Screen
             }
         }
     }
+
+    public void addDrawableAttachedMapObjects(TileTool tool)
+    {
+        for(int i = 0; i < layers.size; i ++)
+        {
+            Layer layer = layers.get(i);
+            if (layer instanceof ObjectLayer)
+                return;
+            for (int w = 0; w < layer.tiles.size; w++)
+            {
+                Tile tile = layer.tiles.get(w);
+                TileTool tileTool = tile.tool;
+                if (tileTool == null || tileTool.id != tool.id)
+                    continue;
+                tile.drawableAttachedMapObjects.clear();
+                for (int k = 0; k < tileTool.mapObjects.size; k++)
+                {
+                    AttachedMapObject drawable = new AttachedMapObject(tileTool.mapObjects.get(k), tile);
+                    drawable.setPosition(tile.position.x + drawable.parentAttached.positionOffset.x, tile.position.y + drawable.parentAttached.positionOffset.y);
+                    tile.drawableAttachedMapObjects.add(drawable);
+                }
+            }
+        }
+    }
+
+    public void removeDrawableAttachedMapObjects(TileTool tool, int id)
+    {
+        for(int i = 0; i < layers.size; i ++)
+        {
+            Layer layer = layers.get(i);
+            if (layer instanceof ObjectLayer)
+                return;
+            for (int w = 0; w < layer.tiles.size; w++)
+            {
+                Tile tile = layer.tiles.get(w);
+                TileTool tileTool = tile.tool;
+                if (tileTool == null || tileTool.id != tool.id)
+                    continue;
+                for(int a = 0; a < tile.drawableAttachedMapObjects.size; a ++)
+                {
+                    if(tile.drawableAttachedMapObjects.get(a).id == id)
+                    {
+                        tile.drawableAttachedMapObjects.removeIndex(a);
+                        a--;
+                    }
+                }
+            }
+        }
+    }
 }

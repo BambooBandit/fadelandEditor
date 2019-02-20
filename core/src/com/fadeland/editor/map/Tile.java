@@ -103,7 +103,8 @@ public class Tile
 
     public void addMapObject(AttachedMapObject mapObject)
     {
-        this.drawableAttachedMapObjects.add(new AttachedMapObject(mapObject, this));
+//        this.drawableAttachedMapObjects.add(new AttachedMapObject(mapObject, this));
         this.tool.mapObjects.add(mapObject);
+        map.addDrawableAttachedMapObjects(tool);
     }
 }

@@ -78,9 +78,12 @@ public class MapInput implements InputProcessor
                             {
                                 for (int k = 0; k < map.selectedObjects.size; k++)
                                 {
-                                    if (map.selectedLayer.tiles.get(i).tool.mapObjects.get(s) == map.selectedObjects.get(k))
+                                    AttachedMapObject attachedMapObject = (AttachedMapObject) map.selectedObjects.get(k);
+                                    if (map.selectedLayer.tiles.get(i).tool.mapObjects.get(s).id == attachedMapObject.id)
                                     {
+                                        System.out.println("delete");
                                         deletedAttached = true;
+                                        map.removeDrawableAttachedMapObjects(map.selectedLayer.tiles.get(i).tool, attachedMapObject.id);
                                         map.selectedObjects.removeValue(map.selectedLayer.tiles.get(i).tool.mapObjects.get(s), true);
                                         map.selectedLayer.tiles.get(i).tool.mapObjects.get(s).removeBody();
                                         map.selectedLayer.tiles.get(i).tool.mapObjects.get(s).removeLight();
