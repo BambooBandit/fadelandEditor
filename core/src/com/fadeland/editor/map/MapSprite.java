@@ -254,7 +254,6 @@ public class MapSprite extends Tile
 
     public void setRotation(float degree)
     {
-        System.out.println(degree + " booboo");
         this.rotation = degree;
         this.sprite.setRotation(degree);
         this.polygon.setRotation(degree);
@@ -303,7 +302,6 @@ public class MapSprite extends Tile
 
     public void rotate(float degree)
     {
-        System.out.println(degree + " yuckkk");
         this.rotation += degree;
         Utils.tilePositionCopy.set(position);
         Vector2 endPos = Utils.tilePositionCopy.sub(Utils.centerOrigin).rotate(degree).add(Utils.centerOrigin); // TODO don't assume this was set in case rotate is used somewhere else

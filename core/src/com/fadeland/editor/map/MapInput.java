@@ -81,7 +81,6 @@ public class MapInput implements InputProcessor
                                     AttachedMapObject attachedMapObject = (AttachedMapObject) map.selectedObjects.get(k);
                                     if (map.selectedLayer.tiles.get(i).tool.mapObjects.get(s).id == attachedMapObject.id)
                                     {
-                                        System.out.println("delete");
                                         deletedAttached = true;
                                         map.removeDrawableAttachedMapObjects(map.selectedLayer.tiles.get(i).tool, attachedMapObject.id);
                                         map.selectedObjects.removeValue(map.selectedLayer.tiles.get(i).tool.mapObjects.get(s), true);
@@ -271,7 +270,6 @@ public class MapInput implements InputProcessor
                 }
             }
         }
-        System.out.println(map.selectedSprites.size + " pppppp");
         for(int i = 0; i < map.selectedSprites.size; i ++)
         {
             if(map.selectedSprites.get(i).rotationBox.contains(coords.x, coords.y))
@@ -385,12 +383,10 @@ public class MapInput implements InputProcessor
             MoveLayerPosition moveLayerPosition = new MoveLayerPosition(map, map.selectedLayer);
             map.performAction(moveLayerPosition);
         }
-        System.out.println(map.selectedObjects.size + " jejeje");
         for(int i = 0; i < map.selectedObjects.size; i ++)
         {
             if(map.selectedObjects.get(i).moveBox.contains(coords.x, coords.y))
             {
-                System.out.println("WOWOOW");
                 // If clicked moveBox with SELECT tool, ignore everything
                 this.draggingMoveBox = true;
 
@@ -880,7 +876,6 @@ public class MapInput implements InputProcessor
         }
         else if(draggingMoveBox)
         {
-            System.out.println("hooooooo");
             for(int i = 0; i < map.selectedSprites.size; i ++)
             {
                 if(!this.oldXofDragMap.containsKey(map.selectedSprites.get(i)))
@@ -900,7 +895,6 @@ public class MapInput implements InputProcessor
                         break;
                     if(map.selectedObjects.get(i) instanceof AttachedMapObject)
                     {
-                        System.out.println(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x);
                         AttachedMapObject attached = ((AttachedMapObject) map.selectedObjects.get(i));
                         attached.parentAttached.positionOffset.set(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
                         attached.setPosition(attached.attachedTile.position.x + attached.parentAttached.positionOffset.x, attached.attachedTile.position.y + attached.parentAttached.positionOffset.y);

@@ -376,7 +376,6 @@ public class TileMap implements Screen
                     AttachedMapObject mapObject = mapSprite.drawableAttachedMapObjects.get(k);
                     boolean selected = selectedObjects.contains(mapObject, true);
                     mapObject.attachedTile = mapSprite;
-//                    System.out.println("poop 3");
                     boolean hoveredOver = mapObject.isHoveredOver(mouseCoords.x, mouseCoords.y);
                     if (selected && editor.getFileTool().tool == Tools.BOXSELECT)
                     {
@@ -513,26 +512,6 @@ public class TileMap implements Screen
         this.stage.act();
         this.stage.draw();
 
-        // Move the attached object positions to the selected map sprites and tiles for MapInput, since there's only one instance of the object per many sprites and tiles
-        if(selectedTile != null)
-        {
-            for (int i = 0; i < selectedTile.tool.mapObjects.size; i++)
-            {
-                AttachedMapObject mapObject = selectedTile.tool.mapObjects.get(i);
-//                System.out.println("poop 2");
-//                mapObject.setPosition(selectedTile.position.x + mapObject.positionOffset.x, selectedTile.position.y + mapObject.positionOffset.y);
-            }
-        }
-        if(selectedSprites.size == 1)
-        {
-            for (int i = 0; i < selectedSprites.first().tool.mapObjects.size; i++)
-            {
-                AttachedMapObject mapObject = selectedSprites.first().tool.mapObjects.get(i);
-//                mapObject.attachedTile = selectedSprites.first();
-//                System.out.println("poop 1");
-//                mapObject.setPosition(selectedSprites.first().position.x + mapObject.positionOffset.x, selectedSprites.first().position.y + mapObject.positionOffset.y);
-            }
-        }
         if(apply)
         {
             apply = false;
@@ -1106,7 +1085,6 @@ public class TileMap implements Screen
                 TileTool tileTool = tile.tool;
                 if (tileTool == null)
                     continue;
-                System.out.println(tileTool.mapObjects.size);
                 for (int k = 0; k < tileTool.mapObjects.size; k++)
                 {
                     AttachedMapObject drawable = new AttachedMapObject(tileTool.mapObjects.get(k), tile);

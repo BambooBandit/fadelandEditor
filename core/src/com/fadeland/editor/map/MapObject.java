@@ -91,7 +91,6 @@ public class MapObject extends Tile
     @Override
     public void setPosition(float x, float y)
     {
-        System.out.println("setposition");
         super.setPosition(x, y);
         if(isPoint && this.attachedTile != null)
         {
@@ -122,10 +121,7 @@ public class MapObject extends Tile
                 polygon.setRotation(mapSprite.rotation);
             }
             if (this.body != null)
-            {
-                System.out.println("oogoo");
                 this.body.setTransform(this.position.x + (width / 2), this.position.y + (height / 2), rotation);
-            }
             else if(this.bodies != null && this.bodies.size > 0)
             {
                 int bodyIndex = 0;
@@ -142,11 +138,9 @@ public class MapObject extends Tile
                             {
                                 MapSprite mapSprite = (MapSprite) body.getUserData();
                                 rotation2 = (float) Math.toRadians(mapSprite.rotation);
-                                System.out.println(rotation2 + ", " + mapSprite.rotation);
                             }
                             Utils.positionDifference.set(attachedMapObject.positionOffset);
                             Utils.positionDifference.sub(attachedMapObject.oldPositionOffset);
-                System.out.println(rotation2 + " hmmm");
                             bodies.get(bodyIndex).setTransform(Utils.positionDifference.x + attachedTile.position.x + attachedTile.width / 2, Utils.positionDifference.y + attachedTile.position.y + attachedTile.height / 2, rotation2);
 //                            bodyIndex ++;
 //                        }
@@ -161,18 +155,7 @@ public class MapObject extends Tile
         {
             int lightIndex = 0;
             AttachedMapObject attachedMapObject = (AttachedMapObject) this;
-//            for (int i = 0; i < map.layers.size; i++)
-//            {
-//                for(int k = 0; k < map.layers.get(i).tiles.size; k ++)
-//                {
-//                    if(this.attachedTile.tool == map.layers.get(i).tiles.get(k).tool)
-//                    {
-//                        System.out.println(attachedMapObject.positionOffset.x + map.layers.get(i).tiles.get(k).position.x + ", " + ((AttachedMapObject) this).attachedTile.position);
-                        pointLights.get(lightIndex).setPosition(attachedMapObject.parentAttached.positionOffset.x + attachedTile.position.x, attachedMapObject.parentAttached.positionOffset.y + attachedTile.position.y);
-//                        lightIndex ++;
-//                    }
-//                }
-//            }
+            pointLights.get(lightIndex).setPosition(attachedMapObject.parentAttached.positionOffset.x + attachedTile.position.x, attachedMapObject.parentAttached.positionOffset.y + attachedTile.position.y);
         }
 
         if(indexOfSelectedVertice != -1)
@@ -377,7 +360,6 @@ public class MapObject extends Tile
             fixtureDef.filter.categoryBits = PhysicsBits.WORLD_PHYSICS;
             fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
             this.body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
-            System.out.println("Sgaalaa");
             this.body.setTransform(this.position, 0);
             shape.dispose();
         }
@@ -410,7 +392,6 @@ public class MapObject extends Tile
         fixtureDef.filter.categoryBits = PhysicsBits.WORLD_PHYSICS;
         fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
         Body body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
-        System.out.println(" jeejeee");
         float rotation = 0;
         if(tile instanceof MapSprite)
             rotation = (float) Math.toRadians(((MapSprite) tile).rotation);

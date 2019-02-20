@@ -67,8 +67,6 @@ public abstract class Layer
                 {
                     AttachedMapObject mapObject = this.tiles.get(i).drawableAttachedMapObjects.get(k);
                     mapObject.attachedTile = this.tiles.get(i);
-//                    System.out.println("poop 22");
-//                    mapObject.setPosition(this.tiles.get(i).position.x + mapObject.positionOffset.x, this.tiles.get(i).position.y + mapObject.positionOffset.y);
                     mapObject.draw();
                 }
             }
