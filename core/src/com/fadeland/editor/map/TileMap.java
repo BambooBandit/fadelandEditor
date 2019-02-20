@@ -951,8 +951,7 @@ public class TileMap implements Screen
                 }
             }
         }
-        for(int i = 0; i < layers.size; i ++)
-            layers.get(i).createDrawableAttachableMapObjects();
+        createDrawableAttachableMapObjects();
         propertyMenu.rebuild();
         PropertyToolPane.apply(this);
         findAllTilesToBeGrouped();
@@ -1081,6 +1080,96 @@ public class TileMap implements Screen
                         {
                             tile.hasBlockedObjectOnTop = true;
                             continue tile;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void createDrawableAttachableMapObjects()
+    {
+        for(int i = 0; i < layers.size; i ++)
+        {
+            Layer layer = layers.get(i);
+            if (layer instanceof ObjectLayer)
+                return;
+            for (int w = 0; w < layer.tiles.size; w++)
+            {
+                Tile tile = layer.tiles.get(w);
+                tile.drawableAttachedMapObjects.clear();
+                TileTool tileTool = tile.tool;
+                if (tileTool == null)
+                    continue;
+                for (int k = 0; k < tileTool.mapObjects.size; k++)
+                {
+                    AttachedMapObject drawable = new AttachedMapObject(tileTool.mapObjects.get(k), tile);
+                    drawable.setPosition(tile.position.x + drawable.parentAttached.positionOffset.x, tile.position.y + drawable.parentAttached.positionOffset.y);
+                    tile.drawableAttachedMapObjects.add(drawable);
+                }
+            }
+        }
+    }
+
+    public void updateAllDrawableAttachableMapObjectsPositions()
+    {
+        for(int i = 0; i < layers.size; i ++)
+        {
+            Layer layer = layers.get(i);
+            if (layer instanceof ObjectLayer)
+                return;
+            for (int w = 0; w < layer.tiles.size; w++)
+            {
+                Tile tile = layer.tiles.get(w);
+                TileTool tileTool = tile.tool;
+                if (tileTool == null)
+                    continue;
+                for (int k = 0; k < tileTool.mapObjects.size; k++)
+                {
+                    AttachedMapObject mapObject = tileTool.mapObjects.get(k);
+                    AttachedMapObject drawable;
+                    for(int a = 0; a < tile.drawableAttachedMapObjects.size; a ++)
+                    {
+                        drawable = tile.drawableAttachedMapObjects.get(a);
+                        if(tile.drawableAttachedMapObjects.get(a).id == mapObject.id)
+                            drawable.setPosition(tile.position.x + drawable.parentAttached.positionOffset.x, tile.position.y + drawable.parentAttached.positionOffset.y);
+                    }
+                }
+            }
+        }
+    }
+
+
+    public void updateAllDrawableAttachableMapObjectsPolygons()
+    {
+        for(int i = 0; i < layers.size; i ++)
+        {
+            Layer layer = layers.get(i);
+            if (layer instanceof ObjectLayer)
+                return;
+            for (int w = 0; w < layer.tiles.size; w++)
+            {
+                Tile tile = layer.tiles.get(w);
+                TileTool tileTool = tile.tool;
+                if (tileTool == null)
+                    continue;
+                for (int k = 0; k < tileTool.mapObjects.size; k++)
+                {
+                    AttachedMapObject mapObject = tileTool.mapObjects.get(k);
+                    if(mapObject.isPoint)
+                        continue;
+                    AttachedMapObject drawable;
+                    for(int a = 0; a < tile.drawableAttachedMapObjects.size; a ++)
+                    {
+                        drawable = tile.drawableAttachedMapObjects.get(a);
+                        if(tile.drawableAttachedMapObjects.get(a).id == mapObject.id)
+                        {
+                            drawable.polygon.setVertices(mapObject.vertices);
+                            if(drawable.body != null || (drawable.bodies != null && drawable.bodies.size > 0))
+                            {
+                                drawable.removeBody();
+                                drawable.createBody();
+                            }
                         }
                     }
                 }

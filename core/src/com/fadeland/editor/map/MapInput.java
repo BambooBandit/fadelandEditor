@@ -796,6 +796,7 @@ public class MapInput implements InputProcessor
             MoveVertice moveVertice = (MoveVertice) map.undo.pop();
             moveVertice.addNewVertices(map.selectedObjects.first().getVerticeX(), map.selectedObjects.first().getVerticeY());
             map.undo.push(moveVertice);
+            map.updateAllDrawableAttachableMapObjectsPolygons();
         }
         else if(draggingMoveBox && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT && map.selectedObjects.size > 0)
         {
@@ -900,22 +901,24 @@ public class MapInput implements InputProcessor
                         AttachedMapObject attached = ((AttachedMapObject) map.selectedObjects.get(i));
                         attached.parentAttached.positionOffset.set(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
                         attached.setPosition(attached.attachedTile.position.x + attached.parentAttached.positionOffset.x, attached.attachedTile.position.y + attached.parentAttached.positionOffset.y);
-                        TileTool tool = attached.attachedTile.tool;
-                        for(int a = 0; a < map.layers.size; a ++)
-                        {
-                            for(int k = 0; k < map.layers.get(a).tiles.size; k ++)
-                            {
-                                if(tool == map.layers.get(a).tiles.get(k).tool)
-                                {
-                                    Tile tile = map.layers.get(a).tiles.get(k);
-                                    for(int w = 0; w < tile.drawableAttachedMapObjects.size; w ++)
-                                    {
-                                        if(tile.drawableAttachedMapObjects.get(w).id == attached.id)
-                                            tile.drawableAttachedMapObjects.get(w).setPosition(tile.position.x + attached.parentAttached.positionOffset.x, tile.position.y + attached.parentAttached.positionOffset.y);
-                                    }
-                                }
-                            }
-                        }
+
+//                        TileTool tool = attached.attachedTile.tool;
+//                        for(int a = 0; a < map.layers.size; a ++)
+//                        {
+//                            for(int k = 0; k < map.layers.get(a).tiles.size; k ++)
+//                            {
+//                                if(tool == map.layers.get(a).tiles.get(k).tool)
+//                                {
+//                                    Tile tile = map.layers.get(a).tiles.get(k);
+//                                    for(int w = 0; w < tile.drawableAttachedMapObjects.size; w ++)
+//                                    {
+//                                        if(tile.drawableAttachedMapObjects.get(w).id == attached.id)
+//                                            tile.drawableAttachedMapObjects.get(w).setPosition(tile.position.x + attached.parentAttached.positionOffset.x, tile.position.y + attached.parentAttached.positionOffset.y);
+//                                    }
+//                                }
+//                            }
+//                        }
+                        map.updateAllDrawableAttachableMapObjectsPositions();
                     }
                     else
                         map.selectedObjects.get(i).setPosition(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);

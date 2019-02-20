@@ -40,5 +40,6 @@ public class AttachedMapObject extends MapObject
         this.properties = attachedMapObject.properties;
         this.positionOffset = attachedMapObject.positionOffset;
         this.oldPositionOffset = attachedMapObject.oldPositionOffset;
+        this.layer = tile.layer;
     }
 }

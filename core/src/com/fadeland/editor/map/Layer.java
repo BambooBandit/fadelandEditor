@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.ui.layerMenu.LayerField;
 import com.fadeland.editor.ui.layerMenu.LayerTypes;
-import com.fadeland.editor.ui.tileMenu.TileTool;
 
 import static com.fadeland.editor.map.TileMap.tileSize;
 
@@ -72,26 +71,6 @@ public abstract class Layer
 //                    mapObject.setPosition(this.tiles.get(i).position.x + mapObject.positionOffset.x, this.tiles.get(i).position.y + mapObject.positionOffset.y);
                     mapObject.draw();
                 }
-            }
-        }
-    }
-
-    public void createDrawableAttachableMapObjects()
-    {
-        if(this instanceof ObjectLayer)
-            return;
-        for(int i = 0; i < tiles.size; i ++)
-        {
-            Tile tile = tiles.get(i);
-            tile.drawableAttachedMapObjects.clear();
-            TileTool tileTool = tile.tool;
-            if(tileTool == null)
-                continue;
-            for(int k = 0; k < tileTool.mapObjects.size; k ++)
-            {
-                AttachedMapObject drawable = new AttachedMapObject(tileTool.mapObjects.get(k), tile);
-                drawable.setPosition(tile.position.x + drawable.parentAttached.positionOffset.x, tile.position.y + drawable.parentAttached.positionOffset.y);
-                tile.drawableAttachedMapObjects.add(drawable);
             }
         }
     }
