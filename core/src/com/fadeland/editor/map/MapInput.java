@@ -65,6 +65,10 @@ public class MapInput implements InputProcessor
     @Override
     public boolean keyDown(int keycode)
     {
+        if(keycode == Input.Keys.S)
+        {
+            editor.shuffleRandomSpriteTool();
+        }
         if(keycode == Input.Keys.FORWARD_DEL)
         {
             if(map.selectedLayer != null)
@@ -136,6 +140,7 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
+        editor.shuffleRandomSpriteTool();
         lastDragX = screenX;
         lastDragY = screenY;
         map.stage.unfocusAll();

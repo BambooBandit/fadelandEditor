@@ -33,6 +33,8 @@ public class FadelandEditor extends Game
 
 	public static Preferences prefs;
 
+	public int randomSpriteIndex;
+
 	@Override
 	public void create ()
 	{
@@ -135,7 +137,19 @@ public class FadelandEditor extends Game
 			return null;
 		if(tileMenu.selectedTiles.first().tool != TileMenuTools.SPRITE)
 			return  null;
+		if(fileMenu.toolPane.random.selected)
+			return tileMenu.selectedTiles.get(randomSpriteIndex);
 		return tileMenu.selectedTiles.first();
+	}
+
+	public void shuffleRandomSpriteTool()
+	{
+		TileMenu tileMenu;
+		if(getScreen() != null)
+			tileMenu = ((TileMap) getScreen()).tileMenu;
+		else
+			return;
+		randomSpriteIndex = Utils.randomInt(0, tileMenu.selectedTiles.size - 1);
 	}
 
 	public void undo()
