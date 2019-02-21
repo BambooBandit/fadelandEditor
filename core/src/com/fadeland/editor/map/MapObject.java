@@ -322,13 +322,17 @@ public class MapObject extends Tile
     {
         if(this.body != null)
         {
+            map.bodies.removeValue(this.body, true);
             this.map.world.destroyBody(this.body);
             this.body = null;
         }
         else if(this.bodies != null)
         {
             for(int i = 0; i < this.bodies.size; i ++)
+            {
+                map.bodies.removeValue(this.bodies.get(i), true);
                 this.map.world.destroyBody(this.bodies.get(i));
+            }
             this.bodies.clear();
         }
     }
@@ -361,6 +365,7 @@ public class MapObject extends Tile
             fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
             this.body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
             this.body.setTransform(this.position, 0);
+            map.bodies.add(this.body);
             shape.dispose();
         }
     }
@@ -392,6 +397,7 @@ public class MapObject extends Tile
         fixtureDef.filter.categoryBits = PhysicsBits.WORLD_PHYSICS;
         fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
         Body body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
+        map.bodies.add(body);
         float rotation = 0;
         if(tile instanceof MapSprite)
             rotation = (float) Math.toRadians(((MapSprite) tile).rotation);

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -85,6 +86,7 @@ public class TileMap implements Screen
     private boolean apply = false;
 
     public File file = null;
+    public Array<Body> bodies = new Array<>();
 
     public TileMap(FadelandEditor editor, TileMapData tileMapData)
     {
@@ -606,25 +608,44 @@ public class TileMap implements Screen
 
     private void fillPreview(float x, float y, TileTool tool)
     {
-        Tile tileToPaint = getTile(x, y - tileSize);
-        if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+        Tile tileToPaint = getTile(x, y);
+        Stack<Tile> s = Utils.floodFillQueue;
+        s.push(tileToPaint);
+        if(editor.getTileTools().size == 0)
+            return;
+        while(s.size() > 0)
         {
-            if(editor.getTileTools() != null && editor.getTileTools().size > 0)
+            tileToPaint = s.pop();
+            TileTool tile = editor.getTileTools().first();
+            if (tile != null && tileToPaint != null)
             {
-                TileTool tile = editor.getTileTools().first();
-                if (tile != null)
-                {
-                    tileToPaint.hasBeenPainted = true;
-                    editor.shapeRenderer.setColor(.2f, .85f, 1f, .5f);
-                    editor.shapeRenderer.rect(tileToPaint.position.x, tileToPaint.position.y, tileSize, tileSize);
-                    fillPreview(x + 64, y, tool);
-                    fillPreview(x - 64, y, tool);
-                    fillPreview(x, y + 64, tool);
-                    fillPreview(x, y - 64, tool);
-                }
+                tileToPaint.hasBeenPainted = true;
+                editor.shapeRenderer.setColor(.2f, .85f, 1f, .5f);
+                editor.shapeRenderer.rect(tileToPaint.position.x, tileToPaint.position.y, tileSize, tileSize);
+
+                float tileToPaintX = tileToPaint.position.x + tileSize / 2;
+                float tileToPaintY = tileToPaint.position.y - tileSize + tileSize / 2;
+
+                tileToPaint = getTile(tileToPaintX + tileSize, tileToPaintY);
+                if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+                    s.push(tileToPaint);
+
+                tileToPaint = getTile(tileToPaintX - tileSize, tileToPaintY);
+                if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+                    s.push(tileToPaint);
+
+                tileToPaint = getTile(tileToPaintX, tileToPaintY + tileSize);
+                if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+                    s.push(tileToPaint);
+
+                tileToPaint = getTile(tileToPaintX, tileToPaintY - tileSize);
+                if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+                    s.push(tileToPaint);
             }
         }
+        s.clear();
     }
+
 
     /** Searches for all occurrences of tile groups in all the tiles of each layer.
      * Allows for easy outlining of possible groups of tiles to stamp, and stamping groups of tiles.*/
@@ -960,85 +981,102 @@ public class TileMap implements Screen
                 float centerX = tile.position.x + tileSize / 2;
                 float centerY = tile.position.y + tileSize / 2;
 
-                // Search all tile tools
-                for(int s = 0; s < tileMenu.tileTable.getChildren().size; s ++)
+                for(int b = 0; b < bodies.size; b++)
                 {
-                    TileTool tileTool = (TileTool) tileMenu.tileTable.getChildren().get(s);
-                    for(int d = 0; d < tileTool.mapObjects.size; d ++)
+                    if(bodies.get(b).getFixtureList() != null)
                     {
-                        AttachedMapObject attachedMapObject = tileTool.mapObjects.get(d);
-                        if(attachedMapObject.body == null && attachedMapObject.bodies != null)
+                        if ((bodies.get(b).getFixtureList().first().testPoint(centerX, centerY) ||
+                                bodies.get(b).getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
+                                bodies.get(b).getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
+                                bodies.get(b).getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
+                                bodies.get(b).getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
                         {
-                            for(int w = 0; w < attachedMapObject.bodies.size; w++)
-                            {
-                                if (!attachedMapObject.isPoint && (
-                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY) ||
-                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
-                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
-                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
-                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
-                                {
-                                    tile.hasBlockedObjectOnTop = true;
-                                    continue tile;
-                                }
-                            }
-                        }
-                        else if(attachedMapObject.bodies == null && attachedMapObject.body != null)
-                        {
-                            if (!attachedMapObject.isPoint && (
-                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY) ||
-                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
-                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
-                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
-                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
-                            {
-                                tile.hasBlockedObjectOnTop = true;
-                                continue tile;
-                            }
+                            tile.hasBlockedObjectOnTop = true;
+                            continue tile;
                         }
                     }
                 }
 
-                // Search all sprite tools
-                for(int s = 0; s < tileMenu.spriteTable.getChildren().size; s ++)
-                {
-                    TileTool tileTool = (TileTool) tileMenu.spriteTable.getChildren().get(s);
-                    for(int d = 0; d < tileTool.mapObjects.size; d ++)
-                    {
-                        AttachedMapObject attachedMapObject = tileTool.mapObjects.get(d);
-                        if(attachedMapObject.body == null && attachedMapObject.bodies != null)
-                        {
-                            for(int w = 0; w < attachedMapObject.bodies.size; w++)
-                            {
-                                if(((MapSprite)attachedMapObject.bodies.get(w).getUserData()).layer.z != tile.layer.z)
-                                    continue;
-                                if (!attachedMapObject.isPoint && (
-                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY) ||
-                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
-                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
-                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
-                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
-                                {
-                                    tile.hasBlockedObjectOnTop = true;
-                                    continue tile;
-                                }
-                            }
-                        }
-                        else if(attachedMapObject.bodies == null && attachedMapObject.body != null)
-                        {
-                            if (!attachedMapObject.isPoint && (
-                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY) ||
-                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
-                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
-                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
-                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
-                            {
-                                tile.hasBlockedObjectOnTop = true;
-                                continue tile;
-                            }
-                        }
-                    }
-                }
+//                // Search all tile tools
+//                for(int s = 0; s < tileMenu.tileTable.getChildren().size; s ++)
+//                {
+//                    TileTool tileTool = (TileTool) tileMenu.tileTable.getChildren().get(s);
+//                    for(int d = 0; d < tileTool.mapObjects.size; d ++)
+//                    {
+//                        AttachedMapObject attachedMapObject = tileTool.mapObjects.get(d);
+//                        if(attachedMapObject.body == null && attachedMapObject.bodies != null)
+//                        {
+//                            for(int w = 0; w < attachedMapObject.bodies.size; w++)
+//                            {
+//                                if (!attachedMapObject.isPoint && (
+//                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY) ||
+//                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
+//                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
+//                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
+//                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
+//                                {
+//                                    tile.hasBlockedObjectOnTop = true;
+//                                    continue tile;
+//                                }
+//                            }
+//                        }
+//                        else if(attachedMapObject.bodies == null && attachedMapObject.body != null)
+//                        {
+//                            if (!attachedMapObject.isPoint && (
+//                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY) ||
+//                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
+//                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
+//                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
+//                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
+//                            {
+//                                tile.hasBlockedObjectOnTop = true;
+//                                continue tile;
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                // Search all sprite tools
+//                for(int s = 0; s < tileMenu.spriteTable.getChildren().size; s ++)
+//                {
+//                    TileTool tileTool = (TileTool) tileMenu.spriteTable.getChildren().get(s);
+//                    for(int d = 0; d < tileTool.mapObjects.size; d ++)
+//                    {
+//                        AttachedMapObject attachedMapObject = tileTool.mapObjects.get(d);
+//                        if(attachedMapObject.body == null && attachedMapObject.bodies != null)
+//                        {
+//                            for(int w = 0; w < attachedMapObject.bodies.size; w++)
+//                            {
+//                                if(((MapSprite)attachedMapObject.bodies.get(w).getUserData()).layer.z != tile.layer.z)
+//                                    continue;
+//                                if (!attachedMapObject.isPoint && (
+//                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY) ||
+//                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
+//                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
+//                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
+//                                        attachedMapObject.bodies.get(w).getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
+//                                {
+//                                    tile.hasBlockedObjectOnTop = true;
+//                                    continue tile;
+//                                }
+//                            }
+//                        }
+//                        else if(attachedMapObject.bodies == null && attachedMapObject.body != null)
+//                        {
+//                            if (!attachedMapObject.isPoint && (
+//                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY) ||
+//                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
+//                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
+//                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY - tileSize / 4) ||
+//                                    attachedMapObject.body.getFixtureList().first().testPoint(centerX, centerY + tileSize / 4)))
+//                            {
+//                                tile.hasBlockedObjectOnTop = true;
+//                                continue tile;
+//                            }
+//                        }
+//                    }
+//                }
+
 
                 // Search all object layers
                 for(int s = 0; s < layers.size; s ++)

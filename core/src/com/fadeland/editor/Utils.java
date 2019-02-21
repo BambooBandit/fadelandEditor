@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.fadeland.editor.map.Tile;
+
+import java.util.Stack;
 
 public class Utils
 {
@@ -15,6 +18,7 @@ public class Utils
     public static Vector2 positionDifference = new Vector2();
     public static boolean print = true;
     public static Vector2 tilePositionCopy = new Vector2();
+    public static Stack<Tile> floodFillQueue = new Stack<>();
 
     public static void centerPrint(SpriteBatch batch, String string, float x, float y)
     {
