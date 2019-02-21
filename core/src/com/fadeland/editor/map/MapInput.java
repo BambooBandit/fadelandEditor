@@ -1343,7 +1343,6 @@ public class MapInput implements InputProcessor
         };
         zField.value.addListener(zListener);
 
-
         mapSprite.lockedProperties.add(idField);
         mapSprite.lockedProperties.add(rotationField);
         mapSprite.lockedProperties.add(scaleField);
@@ -1351,6 +1350,11 @@ public class MapInput implements InputProcessor
 
         float randomSize = Utils.randomFloat(map.editor.fileMenu.toolPane.minSizeValue, map.editor.fileMenu.toolPane.maxSizeValue);
         float randomRotation = Utils.randomFloat(map.editor.fileMenu.toolPane.minRotationValue, map.editor.fileMenu.toolPane.maxRotationValue);
+        try
+        {
+            float z = Float.parseFloat(mapSprite.tool.getPropertyField("spawnZ").value.getText());
+            mapSprite.setZ(z);
+        }catch(NumberFormatException e){}
         mapSprite.setScale(randomSize);
         mapSprite.setRotation(randomRotation);
         return mapSprite;

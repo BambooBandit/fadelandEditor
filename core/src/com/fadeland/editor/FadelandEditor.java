@@ -125,6 +125,20 @@ public class FadelandEditor extends Game
         return tileMenu.selectedTiles;
     }
 
+	public Array<TileTool> getSpriteTools()
+	{
+		TileMenu tileMenu;
+		if(getScreen() != null)
+			tileMenu = ((TileMap) getScreen()).tileMenu;
+		else
+			return null;
+
+		if(tileMenu.selectedTiles.size > 0)
+			if(tileMenu.selectedTiles.first().tool != TileMenuTools.SPRITE)
+				return  null;
+		return tileMenu.selectedTiles;
+	}
+
 	public TileTool getSpriteTool()
 	{
 		TileMenu tileMenu;
@@ -149,7 +163,22 @@ public class FadelandEditor extends Game
 			tileMenu = ((TileMap) getScreen()).tileMenu;
 		else
 			return;
-		randomSpriteIndex = Utils.randomInt(0, tileMenu.selectedTiles.size - 1);
+
+		// Randomly pick a sprite from the selected sprites based on weighted probabilities
+		float totalSum = 0;
+		float partialSum = 0;
+		for(int i = 0; i < getSpriteTools().size; i ++)
+			totalSum += Float.parseFloat(getSpriteTools().get(i).getPropertyField("Probability").value.getText());
+		float random = Utils.randomFloat(0, totalSum);
+		for(int i = 0; i < getSpriteTools().size; i ++)
+		{
+			partialSum += Float.parseFloat(getSpriteTools().get(i).getPropertyField("Probability").value.getText());
+			if(partialSum >= random)
+			{
+				randomSpriteIndex = i;
+				break;
+			}
+		}
 	}
 
 	public void undo()
