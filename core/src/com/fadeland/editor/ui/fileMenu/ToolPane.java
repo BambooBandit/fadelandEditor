@@ -2,6 +2,7 @@ package com.fadeland.editor.ui.fileMenu;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
@@ -43,6 +44,21 @@ public class ToolPane extends Group
     private TextButton bringTop;
     private TextButton bringBottom;
 
+    private Label minSizeLabel;
+    public TextField minSize;
+    private Label maxSizeLabel;
+    public TextField maxSize;
+    private Label minRotationLabel;
+    public TextField minRotation;
+    private Label maxRotationLabel;
+    public TextField maxRotation;
+    public Label fps;
+
+    public float minSizeValue = 1;
+    public float maxSizeValue = 1;
+    public float minRotationValue = 0;
+    public float maxRotationValue = 0;
+
     public ToolPane(FadelandEditor editor, Skin skin)
     {
         this.toolTable = new Table();
@@ -68,6 +84,18 @@ public class ToolPane extends Group
         this.bringDown = new TextButton("v", skin);
         this.bringTop = new TextButton("^^", skin);
         this.bringBottom = new TextButton("vv", skin);
+
+        this.minSizeLabel = new Label("MnSz", skin);
+        this.minSize = new TextField("1", skin);
+        this.maxSizeLabel = new Label("MxSz", skin);
+        this.maxSize = new TextField("1", skin);
+        this.minRotationLabel = new Label("MnRt", skin);
+        this.minRotation = new TextField("0", skin);
+        this.maxRotationLabel = new Label("MxRt", skin);
+        this.maxRotation = new TextField("0", skin);
+
+        this.fps = new Label("0", skin);
+
         setUpAndDownListeners();
         this.toolTable.left();
         this.toolTable.add(this.brush).padRight(1);
@@ -89,7 +117,16 @@ public class ToolPane extends Group
         this.toolTable.add(this.bringUp).padRight(1);
         this.toolTable.add(this.bringDown).padRight(1);
         this.toolTable.add(this.bringTop).padRight(1);
-        this.toolTable.add(this.bringBottom).padRight(1);
+        this.toolTable.add(this.bringBottom).padRight(5);
+        this.toolTable.add(this.minSizeLabel).padRight(1);
+        this.toolTable.add(this.minSize).padRight(1);
+        this.toolTable.add(this.maxSizeLabel).padRight(1);
+        this.toolTable.add(this.maxSize).padRight(5);
+        this.toolTable.add(this.minRotationLabel).padRight(1);
+        this.toolTable.add(this.minRotation).padRight(1);
+        this.toolTable.add(this.maxRotationLabel).padRight(1);
+        this.toolTable.add(this.maxRotation).padRight(5);
+        this.toolTable.add(this.fps).padRight(1);
 
         this.editor = editor;
         this.skin = skin;
@@ -129,6 +166,15 @@ public class ToolPane extends Group
         this.toolTable.getCell(this.bringDown).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.bringTop).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.bringBottom).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.minSizeLabel).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.minSize).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.maxSizeLabel).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.maxSize).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.minRotationLabel).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.minRotation).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.maxRotationLabel).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.maxRotation).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.fps).size(toolHeight, toolHeight);
         this.toolTable.invalidateHierarchy();
 
         this.pane.invalidateHierarchy();
@@ -235,6 +281,92 @@ public class ToolPane extends Group
                 map.selectedLayer.tiles.insert(0, selectedSprite);
                 bringSpriteUpOrDown.addNew();
                 map.performAction(bringSpriteUpOrDown);
+            }
+        });
+
+        TextField.TextFieldFilter valueFilter = new TextField.TextFieldFilter()
+        {
+            @Override
+            public boolean acceptChar(TextField textField, char c)
+            {
+                return c == '.' || c == '-' || Character.isDigit(c);
+            }
+        };
+
+        this.minSize.setTextFieldFilter(valueFilter);
+        this.minSize.addListener(new InputListener()
+        {
+            @Override
+            public boolean keyTyped (InputEvent event, char character)
+            {
+                try
+                {
+                    minSizeValue = Float.parseFloat(minSize.getText());
+                    if(minSizeValue > 1)
+                        minSizeValue = 1;
+                }
+                catch(NumberFormatException e)
+                {
+                    minSizeValue = 0;
+                }
+                return false;
+            }
+        });
+
+        this.maxSize.setTextFieldFilter(valueFilter);
+        this.maxSize.addListener(new InputListener()
+        {
+            @Override
+            public boolean keyTyped (InputEvent event, char character)
+            {
+                try
+                {
+                    maxSizeValue = Float.parseFloat(maxSize.getText());
+                    if(maxSizeValue > 1)
+                        maxSizeValue = 1;
+                }
+                catch(NumberFormatException e)
+                {
+                    maxSizeValue = 0;
+                }
+                return false;
+            }
+        });
+
+
+        this.minRotation.setTextFieldFilter(valueFilter);
+        this.minRotation.addListener(new InputListener()
+        {
+            @Override
+            public boolean keyTyped (InputEvent event, char character)
+            {
+                try
+                {
+                    minRotationValue = Float.parseFloat(minRotation.getText());
+                }
+                catch(NumberFormatException e)
+                {
+                    minRotationValue = 0;
+                }
+                return false;
+            }
+        });
+
+        this.maxRotation.setTextFieldFilter(valueFilter);
+        this.maxRotation.addListener(new InputListener()
+        {
+            @Override
+            public boolean keyTyped (InputEvent event, char character)
+            {
+                try
+                {
+                    maxRotationValue = Float.parseFloat(maxRotation.getText());
+                }
+                catch(NumberFormatException e)
+                {
+                    maxRotationValue = 0;
+                }
+                return false;
             }
         });
     }

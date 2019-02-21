@@ -61,6 +61,7 @@ public class FadelandEditor extends Game
 	@Override
 	public void render ()
 	{
+		fileMenu.toolPane.fps.setText(Gdx.graphics.getFramesPerSecond());
 		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
 			undo();
 		else if(Gdx.input.isKeyJustPressed(Input.Keys.R) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))

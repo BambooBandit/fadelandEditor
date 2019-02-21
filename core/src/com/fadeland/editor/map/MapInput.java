@@ -139,6 +139,7 @@ public class MapInput implements InputProcessor
         lastDragX = screenX;
         lastDragY = screenY;
         map.stage.unfocusAll();
+        editor.stage.unfocusAll();
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         this.dragOrigin.set(coords.x, coords.y);
         if(button == Input.Buttons.RIGHT && isDrawingObjectPolygon)
@@ -1342,6 +1343,11 @@ public class MapInput implements InputProcessor
         mapSprite.lockedProperties.add(rotationField);
         mapSprite.lockedProperties.add(scaleField);
         mapSprite.lockedProperties.add(zField);
+
+        float randomSize = Utils.randomFloat(map.editor.fileMenu.toolPane.minSizeValue, map.editor.fileMenu.toolPane.maxSizeValue);
+        float randomRotation = Utils.randomFloat(map.editor.fileMenu.toolPane.minRotationValue, map.editor.fileMenu.toolPane.maxRotationValue);
+        mapSprite.setScale(randomSize);
+        mapSprite.setRotation(randomRotation);
         return mapSprite;
     }
 
