@@ -1,10 +1,10 @@
 package com.fadeland.editor.map.mapdata;
 
-import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.ObjectLayer;
 import com.fadeland.editor.map.SpriteLayer;
 import com.fadeland.editor.map.TileLayer;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.tileMenu.SheetTools;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class TileMapData
         this.a = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.aValue.getText());
         this.sheets = new ArrayList<>(2);
         this.sheets.add(new TileSheetData(tileMap, "tiles.png", TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
-        this.sheets.add(new SpriteSheetData(tileMap, "map.png", GameAssets.getGameAtlas().getRegions()));
+        this.sheets.add(new SpriteSheetData(tileMap, SheetTools.MAP));
         this.layers = new ArrayList<>();
         for(int i = 0; i < tileMap.layers.size; i ++)
         {

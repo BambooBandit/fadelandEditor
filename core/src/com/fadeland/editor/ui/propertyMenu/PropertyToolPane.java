@@ -97,15 +97,18 @@ public class PropertyToolPane extends Group
         // map sprites
         for(int i = 0; i < map.tileMenu.spriteTable.getChildren().size; i ++)
         {
-            TileTool tileTool = (TileTool) map.tileMenu.spriteTable.getChildren().get(i);
-            // top
-            PropertyField topProperty = tileTool.getPropertyField("top");
-            if(topProperty == null)
-                tileTool.setTopSprites("");
-            else
+            if(map.tileMenu.spriteTable.getChildren().get(i) instanceof TileTool)
             {
-                String topValue = topProperty.value.getText();
-                tileTool.setTopSprites(topValue);
+                TileTool tileTool = (TileTool) map.tileMenu.spriteTable.getChildren().get(i);
+                // top
+                PropertyField topProperty = tileTool.getPropertyField("top");
+                if (topProperty == null)
+                    tileTool.setTopSprites("");
+                else
+                {
+                    String topValue = topProperty.value.getText();
+                    tileTool.setTopSprites(topValue);
+                }
             }
         }
 

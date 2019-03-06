@@ -89,10 +89,13 @@ public class TileMenu extends Group
                 Table table = (Table) spriteScrollPane.getWidget();
                 for(int i = 0; i < table.getCells().size; i ++)
                 {
-                    table.getCells().get(i).size(table.getCells().get(i).getMinWidth() - (table.getCells().get(i).getMinWidth() / (amount * 3f)), table.getCells().get(i).getMinHeight() - (table.getCells().get(i).getMinHeight() / (amount * 3f)));
-                    TileTool tileTool = (TileTool) table.getCells().get(i).getActor();
-                    tileTool.image.setSize(table.getCells().get(i).getMinWidth(), table.getCells().get(i).getMinHeight());
-                    table.invalidateHierarchy();
+                    if(table.getCells().get(i).getActor() instanceof TileTool)
+                    {
+                        table.getCells().get(i).size(table.getCells().get(i).getMinWidth() - (table.getCells().get(i).getMinWidth() / (amount * 3f)), table.getCells().get(i).getMinHeight() - (table.getCells().get(i).getMinHeight() / (amount * 3f)));
+                        TileTool tileTool = (TileTool) table.getCells().get(i).getActor();
+                        tileTool.image.setSize(table.getCells().get(i).getMinWidth(), table.getCells().get(i).getMinHeight());
+                        table.invalidateHierarchy();
+                    }
                 }
                 return true;
             }
@@ -115,22 +118,37 @@ public class TileMenu extends Group
             {
                 TextureRegion tileRegion = new TextureRegion(tileSheet, x, y, tileSize, tileSize);
 
-                TileTool tile = new TileTool(TileMenuTools.TILE, new Image(tileRegion), tileRegion, "", id, tileSheet.getWidth() - x - tileSize, y, toolPane, skin);
+                TileTool tile = new TileTool(TileMenuTools.TILE, SheetTools.MAP, new Image(tileRegion), tileRegion, "", id, tileSheet.getWidth() - x - tileSize, y, toolPane, skin);
                 id ++;
                 tileTable.add(tile);
             }
             tileTable.row();
         }
 
+        id = createSpriteSheet(SheetTools.MAP, skin, 0);
+        id = createSpriteSheet(SheetTools.FLATMAP, skin, id);
+
+        this.stack.add(this.background);
+        this.stack.add(this.tileScrollPane);
+        this.stack.add(this.spriteScrollPane);
+        this.stack.setPosition(0, toolHeight);
+
+        this.addActor(this.stack);
+        this.addActor(this.toolPane);
+    }
+
+    private int createSpriteSheet(SheetTools sheetTool, Skin skin, int id)
+    {
         // Add all the sprites to the spriteTable as Images
         spriteTable.padLeft(1);
         spriteTable.padTop(1);
-        id = 0;
-        for(int i = 0; i < GameAssets.getGameAtlas().getRegions().size; i ++)
+        spriteTable.add(new Label(sheetTool.name, skin));
+        spriteTable.row();
+        for(int i = 0; i < GameAssets.getGameAtlas(sheetTool.name).getRegions().size; i ++)
         {
-            TextureAtlas.AtlasRegion spriteRegion = GameAssets.getGameAtlas().getRegions().get(i);
+            TextureAtlas.AtlasRegion spriteRegion = GameAssets.getGameAtlas(sheetTool.name).getRegions().get(i);
 
-            TileTool sprite = new TileTool(TileMenuTools.SPRITE, new Image(spriteRegion), spriteRegion, spriteRegion.name, id, 0, 0, toolPane, skin);
+            TileTool sprite = new TileTool(TileMenuTools.SPRITE, sheetTool, new Image(spriteRegion), spriteRegion, spriteRegion.name, id, 0, 0, toolPane, skin);
             float newWidth = sprite.image.getWidth() / 5;
             float newHeight = sprite.image.getHeight() / 5;
             sprite.image.setSize(newWidth, newHeight);
@@ -140,14 +158,9 @@ public class TileMenu extends Group
             if((i + 1) % 5 == 0)
                 spriteTable.row();
         }
-
-        this.stack.add(this.background);
-        this.stack.add(this.tileScrollPane);
-        this.stack.add(this.spriteScrollPane);
-        this.stack.setPosition(0, toolHeight);
-
-        this.addActor(this.stack);
-        this.addActor(this.toolPane);
+        spriteTable.row();
+        spriteTable.padBottom(200).row();
+        return id;
     }
 
     @Override
@@ -177,9 +190,12 @@ public class TileMenu extends Group
         {
             for(int i = 0; i < spriteTable.getChildren().size; i ++)
             {
-                TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
-                if(tileTool.id == id)
-                    return tileTool;
+                if(spriteTable.getChildren().get(i) instanceof TileTool)
+                {
+                    TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
+                    if (tileTool.id == id)
+                        return tileTool;
+                }
             }
         }
         return null;
@@ -191,9 +207,12 @@ public class TileMenu extends Group
         {
             for(int i = 0; i < spriteTable.getChildren().size; i ++)
             {
-                TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
-                if(tileTool.name.equals(name))
-                    return tileTool;
+                if(spriteTable.getChildren().get(i) instanceof TileTool)
+                {
+                    TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
+                    if (tileTool.name.equals(name))
+                        return tileTool;
+                }
             }
         }
         return null;
@@ -220,9 +239,12 @@ public class TileMenu extends Group
         {
             for(int i = 0; i < spriteTable.getChildren().size; i ++)
             {
-                TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
-                if(tileTool.name.equals(name))
-                    return tileTool;
+                if(spriteTable.getChildren().get(i) instanceof TileTool)
+                {
+                    TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
+                    if (tileTool.name.equals(name))
+                        return tileTool;
+                }
             }
         }
         return null;

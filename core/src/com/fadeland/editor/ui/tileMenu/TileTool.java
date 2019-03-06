@@ -27,9 +27,9 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
     public Array<Sprite> previewSprites;
     public Array<TextureAtlas.AtlasSprite> topSprites;
 
-    public TileTool(TileMenuTools tool, Image image, TextureRegion textureRegion, String name, int id, int x, int y, TileMenuToolPane tileMenuToolPane, Skin skin)
+    public TileTool(TileMenuTools tool, SheetTools sheetTool, Image image, TextureRegion textureRegion, String name, int id, int x, int y, TileMenuToolPane tileMenuToolPane, Skin skin)
     {
-        super(tool, image, tileMenuToolPane, skin);
+        super(tool, sheetTool, image, tileMenuToolPane, skin);
         this.textureRegion = textureRegion;
         this.previewSprites = new Array();
         if(textureRegion instanceof TextureAtlas.AtlasRegion)
@@ -116,7 +116,7 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
         }
         if(digits == 0)
         {
-            TextureRegion textureRegion = GameAssets.getTextureRegion(topSpriteName);
+            TextureRegion textureRegion = GameAssets.getTextureRegion(sheetTool.name, topSpriteName);
             if (textureRegion == null)
                 return;
             Sprite sprite = new TextureAtlas.AtlasSprite((TextureAtlas.AtlasRegion) textureRegion);
@@ -127,13 +127,13 @@ public class TileTool extends TileMenuTool implements Comparable<TileTool>
         {
             String topSpriteNoDigits = topSpriteName.substring(0, topSpriteName.length() - digits);
             int number = Integer.parseInt(topSpriteName.substring(topSpriteName.length() - digits));
-            TextureRegion textureRegion = GameAssets.getTextureRegion(topSpriteName);
+            TextureRegion textureRegion = GameAssets.getTextureRegion(sheetTool.name, topSpriteName);
             while(textureRegion != null)
             {
                 this.topSprites.add(new TextureAtlas.AtlasSprite((TextureAtlas.AtlasRegion) textureRegion));
                 this.previewSprites.add(new TextureAtlas.AtlasSprite((TextureAtlas.AtlasRegion) textureRegion));
                 number ++;
-                textureRegion = GameAssets.getTextureRegion(topSpriteNoDigits + number);
+                textureRegion = GameAssets.getTextureRegion(sheetTool.name, (topSpriteNoDigits + number));
             }
         }
     }

@@ -21,6 +21,7 @@ public class TileMenuTool extends Group
     public boolean isSelected;
 
     public TileMenuTools tool;
+    public SheetTools sheetTool;
 
     /** For tile menu tools */
     public TileMenuTool(TileMenuTools tool, final TileMenuToolPane tileMenuToolPane, Skin skin)
@@ -48,7 +49,7 @@ public class TileMenuTool extends Group
     }
 
     /** For tiles */
-    public TileMenuTool(TileMenuTools tool, Image image, final TileMenuToolPane tileMenuToolPane, Skin skin)
+    public TileMenuTool(TileMenuTools tool, SheetTools sheetTool, Image image, final TileMenuToolPane tileMenuToolPane, Skin skin)
     {
         this.tool = tool;
         this.tileMenuToolPane = tileMenuToolPane;

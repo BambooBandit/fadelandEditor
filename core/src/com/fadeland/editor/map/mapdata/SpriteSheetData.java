@@ -1,17 +1,19 @@
 package com.fadeland.editor.map.mapdata;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.tileMenu.SheetTools;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
 public class SpriteSheetData extends SheetData
 {
     public SpriteSheetData(){}
-    public SpriteSheetData(TileMap tileMap, String name, Array<TextureAtlas.AtlasRegion> spriteNames)
+    public SpriteSheetData(TileMap tileMap, SheetTools sheetTool)
     {
-        super(tileMap, name);
+        super(tileMap, sheetTool.name + ".png");
         for(int i = 0; i < tileMap.tileMenu.spriteTable.getChildren().size; i ++)
-            this.tools.add(new ToolData((TileTool) tileMap.tileMenu.spriteTable.getChildren().get(i)));
+        {
+            if(tileMap.tileMenu.spriteTable.getChildren().get(i) instanceof TileTool)
+                this.tools.add(new ToolData((TileTool) tileMap.tileMenu.spriteTable.getChildren().get(i)));
+        }
     }
 }
