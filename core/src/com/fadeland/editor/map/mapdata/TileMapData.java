@@ -27,11 +27,13 @@ public class TileMapData
         this.g = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.gValue.getText());
         this.b = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.bValue.getText());
         this.a = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.aValue.getText());
-        this.sheets = new ArrayList<>(2);
-        this.sheets.add(new TileSheetData(tileMap, "tiles", TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
+        this.sheets = new ArrayList<>(4);
 
         boolean map = false;
+        boolean tiles = false;
         boolean flatMap = false;
+        boolean desertTiles = false;
+
         this.layers = new ArrayList<>();
         for(int i = 0; i < tileMap.layers.size; i ++)
         {
@@ -48,14 +50,22 @@ public class TileMapData
                     continue;
                 if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.MAP)
                     map = true;
+                else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.TILES)
+                    tiles = true;
                 else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.FLATMAP)
                     flatMap = true;
+                else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.DESERTTILES)
+                    desertTiles = true;
             }
         }
         if(map)
             this.sheets.add(new SpriteSheetData(tileMap, SheetTools.MAP));
+        if(tiles)
+            this.sheets.add(new TileSheetData(tileMap, SheetTools.TILES, TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
         if(flatMap)
             this.sheets.add(new SpriteSheetData(tileMap, SheetTools.FLATMAP));
+        if(desertTiles)
+            this.sheets.add(new TileSheetData(tileMap, SheetTools.DESERTTILES, TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
 
         this.tileGroups = new ArrayList<>();
         for(int i = 0; i < tileMap.tileGroups.size; i ++)

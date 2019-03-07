@@ -101,39 +101,39 @@ public class TileMenuToolPane extends Group
         {
             for(int i = 0; i < this.menu.tileTable.getChildren().size; i ++)
             {
-                TileTool tool = (TileTool) this.menu.tileTable.getChildren().get(i);
-                if(tool == selectedTool)
+                if(this.menu.tileTable.getChildren().get(i) instanceof TileTool)
                 {
-                    if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                    TileTool tool = (TileTool) this.menu.tileTable.getChildren().get(i);
+                    if (tool == selectedTool)
                     {
-                        if(tool.isSelected)
+                        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+                        {
+                            if (tool.isSelected)
+                            {
+                                this.menu.selectedTiles.removeValue(tool, false);
+                                this.map.propertyMenu.rebuild();
+                                tool.unselect();
+                            } else
+                            {
+                                this.menu.selectedTiles.add(tool);
+                                this.map.propertyMenu.rebuild();
+                                tool.select();
+                            }
+                        } else
+                        {
+                            this.menu.selectedTiles.clear();
+                            this.menu.selectedTiles.add(tool);
+                            this.map.propertyMenu.rebuild();
+                            tool.select();
+                        }
+                    } else if (tool.tool == TileMenuTools.TILE)
+                    {
+                        if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
                         {
                             this.menu.selectedTiles.removeValue(tool, false);
                             this.map.propertyMenu.rebuild();
                             tool.unselect();
                         }
-                        else
-                        {
-                            this.menu.selectedTiles.add(tool);
-                            this.map.propertyMenu.rebuild();
-                            tool.select();
-                        }
-                    }
-                    else
-                    {
-                        this.menu.selectedTiles.clear();
-                        this.menu.selectedTiles.add(tool);
-                        this.map.propertyMenu.rebuild();
-                        tool.select();
-                    }
-                }
-                else if(tool.tool == TileMenuTools.TILE)
-                {
-                    if(!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
-                    {
-                        this.menu.selectedTiles.removeValue(tool, false);
-                        this.map.propertyMenu.rebuild();
-                        tool.unselect();
                     }
                 }
             }
@@ -192,8 +192,11 @@ public class TileMenuToolPane extends Group
         {
             for(int i = 0; i < this.menu.tileTable.getChildren().size; i ++)
             {
-                if(((TileTool)this.menu.tileTable.getChildren().get(i)).isSelected)
-                    this.menu.selectedTiles.add((TileTool) this.menu.tileTable.getChildren().get(i));
+                if(this.menu.tileTable.getChildren().get(i) instanceof TileTool)
+                {
+                    if (((TileTool) this.menu.tileTable.getChildren().get(i)).isSelected)
+                        this.menu.selectedTiles.add((TileTool) this.menu.tileTable.getChildren().get(i));
+                }
             }
         }
         else if(this.sprites.isSelected)

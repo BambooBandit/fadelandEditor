@@ -150,18 +150,21 @@ public class PropertyMenu extends Group
     {
         for(int i = 0; i < map.tileMenu.tileTable.getChildren().size; i ++)
         {
-            PropertyField probability = new PropertyField("Probability", "1.0", skin, this, false);
-            probability.value.setTextFieldFilter(new TextField.TextFieldFilter()
+            if(map.tileMenu.tileTable.getChildren().get(i) instanceof TileTool)
             {
-                @Override
-                public boolean acceptChar(TextField textField, char c)
+                PropertyField probability = new PropertyField("Probability", "1.0", skin, this, false);
+                probability.value.setTextFieldFilter(new TextField.TextFieldFilter()
                 {
-                    return c == '.' || Character.isDigit(c);
-                }
-            });
-            ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(probability);
-            PropertyField type = new PropertyField("Type", "", skin, this, false);
-            ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(type);
+                    @Override
+                    public boolean acceptChar(TextField textField, char c)
+                    {
+                        return c == '.' || Character.isDigit(c);
+                    }
+                });
+                ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(probability);
+                PropertyField type = new PropertyField("Type", "", skin, this, false);
+                ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(type);
+            }
         }
     }
     private void setSpriteProperties()

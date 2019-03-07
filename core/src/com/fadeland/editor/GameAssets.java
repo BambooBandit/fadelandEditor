@@ -126,7 +126,12 @@ public class GameAssets
         nameToCachedAtlas.put(name, cachedGameAtlas);
     }
 
-    public static TextureRegion getTextureRegion(String name, String path) { return nameToCachedAtlas.get(name).get(path); }
+    public static TextureRegion getTextureRegion(String name, String path)
+    {
+        if(nameToCachedAtlas.get(name) == null)
+            return null;
+        return nameToCachedAtlas.get(name).get(path);
+    }
 
     public static boolean hasTextureRegion(String name, String path) { return nameToCachedAtlas.get(name).containsKey(path); }
 

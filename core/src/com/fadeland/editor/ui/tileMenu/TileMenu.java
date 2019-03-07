@@ -23,8 +23,6 @@ public class TileMenu extends Group
     public static int tileSheetHeight;
     public static int tilePadding = 2; // Bleeding area in pixels
     public static int toolHeight = 35;
-    public static String tileSheetName = "tiles.png";
-    public static String spriteSheetName = "sprites.png";
 
     private FadelandEditor editor;
     private TileMap map;
@@ -63,10 +61,16 @@ public class TileMenu extends Group
                 Table table = (Table) tileScrollPane.getWidget();
                 for(int i = 0; i < table.getCells().size; i ++)
                 {
-                    table.getCells().get(i).size(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
-                    TileTool tileTool = (TileTool) table.getCells().get(i).getActor();
-                    tileTool.image.setSize(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
-                    table.invalidateHierarchy();
+                    if(table.getCells().get(i).getActor() instanceof TileTool)
+                    {
+                        TileTool tileTool = (TileTool) table.getCells().get(i).getActor();
+                        tileTool.image.setSize(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
+                        tileTool.setSize(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight() - amount * 5);
+                        table.invalidateHierarchy();
+                        table.pack();
+                    }
+                    else
+                        table.getCells().get(i).size(table.getCells().get(i).getMinWidth() - amount * 5, table.getCells().get(i).getMinHeight()  - amount * 5).getActor().setZIndex(200);
                 }
                 return true;
             }
@@ -89,13 +93,17 @@ public class TileMenu extends Group
                 Table table = (Table) spriteScrollPane.getWidget();
                 for(int i = 0; i < table.getCells().size; i ++)
                 {
+                    table.getCells().get(i).size(table.getCells().get(i).getMinWidth() - (table.getCells().get(i).getMinWidth() / (amount * 3f)), table.getCells().get(i).getMinHeight() - (table.getCells().get(i).getMinHeight() / (amount * 3f)));
                     if(table.getCells().get(i).getActor() instanceof TileTool)
                     {
-                        table.getCells().get(i).size(table.getCells().get(i).getMinWidth() - (table.getCells().get(i).getMinWidth() / (amount * 3f)), table.getCells().get(i).getMinHeight() - (table.getCells().get(i).getMinHeight() / (amount * 3f)));
                         TileTool tileTool = (TileTool) table.getCells().get(i).getActor();
                         tileTool.image.setSize(table.getCells().get(i).getMinWidth(), table.getCells().get(i).getMinHeight());
+                        tileTool.setSize(table.getCells().get(i).getMinWidth(), table.getCells().get(i).getMinHeight());
                         table.invalidateHierarchy();
+                        table.pack();
                     }
+                    else
+                        table.getCells().get(i).getActor().setZIndex(200);
                 }
                 return true;
             }
@@ -105,25 +113,10 @@ public class TileMenu extends Group
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.toolPane = new TileMenuToolPane(editor, this, map, skin);
 
+        int id;
         // Add all the tiles to the tileTable as Images
-        Texture tileSheet = new Texture(tileSheetName);
-        tileSheetWidth = tileSheet.getWidth();
-        tileSheetHeight = tileSheet.getHeight();
-        tileTable.padLeft(1);
-        tileTable.padTop(1);
-        int id = 0;
-        for(int y = 0; y < tileSheet.getHeight(); y += tileSize)
-        {
-            for(int x = 0; x < tileSheet.getWidth(); x += tileSize)
-            {
-                TextureRegion tileRegion = new TextureRegion(tileSheet, x, y, tileSize, tileSize);
-
-                TileTool tile = new TileTool(TileMenuTools.TILE, SheetTools.MAP, new Image(tileRegion), tileRegion, "", id, tileSheet.getWidth() - x - tileSize, y, toolPane, skin);
-                id ++;
-                tileTable.add(tile);
-            }
-            tileTable.row();
-        }
+        id = createTileSheet(SheetTools.TILES, skin, 0);
+        id = createTileSheet(SheetTools.DESERTTILES, skin, id);
 
         id = createSpriteSheet(SheetTools.MAP, skin, 0);
         id = createSpriteSheet(SheetTools.FLATMAP, skin, id);
@@ -135,6 +128,32 @@ public class TileMenu extends Group
 
         this.addActor(this.stack);
         this.addActor(this.toolPane);
+    }
+
+    private int createTileSheet(SheetTools sheetTool, Skin skin, int id)
+    {
+        Texture tileSheet = new Texture(sheetTool.name + ".png");
+        tileSheetWidth = tileSheet.getWidth();
+        tileSheetHeight = tileSheet.getHeight();
+        tileTable.padLeft(1);
+        tileTable.padTop(1);
+        tileTable.add(new Label(sheetTool.name, skin)).width(tileSize);
+        tileTable.row();
+        for(int y = 0; y < tileSheet.getHeight(); y += tileSize)
+        {
+            for(int x = 0; x < tileSheet.getWidth(); x += tileSize)
+            {
+                TextureRegion tileRegion = new TextureRegion(tileSheet, x, y, tileSize, tileSize);
+
+                TileTool tile = new TileTool(TileMenuTools.TILE, SheetTools.TILES, new Image(tileRegion), tileRegion, "", id, tileSheet.getWidth() - x - tileSize, y, toolPane, skin);
+                id ++;
+                tileTable.add(tile);
+            }
+            tileTable.row();
+        }
+        tileTable.row();
+        tileTable.padBottom(500).row();
+        return id;
     }
 
     private int createSpriteSheet(SheetTools sheetTool, Skin skin, int id)
@@ -159,7 +178,7 @@ public class TileMenu extends Group
                 spriteTable.row();
         }
         spriteTable.row();
-        spriteTable.padBottom(200).row();
+        spriteTable.padBottom(500).row();
         return id;
     }
 
@@ -181,9 +200,12 @@ public class TileMenu extends Group
         {
             for(int i = 0; i < tileTable.getChildren().size; i ++)
             {
-                TileTool tileTool = (TileTool) tileTable.getChildren().get(i);
-                if(tileTool.id == id)
-                    return tileTool;
+                if(tileTable.getChildren().get(i) instanceof TileTool)
+                {
+                    TileTool tileTool = (TileTool) tileTable.getChildren().get(i);
+                    if (tileTool.id == id)
+                        return tileTool;
+                }
             }
         }
         else if(tileMenuTools == TileMenuTools.SPRITE)
@@ -230,9 +252,12 @@ public class TileMenu extends Group
         {
             for(int i = 0; i < tileTable.getChildren().size; i ++)
             {
-                TileTool tileTool = (TileTool) tileTable.getChildren().get(i);
-                if(tileTool.id == id)
-                    return tileTool;
+                if(tileTable.getChildren().get(i) instanceof TileTool)
+                {
+                    TileTool tileTool = (TileTool) tileTable.getChildren().get(i);
+                    if (tileTool.id == id)
+                        return tileTool;
+                }
             }
         }
         else if(tileMenuTools == TileMenuTools.SPRITE)
