@@ -9,11 +9,15 @@ public class SpriteSheetData extends SheetData
     public SpriteSheetData(){}
     public SpriteSheetData(TileMap tileMap, SheetTools sheetTool)
     {
-        super(tileMap, sheetTool.name + ".png");
+        super(tileMap, sheetTool.name);
         for(int i = 0; i < tileMap.tileMenu.spriteTable.getChildren().size; i ++)
         {
             if(tileMap.tileMenu.spriteTable.getChildren().get(i) instanceof TileTool)
-                this.tools.add(new ToolData((TileTool) tileMap.tileMenu.spriteTable.getChildren().get(i)));
+            {
+                TileTool tileTool = ((TileTool) tileMap.tileMenu.spriteTable.getChildren().get(i));
+                if(tileTool.sheetTool == sheetTool)
+                    this.tools.add(new ToolData(tileTool));
+            }
         }
     }
 }

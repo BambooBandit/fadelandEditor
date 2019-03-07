@@ -52,6 +52,7 @@ public class TileMenuTool extends Group
     public TileMenuTool(TileMenuTools tool, SheetTools sheetTool, Image image, final TileMenuToolPane tileMenuToolPane, Skin skin)
     {
         this.tool = tool;
+        this.sheetTool = sheetTool;
         this.tileMenuToolPane = tileMenuToolPane;
         this.image = image;
 

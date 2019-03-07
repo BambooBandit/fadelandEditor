@@ -164,6 +164,9 @@ public class FadelandEditor extends Game
 		else
 			return;
 
+		if(getSpriteTools() == null)
+			return;
+
 		// Randomly pick a sprite from the selected sprites based on weighted probabilities
 		float totalSum = 0;
 		float partialSum = 0;
