@@ -145,7 +145,7 @@ public class TileMenu extends Group
             {
                 TextureRegion tileRegion = new TextureRegion(tileSheet, x, y, tileSize, tileSize);
 
-                TileTool tile = new TileTool(TileMenuTools.TILE, SheetTools.TILES, new Image(tileRegion), tileRegion, "", id, tileSheet.getWidth() - x - tileSize, y, toolPane, skin);
+                TileTool tile = new TileTool(TileMenuTools.TILE, sheetTool, new Image(tileRegion), tileRegion, "", id, tileSheet.getWidth() - x - tileSize, y, toolPane, skin);
                 id ++;
                 tileTable.add(tile);
             }
