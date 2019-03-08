@@ -1,10 +1,10 @@
 package com.fadeland.editor.map.mapdata;
 
-import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.ObjectLayer;
 import com.fadeland.editor.map.SpriteLayer;
 import com.fadeland.editor.map.TileLayer;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.tileMenu.SheetTools;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
 
 import java.util.ArrayList;
@@ -27,9 +27,13 @@ public class TileMapData
         this.g = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.gValue.getText());
         this.b = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.bValue.getText());
         this.a = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.aValue.getText());
-        this.sheets = new ArrayList<>(2);
-        this.sheets.add(new TileSheetData(tileMap, "tiles.png", TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
-        this.sheets.add(new SpriteSheetData(tileMap, "map.png", GameAssets.getGameAtlas().getRegions()));
+        this.sheets = new ArrayList<>(4);
+
+        boolean map = false;
+        boolean tiles = false;
+        boolean flatMap = false;
+        boolean desertTiles = false;
+
         this.layers = new ArrayList<>();
         for(int i = 0; i < tileMap.layers.size; i ++)
         {
@@ -39,7 +43,30 @@ public class TileMapData
                 this.layers.add(new MapSpriteLayerData(tileMap.layers.get(i)));
             else if(tileMap.layers.get(i) instanceof ObjectLayer)
                 this.layers.add(new MapObjectLayerData(tileMap.layers.get(i)));
+
+            for(int k = 0; k < tileMap.layers.get(i).tiles.size; k++)
+            {
+                if(tileMap.layers.get(i).tiles.get(k).tool == null)
+                    continue;
+                if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.MAP)
+                    map = true;
+                else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.TILES)
+                    tiles = true;
+                else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.FLATMAP)
+                    flatMap = true;
+                else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.DESERTTILES)
+                    desertTiles = true;
+            }
         }
+        if(map)
+            this.sheets.add(new SpriteSheetData(tileMap, SheetTools.MAP));
+        if(tiles)
+            this.sheets.add(new TileSheetData(tileMap, SheetTools.TILES, TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
+        if(flatMap)
+            this.sheets.add(new SpriteSheetData(tileMap, SheetTools.FLATMAP));
+        if(desertTiles)
+            this.sheets.add(new TileSheetData(tileMap, SheetTools.DESERTTILES, TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
+
         this.tileGroups = new ArrayList<>();
         for(int i = 0; i < tileMap.tileGroups.size; i ++)
             this.tileGroups.add(new TileGroupData(tileMap.tileGroups.get(i)));

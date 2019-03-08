@@ -57,6 +57,7 @@ public class PropertyMenu extends Group
         this.propertyTable.add(this.propertyPanel);
 
         setTileProperties();
+        setSpriteProperties();
 
         this.stack.add(this.background);
         this.stack.add(this.propertyTable);
@@ -149,18 +150,52 @@ public class PropertyMenu extends Group
     {
         for(int i = 0; i < map.tileMenu.tileTable.getChildren().size; i ++)
         {
-            PropertyField probability = new PropertyField("Probability", "1.0", skin, this, false);
-            probability.value.setTextFieldFilter(new TextField.TextFieldFilter()
+            if(map.tileMenu.tileTable.getChildren().get(i) instanceof TileTool)
             {
-                @Override
-                public boolean acceptChar(TextField textField, char c)
+                PropertyField probability = new PropertyField("Probability", "1.0", skin, this, false);
+                probability.value.setTextFieldFilter(new TextField.TextFieldFilter()
                 {
-                    return c == '.' || Character.isDigit(c);
-                }
-            });
-            PropertyField type = new PropertyField("Type", "", skin, this, false);
-            ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(probability);
-            ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(type);
+                    @Override
+                    public boolean acceptChar(TextField textField, char c)
+                    {
+                        return c == '.' || Character.isDigit(c);
+                    }
+                });
+
+                ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(probability);
+                PropertyField type = new PropertyField("Type", "", skin, this, false);
+                ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(type);
+
+                PropertyField dustType = new PropertyField("Dust Type", "", skin, this, false);
+                ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(dustType);
+
+                PropertyField dustColor = new PropertyField(skin, this, false, 1, 1, 1, 1);
+                ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(dustColor);
+            }
+        }
+    }
+    private void setSpriteProperties()
+    {
+        for(int i = 0; i < map.tileMenu.spriteTable.getChildren().size; i ++)
+        {
+            if(map.tileMenu.spriteTable.getChildren().get(i) instanceof TileTool)
+            {
+                PropertyField probability = new PropertyField("Probability", "1.0", skin, this, false);
+                probability.value.setTextFieldFilter(new TextField.TextFieldFilter()
+                {
+                    @Override
+                    public boolean acceptChar(TextField textField, char c)
+                    {
+                        return c == '.' || Character.isDigit(c);
+                    }
+                });
+
+                ((TileTool) map.tileMenu.spriteTable.getChildren().get(i)).lockedProperties.add(probability);
+                PropertyField type = new PropertyField("Type", "", skin, this, false);
+                ((TileTool) map.tileMenu.spriteTable.getChildren().get(i)).lockedProperties.add(type);
+                PropertyField z = new PropertyField("spawnZ", "", skin, this, false);
+                ((TileTool) map.tileMenu.spriteTable.getChildren().get(i)).lockedProperties.add(z);
+            }
         }
     }
 
@@ -201,6 +236,13 @@ public class PropertyMenu extends Group
                 for (int i = 0; i < tileProperties.size; i++)
                     this.tilePropertyPanel.table.add(tileProperties.get(i)).padBottom(1).row();
                 this.tilePropertyPanel.setVisible(true);
+            }
+            else if(map.tileMenu.selectedTiles.first().tool == TileMenuTools.SPRITE)
+            {
+                Array<PropertyField> spriteProperties = map.tileMenu.selectedTiles.first().lockedProperties;
+                for (int i = 0; i < spriteProperties.size; i++)
+                    this.spritePropertyPanel.table.add(spriteProperties.get(i)).padBottom(1).row();
+                this.spritePropertyPanel.setVisible(true);
             }
         }
         if(map.selectedSprites.size > 0)

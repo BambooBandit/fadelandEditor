@@ -69,10 +69,16 @@ public class MoveAttachedObject extends PerformableAction
     {
         super.undo();
         if(this.mapObject != null)
+        {
             this.mapObject.positionOffset.set(oldXofDragMap.get(mapObject), oldYofDragMap.get(mapObject));
+            map.updateAllDrawableAttachableMapObjectsPositions();
+        }
         else
             for(int i = 0; i < mapObjects.size; i ++)
+            {
                 mapObjects.get(i).positionOffset.set(oldXofDragMap.get(mapObjects.get(i)), oldYofDragMap.get(mapObjects.get(i)));
+                map.updateAllDrawableAttachableMapObjectsPositions();
+            }
     }
 
     @Override
@@ -80,9 +86,15 @@ public class MoveAttachedObject extends PerformableAction
     {
         super.redo();
         if(this.mapObject != null)
+        {
             this.mapObject.positionOffset.set(newX, newY);
+            map.updateAllDrawableAttachableMapObjectsPositions();
+        }
         else
             for(int i = 0; i < mapObjects.size; i ++)
+            {
                 mapObjects.get(i).positionOffset.set(newXofDragMap.get(mapObjects.get(i)), newYofDragMap.get(mapObjects.get(i)));
+                map.updateAllDrawableAttachableMapObjectsPositions();
+            }
     }
 }

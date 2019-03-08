@@ -63,11 +63,10 @@ public abstract class Layer
         {
             if(this.tiles.get(i).tool != null)
             {
-                for (int k = 0; k < this.tiles.get(i).tool.mapObjects.size; k++)
+                for (int k = 0; k < this.tiles.get(i).drawableAttachedMapObjects.size; k++)
                 {
-                    AttachedMapObject mapObject = this.tiles.get(i).tool.mapObjects.get(k);
+                    AttachedMapObject mapObject = this.tiles.get(i).drawableAttachedMapObjects.get(k);
                     mapObject.attachedTile = this.tiles.get(i);
-                    mapObject.setPosition(this.tiles.get(i).position.x + mapObject.positionOffset.x, this.tiles.get(i).position.y + mapObject.positionOffset.y);
                     mapObject.draw();
                 }
             }

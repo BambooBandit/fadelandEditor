@@ -33,6 +33,8 @@ public class FadelandEditor extends Game
 
 	public static Preferences prefs;
 
+	public int randomSpriteIndex;
+
 	@Override
 	public void create ()
 	{
@@ -61,6 +63,7 @@ public class FadelandEditor extends Game
 	@Override
 	public void render ()
 	{
+		fileMenu.toolPane.fps.setText(Gdx.graphics.getFramesPerSecond());
 		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
 			undo();
 		else if(Gdx.input.isKeyJustPressed(Input.Keys.R) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
@@ -122,6 +125,20 @@ public class FadelandEditor extends Game
         return tileMenu.selectedTiles;
     }
 
+	public Array<TileTool> getSpriteTools()
+	{
+		TileMenu tileMenu;
+		if(getScreen() != null)
+			tileMenu = ((TileMap) getScreen()).tileMenu;
+		else
+			return null;
+
+		if(tileMenu.selectedTiles.size > 0)
+			if(tileMenu.selectedTiles.first().tool != TileMenuTools.SPRITE)
+				return  null;
+		return tileMenu.selectedTiles;
+	}
+
 	public TileTool getSpriteTool()
 	{
 		TileMenu tileMenu;
@@ -134,7 +151,37 @@ public class FadelandEditor extends Game
 			return null;
 		if(tileMenu.selectedTiles.first().tool != TileMenuTools.SPRITE)
 			return  null;
+		if(fileMenu.toolPane.random.selected)
+			return tileMenu.selectedTiles.get(randomSpriteIndex);
 		return tileMenu.selectedTiles.first();
+	}
+
+	public void shuffleRandomSpriteTool()
+	{
+		TileMenu tileMenu;
+		if(getScreen() != null)
+			tileMenu = ((TileMap) getScreen()).tileMenu;
+		else
+			return;
+
+		if(getSpriteTools() == null)
+			return;
+
+		// Randomly pick a sprite from the selected sprites based on weighted probabilities
+		float totalSum = 0;
+		float partialSum = 0;
+		for(int i = 0; i < getSpriteTools().size; i ++)
+			totalSum += Float.parseFloat(getSpriteTools().get(i).getPropertyField("Probability").value.getText());
+		float random = Utils.randomFloat(0, totalSum);
+		for(int i = 0; i < getSpriteTools().size; i ++)
+		{
+			partialSum += Float.parseFloat(getSpriteTools().get(i).getPropertyField("Probability").value.getText());
+			if(partialSum >= random)
+			{
+				randomSpriteIndex = i;
+				break;
+			}
+		}
 	}
 
 	public void undo()

@@ -21,6 +21,8 @@ import com.fadeland.editor.ui.propertyMenu.PropertyToolPane;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 import com.fadeland.editor.undoredo.*;
 
+import java.util.Stack;
+
 import static com.fadeland.editor.map.TileMap.tileSize;
 
 public class MapInput implements InputProcessor
@@ -42,6 +44,8 @@ public class MapInput implements InputProcessor
 
     public FloatArray objectVertices; // allows for seeing where you are clicking when constructing a new MapObject polygon
     public Vector2 objectVerticePosition;
+    public int lastDragX;
+    public int lastDragY;
 
     public boolean isDrawingObjectPolygon = false;
 
@@ -61,6 +65,10 @@ public class MapInput implements InputProcessor
     @Override
     public boolean keyDown(int keycode)
     {
+        if(keycode == Input.Keys.S)
+        {
+            editor.shuffleRandomSpriteTool();
+        }
         if(keycode == Input.Keys.FORWARD_DEL)
         {
             if(map.selectedLayer != null)
@@ -68,7 +76,7 @@ public class MapInput implements InputProcessor
                 boolean deletedAttached = false;
                 if(map.selectedLayer != null && (map.selectedLayer instanceof SpriteLayer || map.selectedLayer instanceof TileLayer))
                 {
-                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, map.selectedObjects);
+                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, map.selectedObjects, true);
                     for (int i = 0; i < map.selectedLayer.tiles.size; i++)
                     {
                         if(map.selectedLayer.tiles.get(i).tool != null)
@@ -78,9 +86,11 @@ public class MapInput implements InputProcessor
                             {
                                 for (int k = 0; k < map.selectedObjects.size; k++)
                                 {
-                                    if (map.selectedLayer.tiles.get(i).tool.mapObjects.get(s) == map.selectedObjects.get(k))
+                                    AttachedMapObject attachedMapObject = (AttachedMapObject) map.selectedObjects.get(k);
+                                    if (map.selectedLayer.tiles.get(i).tool.mapObjects.get(s).id == attachedMapObject.id)
                                     {
                                         deletedAttached = true;
+                                        map.removeDrawableAttachedMapObjects(map.selectedLayer.tiles.get(i).tool, attachedMapObject.id);
                                         map.selectedObjects.removeValue(map.selectedLayer.tiles.get(i).tool.mapObjects.get(s), true);
                                         map.selectedLayer.tiles.get(i).tool.mapObjects.get(s).removeBody();
                                         map.selectedLayer.tiles.get(i).tool.mapObjects.get(s).removeLight();
@@ -130,7 +140,11 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
+        editor.shuffleRandomSpriteTool();
+        lastDragX = screenX;
+        lastDragY = screenY;
         map.stage.unfocusAll();
+        editor.stage.unfocusAll();
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
         this.dragOrigin.set(coords.x, coords.y);
         if(button == Input.Buttons.RIGHT && isDrawingObjectPolygon)
@@ -149,7 +163,7 @@ public class MapInput implements InputProcessor
                 }
                 else if(map.selectedLayer instanceof SpriteLayer)
                 {
-                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
+                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null, false);
                     MapSprite mapSprite = map.selectedSprites.first();
                     EditorPolygon antiRotatePolygon = new EditorPolygon(objectVertices.toArray());
                     antiRotatePolygon.setOrigin(-(objectVerticePosition.x - mapSprite.position.x) + mapSprite.width / 2, -(objectVerticePosition.y - mapSprite.position.y) + mapSprite.height / 2);
@@ -161,7 +175,7 @@ public class MapInput implements InputProcessor
                 }
                 else if(map.selectedLayer instanceof TileLayer)
                 {
-                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
+                    CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null, false);
                     Tile selectedTile = map.selectedTile;
                     mapObject = new AttachedMapObject(map, map.selectedLayer, selectedTile, objectVertices.toArray(), objectVerticePosition.x - selectedTile.position.x, objectVerticePosition.y - selectedTile.position.y, selectedTile.sprite.getWidth(), selectedTile.sprite.getHeight(), objectVerticePosition.x, objectVerticePosition.y);
                     selectedTile.addMapObject((AttachedMapObject) mapObject);
@@ -185,7 +199,7 @@ public class MapInput implements InputProcessor
             }
             else if(map.selectedLayer instanceof SpriteLayer && map.selectedSprites.size > 0)
             {
-                CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
+                CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null, false);
                 MapSprite mapSprite = map.selectedSprites.first();
                 mapObject = new AttachedMapObject(map, map.selectedLayer, mapSprite, coords.x - mapSprite.position.x, coords.y - mapSprite.position.y, coords.x, coords.y);
                 mapSprite.addMapObject((AttachedMapObject) mapObject);
@@ -194,7 +208,7 @@ public class MapInput implements InputProcessor
             }
             else if(map.selectedLayer instanceof TileLayer && map.selectedTile != null)
             {
-                CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null);
+                CreateOrRemoveAttachedObject createOrRemoveAttachedObject = new CreateOrRemoveAttachedObject(map, map.selectedLayer.tiles, null, false);
                 Tile selectedTile = map.selectedTile;
                 mapObject = new AttachedMapObject(map, map.selectedLayer, selectedTile, coords.x - selectedTile.position.x, coords.y - selectedTile.position.y, coords.x, coords.y);
                 selectedTile.addMapObject((AttachedMapObject) mapObject);
@@ -460,9 +474,9 @@ public class MapInput implements InputProcessor
                 // Randomly pick a tile from the selected tiles based on weighted probabilities
                 Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
                 TileTool randomTile = randomTile();
-                if(randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
+                if(clickedTile != null && randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
                 {
-                    map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, randomTile));
+                    map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, randomTile)); // TODO nullpointer
                     clickedTile.setTool(randomTile);
                 }
                 map.findAllTilesToBeGrouped();
@@ -471,9 +485,9 @@ public class MapInput implements InputProcessor
             {
                 if(map.selectedTile != null)
                 {
-                    for(int k = 0; k < map.selectedTile.tool.mapObjects.size; k ++)
+                    for(int k = 0; k < map.selectedTile.drawableAttachedMapObjects.size; k ++)
                     {
-                        AttachedMapObject attachedMapObject = map.selectedTile.tool.mapObjects.get(k);
+                        AttachedMapObject attachedMapObject = map.selectedTile.drawableAttachedMapObjects.get(k);
                         if (attachedMapObject.isHoveredOver(coords.x, coords.y))
                         {
                             if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
@@ -599,9 +613,9 @@ public class MapInput implements InputProcessor
                     for (int i = map.selectedLayer.tiles.size - 1; i >= 0; i--)
                     {
                         MapSprite mapSprite = ((MapSprite) map.selectedLayer.tiles.get(i));
-                        for(int k = 0; k < mapSprite.tool.mapObjects.size; k ++)
+                        for(int k = 0; k < mapSprite.drawableAttachedMapObjects.size; k ++)
                         {
-                            AttachedMapObject attachedMapObject = mapSprite.tool.mapObjects.get(k);
+                            AttachedMapObject attachedMapObject = mapSprite.drawableAttachedMapObjects.get(k);
                             if (attachedMapObject.isHoveredOver(coords.x, coords.y))
                             {
                                 SelectObject selectObject = new SelectObject(map, map.selectedObjects);
@@ -793,6 +807,7 @@ public class MapInput implements InputProcessor
             MoveVertice moveVertice = (MoveVertice) map.undo.pop();
             moveVertice.addNewVertices(map.selectedObjects.first().getVerticeX(), map.selectedObjects.first().getVerticeY());
             map.undo.push(moveVertice);
+            map.updateAllDrawableAttachableMapObjectsPolygons();
         }
         else if(draggingMoveBox && editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT && map.selectedObjects.size > 0)
         {
@@ -855,6 +870,58 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
+        int x, y, dx, dy, incx, incy, pdx, pdy, es, el, err;
+        dx = screenX - lastDragX;
+        dy = screenY - lastDragY;
+
+        incx = sign(dx);
+        incy = sign(dy);
+
+        if (dx < 0) dx = -dx;
+        if (dy < 0) dy = -dy;
+
+        if (dx > dy)
+        {
+            pdx = incx;     pdy = 0;
+            es = dy;        el = dx;
+        }
+        else
+        {
+            pdx = 0;        pdy = incy;
+            es = dx;        el = dy;
+        }
+
+        x = lastDragX;
+        y = lastDragY;
+        err = el/2;
+        drag(x, y, pointer);
+
+        for (int t = 0; t < el; t++)
+        {
+            err -= es;
+            if (err < 0)
+            {
+                err += el;
+                x += incx;
+                y += incy;
+            }
+            else
+            {
+                x += pdx;
+                y += pdy;
+            }
+
+            drag(x, y, pointer);
+        }
+
+
+        lastDragX = screenX;
+        lastDragY = screenY;
+        return false;
+    }
+
+    private boolean drag(int screenX, int screenY, int pointer)
+    {
         editor.stage.unfocus(map.tileMenu.tileScrollPane);
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
@@ -891,7 +958,29 @@ public class MapInput implements InputProcessor
                     if(!this.oldXofDragMap.containsKey(map.selectedObjects.get(i)))
                         break;
                     if(map.selectedObjects.get(i) instanceof AttachedMapObject)
-                        ((AttachedMapObject)map.selectedObjects.get(i)).positionOffset.set(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
+                    {
+                        AttachedMapObject attached = ((AttachedMapObject) map.selectedObjects.get(i));
+                        attached.parentAttached.positionOffset.set(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
+                        attached.setPosition(attached.attachedTile.position.x + attached.parentAttached.positionOffset.x, attached.attachedTile.position.y + attached.parentAttached.positionOffset.y);
+
+//                        TileTool tool = attached.attachedTile.tool;
+//                        for(int a = 0; a < map.layers.size; a ++)
+//                        {
+//                            for(int k = 0; k < map.layers.get(a).tiles.size; k ++)
+//                            {
+//                                if(tool == map.layers.get(a).tiles.get(k).tool)
+//                                {
+//                                    Tile tile = map.layers.get(a).tiles.get(k);
+//                                    for(int w = 0; w < tile.drawableAttachedMapObjects.size; w ++)
+//                                    {
+//                                        if(tile.drawableAttachedMapObjects.get(w).id == attached.id)
+//                                            tile.drawableAttachedMapObjects.get(w).setPosition(tile.position.x + attached.parentAttached.positionOffset.x, tile.position.y + attached.parentAttached.positionOffset.y);
+//                                    }
+//                                }
+//                            }
+//                        }
+                        map.updateAllDrawableAttachableMapObjectsPositions();
+                    }
                     else
                         map.selectedObjects.get(i).setPosition(this.oldXofDragMap.get(map.selectedObjects.get(i)) + pos.x, this.oldYofDragMap.get(map.selectedObjects.get(i)) + pos.y);
                 }
@@ -1050,6 +1139,8 @@ public class MapInput implements InputProcessor
         }
         else
         {
+            if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT))
+                amount *= 10;
             this.map.zoom += amount / 3f;
             if(this.map.zoom < .1f)
                 this.map.zoom = .1f;
@@ -1081,27 +1172,75 @@ public class MapInput implements InputProcessor
 
     private void fill(float x, float y, TileTool tool)
     {
-        Tile tileToPaint = map.getTile(x, y - tileSize);
-        if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+        Tile tileToPaint = map.getTile(x, y);
+        Stack<Tile> s = Utils.floodFillQueue;
+        s.push(tileToPaint);
+        if(editor.getTileTools().size == 0)
+            return;
+        while(s.size() > 0)
         {
+            tileToPaint = s.pop();
             TileTool tile;
             if(editor.fileMenu.toolPane.random.selected)
                 tile = randomTile();
             else
                 tile = editor.getTileTools().first();
-            if(tile != null)
+            if (tile != null && tileToPaint != null)
             {
                 tileToPaint.hasBeenPainted = true;
                 PlaceTile placeTile = (PlaceTile) map.undo.pop();
                 placeTile.addTile(tileToPaint, tileToPaint.tool, tile);
                 map.undo.push(placeTile);
                 tileToPaint.setTool(tile);
-                fill(x + 64, y, tool);
-                fill(x - 64, y, tool);
-                fill(x, y + 64, tool);
-                fill(x, y - 64, tool);
+
+                float tileToPaintX = tileToPaint.position.x + tileSize / 2;
+                float tileToPaintY = tileToPaint.position.y - tileSize + tileSize / 2;
+
+                tileToPaint = map.getTile(tileToPaintX + tileSize, tileToPaintY);
+                if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+                    s.push(tileToPaint);
+
+                tileToPaint = map.getTile(tileToPaintX - tileSize, tileToPaintY);
+                if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+                    s.push(tileToPaint);
+
+                tileToPaint = map.getTile(tileToPaintX, tileToPaintY + tileSize);
+                if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+                    s.push(tileToPaint);
+
+                tileToPaint = map.getTile(tileToPaintX, tileToPaintY - tileSize);
+                if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+                    s.push(tileToPaint);
             }
         }
+        s.clear();
+
+
+
+
+
+
+//        Tile tileToPaint = map.getTile(x, y - tileSize);
+//        if(tileToPaint != null && tileToPaint.tool == tool && !tileToPaint.hasBeenPainted)
+//        {
+//            TileTool tile;
+//            if(editor.fileMenu.toolPane.random.selected)
+//                tile = randomTile();
+//            else
+//                tile = editor.getTileTools().first();
+//            if(tile != null)
+//            {
+//                tileToPaint.hasBeenPainted = true;
+//                PlaceTile placeTile = (PlaceTile) map.undo.pop();
+//                placeTile.addTile(tileToPaint, tileToPaint.tool, tile);
+//                map.undo.push(placeTile);
+//                tileToPaint.setTool(tile);
+//                fill(x + 64, y, tool);
+//                fill(x - 64, y, tool);
+//                fill(x, y + 64, tool);
+//                fill(x, y - 64, tool);
+//            }
+//        }
     }
 
     public static MapSprite newMapSprite(TileMap map, TileTool tileTool, Layer layer, float x, float y)
@@ -1204,11 +1343,24 @@ public class MapInput implements InputProcessor
         };
         zField.value.addListener(zListener);
 
-
         mapSprite.lockedProperties.add(idField);
         mapSprite.lockedProperties.add(rotationField);
         mapSprite.lockedProperties.add(scaleField);
         mapSprite.lockedProperties.add(zField);
+
+        float randomSize = Utils.randomFloat(map.editor.fileMenu.toolPane.minSizeValue, map.editor.fileMenu.toolPane.maxSizeValue);
+        float randomRotation = Utils.randomFloat(map.editor.fileMenu.toolPane.minRotationValue, map.editor.fileMenu.toolPane.maxRotationValue);
+        try
+        {
+            float z = Float.parseFloat(mapSprite.tool.getPropertyField("spawnZ").value.getText());
+            mapSprite.setZ(z);
+        }catch(NumberFormatException e){}
+        mapSprite.setScale(randomSize);
+        mapSprite.setRotation(randomRotation);
         return mapSprite;
+    }
+
+    private int sign (int x) {
+        return (x > 0) ? 1 : (x < 0) ? -1 : 0;
     }
 }

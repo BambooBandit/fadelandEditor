@@ -18,11 +18,11 @@ public class GameAssets
     private static BitmapFont font;
     private static BitmapFont headerFont;
     private static GlyphLayout glyph;
-    private static TextureAtlas gameAtlas;
     private static TextureAtlas uiAtlas;
     private static Skin uiSkin;
 
-    private static ObjectMap<String, TextureAtlas.AtlasRegion> cachedGameAtlas;
+    private static ObjectMap<String, ObjectMap<String, TextureAtlas.AtlasRegion>> nameToCachedAtlas = new ObjectMap<>();
+    private static ObjectMap<String, TextureAtlas> nameToGameAtlas = new ObjectMap<>();
 
     private GameAssets() { }
 
@@ -39,7 +39,8 @@ public class GameAssets
             uiSkin = new Skin();
             initFonts();
             loadAssets();
-            GameAssets.gameAssets.setGameAtlas(GameAssets.gameAssets.getAssets().get("map.atlas"));
+            GameAssets.gameAssets.setGameAtlas("map", GameAssets.gameAssets.getAssets().get("map.atlas"));
+            GameAssets.gameAssets.setGameAtlas("flatMap", GameAssets.gameAssets.getAssets().get("flatMap.atlas"));
         }
         return gameAssets;
     }
@@ -60,6 +61,7 @@ public class GameAssets
         uiSkin.add("small-font", smallFont);
         uiSkin.load(Gdx.files.internal("ui/ui.json"));
         assets.load("map.atlas", TextureAtlas.class);
+        assets.load("flatMap.atlas", TextureAtlas.class);
         assets.finishLoading();
     }
 
@@ -107,28 +109,35 @@ public class GameAssets
         return get().glyph;
     }
 
-    public static TextureAtlas getGameAtlas()
+    public static TextureAtlas getGameAtlas(String name)
     {
-        return get().gameAtlas;
+        return get().nameToGameAtlas.get(name);
     }
 
     /**Should only be used by the Loader
+     * @param name - Which atlas to work with
      * @param atlas - Setter*/
-    public static void setGameAtlas(TextureAtlas atlas)
+    public static void setGameAtlas(String name, TextureAtlas atlas)
     {
-        get().gameAtlas = atlas;
-        cachedGameAtlas = new ObjectMap<>(atlas.getRegions().size);
+        get().nameToGameAtlas.put(name, atlas);
+        ObjectMap<String, TextureAtlas.AtlasRegion> cachedGameAtlas = new ObjectMap<>(atlas.getRegions().size);
         for(int i = 0; i < atlas.getRegions().size; i++)
             cachedGameAtlas.put(atlas.getRegions().get(i).name, atlas.getRegions().get(i));
+        nameToCachedAtlas.put(name, cachedGameAtlas);
     }
 
-    public static TextureRegion getTextureRegion(String path) { return cachedGameAtlas.get(path); }
+    public static TextureRegion getTextureRegion(String name, String path)
+    {
+        if(nameToCachedAtlas.get(name) == null)
+            return null;
+        return nameToCachedAtlas.get(name).get(path);
+    }
 
-    public static boolean hasTextureRegion(String path) { return cachedGameAtlas.containsKey(path); }
+    public static boolean hasTextureRegion(String name, String path) { return nameToCachedAtlas.get(name).containsKey(path); }
 
-    public static Sprite createSprite(String path) { return new Sprite(cachedGameAtlas.get(path)); }
+    public static Sprite createSprite(String name, String path) { return new Sprite(nameToCachedAtlas.get(name).get(path)); }
 
-    public static TextureAtlas.AtlasSprite createAtlasSprite(String path) { return new TextureAtlas.AtlasSprite(cachedGameAtlas.get(path)); }
+    public static TextureAtlas.AtlasSprite createAtlasSprite(String name, String path) { return new TextureAtlas.AtlasSprite(nameToCachedAtlas.get(name).get(path)); }
 
     public static TextureAtlas getUIAtlas()
     {
