@@ -161,9 +161,16 @@ public class PropertyMenu extends Group
                         return c == '.' || Character.isDigit(c);
                     }
                 });
+
                 ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(probability);
                 PropertyField type = new PropertyField("Type", "", skin, this, false);
                 ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(type);
+
+                PropertyField dustType = new PropertyField("Dust Type", "", skin, this, false);
+                ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(dustType);
+
+                PropertyField dustColor = new PropertyField(skin, this, false, 1, 1, 1, 1);
+                ((TileTool) map.tileMenu.tileTable.getChildren().get(i)).lockedProperties.add(dustColor);
             }
         }
     }

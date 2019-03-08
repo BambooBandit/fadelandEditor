@@ -15,7 +15,6 @@ public class PropertyField extends Group
     private Label property; // Null if removeable, rgba, or rgbaDistanceRayAmount is true
     public TextField propertyTextField; // Null if removeable is false, or rgba or rgbaDistanceRayAmount is true
     public TextField value; // Null if rgba, or rgbaDistanceRayAmount is true
-    private Label aLabel; // Null if rgba and rgbaDistanceRayAmount is false
     private Label distanceLabel; // Null if rgbaDistanceRayAmount is false
     private Label rayAmountLabel; // Null if rgbaDistanceRayAmount is false
     public TextField rValue; // Null if rgba and rgbaDistanceRayAmount is false
@@ -71,9 +70,10 @@ public class PropertyField extends Group
             });
 
             this.table.add(this.remove);
-
-            addListener();
+            addRemoveableListener();
         }
+        else
+            addLockedListener();
 
         addActor(this.table);
     }
@@ -95,8 +95,6 @@ public class PropertyField extends Group
             }
         };
 
-        this.aLabel = new Label("A", skin);
-        this.aLabel.setAlignment(Align.right);
         this.rValue = new TextField(Float.toString(r), skin);
         this.gValue = new TextField(Float.toString(g), skin);
         this.bValue = new TextField(Float.toString(b), skin);
@@ -114,7 +112,6 @@ public class PropertyField extends Group
         this.table.add(this.rValue);
         this.table.add(this.gValue);
         this.table.add(this.bValue);
-        this.table.add(this.aLabel);
         this.table.add(this.aValue);
 
         if(removeable)
@@ -132,9 +129,10 @@ public class PropertyField extends Group
             });
 
             this.table.add(this.remove);
-
-            addListener();
+            addRemoveableListener();
         }
+        else
+            addLockedListener();
 
         addActor(this.table);
     }
@@ -156,8 +154,6 @@ public class PropertyField extends Group
             }
         };
 
-        this.aLabel = new Label("A", skin);
-        this.aLabel.setAlignment(Align.right);
         this.rValue = new TextField(Float.toString(r), skin);
         this.gValue = new TextField(Float.toString(g), skin);
         this.bValue = new TextField(Float.toString(b), skin);
@@ -183,7 +179,6 @@ public class PropertyField extends Group
         this.table.add(this.rValue);
         this.table.add(this.gValue);
         this.table.add(this.bValue);
-        this.table.add(this.aLabel);
         this.table.add(this.aValue);
         this.table.add(this.distanceLabel);
         this.table.add(this.distanceValue);
@@ -205,9 +200,10 @@ public class PropertyField extends Group
             });
 
             this.table.add(this.remove);
-
-            addListener();
+            addRemoveableListener();
         }
+        else
+            addLockedListener();
 
         addActor(this.table);
     }
@@ -220,12 +216,10 @@ public class PropertyField extends Group
             float removeable = 0;
             if(this.removeable)
                 removeable = height;
-            float labelWidth = ((width - removeable) / 5) * .55f;
-            float valueWidth = ((width - removeable) / 5) * 1.1125f;
+            float valueWidth = ((width - removeable) / 4);
             this.table.getCell(this.rValue).size(valueWidth, height);
             this.table.getCell(this.gValue).size(valueWidth, height);
             this.table.getCell(this.bValue).size(valueWidth, height);
-            this.table.getCell(this.aLabel).size(labelWidth, height);
             this.table.getCell(this.aValue).size(valueWidth, height);
         }
         else if(rgbaDistanceRayAmount)
@@ -236,12 +230,10 @@ public class PropertyField extends Group
             float distanceRayAmountWidth = ((((width - removeable) / 1.88f)) / 4);
             float distanceRayAmountLabelWidth = ((((width - removeable) / 1.88f)) / 4) * .6f;
             float distanceRayAmountValueWidth = ((((width - removeable) / 1.88f)) / 4) * 1.4f;
-            float rgbaLabelWidth = ((width - removeable - distanceRayAmountWidth * 4) / 5) * .4f;
-            float rgbaValueWidth = ((width - removeable - distanceRayAmountWidth * 4) / 5) * 1.15f;
+            float rgbaValueWidth = ((width - removeable - distanceRayAmountWidth * 4) / 4);
             this.table.getCell(this.rValue).size(rgbaValueWidth, height);
             this.table.getCell(this.gValue).size(rgbaValueWidth, height);
             this.table.getCell(this.bValue).size(rgbaValueWidth, height);
-            this.table.getCell(this.aLabel).size(rgbaLabelWidth, height);
             this.table.getCell(this.aValue).size(rgbaValueWidth, height);
             this.table.getCell(this.distanceLabel).size(distanceRayAmountLabelWidth, height);
             this.table.getCell(this.distanceValue).size(distanceRayAmountValueWidth, height);
@@ -337,8 +329,10 @@ public class PropertyField extends Group
                         this.aValue.getText().equals(toCompare.aValue.getText()) &&
                         this.distanceValue.getText().equals(toCompare.distanceValue.getText()) &&
                         this.rayAmountValue.getText().equals(toCompare.rayAmountValue.getText());
-            else if(!rgba && !toCompare.rgba && !rgbaDistanceRayAmount && !toCompare.rgbaDistanceRayAmount)
+            else if(!rgba && !toCompare.rgba && !rgbaDistanceRayAmount && !toCompare.rgbaDistanceRayAmount && this.propertyTextField != null && toCompare.propertyTextField != null)
                 return this.propertyTextField.getText().equals(toCompare.propertyTextField.getText()) && this.value.getText().equals(toCompare.value.getText());
+            else if(!rgba && !toCompare.rgba && !rgbaDistanceRayAmount && !toCompare.rgbaDistanceRayAmount)
+                return this.value.getText().equals(toCompare.value.getText());
         }
         return false;
     }
@@ -357,12 +351,14 @@ public class PropertyField extends Group
                     this.aValue.getText().hashCode() +
                     this.distanceValue.getText().hashCode() +
                     this.rayAmountValue.getText().hashCode();
-        else
+        else if(this.propertyTextField != null)
             return this.propertyTextField.getText().hashCode() + this.value.getText().hashCode();
+        else
+            return this.value.getText().hashCode();
     }
 
-    /** Any changes you make to one property will change all other identical properties in a selection of objects or tiles*/
-    private void addListener()
+    /** Any changes you make to one removeable property will change all other identical properties in a selection of objects or tiles*/
+    private void addRemoveableListener()
     {
         final TileMap map = menu.map;
 
@@ -653,7 +649,9 @@ public class PropertyField extends Group
                         {
                             final PropertyField finalPropertyField = propertyField;
                             textFieldActions.add(() ->
-                            {finalPropertyField.propertyTextField.setText(property.propertyTextField.getText());});
+                            {
+                                finalPropertyField.propertyTextField.setText(property.propertyTextField.getText());
+                            });
                         }
                     }
                     for (int i = 0; i < map.selectedObjects.size; i++)
@@ -667,7 +665,9 @@ public class PropertyField extends Group
                         {
                             final PropertyField finalPropertyField = propertyField;
                             textFieldActions.add(() ->
-                            {finalPropertyField.propertyTextField.setText(property.propertyTextField.getText());});
+                            {
+                                finalPropertyField.propertyTextField.setText(property.propertyTextField.getText());
+                            });
                         }
                     }
                     super.keyTyped(event, character);
@@ -720,6 +720,349 @@ public class PropertyField extends Group
                 }
             };
             this.value.addListener(valueClickListener);
+        }
+    }
+
+    /** Any changes you make to one locked property will change all other identical properties in a selection of objects or tiles*/
+    private void addLockedListener()
+    {
+        final TileMap map = menu.map;
+
+        final PropertyField property = this;
+
+        if(rgba || rgbaDistanceRayAmount)
+        {
+            this.rValue.getListeners().clear();
+            this.gValue.getListeners().clear();
+            this.bValue.getListeners().clear();
+            this.aValue.getListeners().clear();
+
+            TextField.TextFieldClickListener rClickListener = rValue.new TextFieldClickListener()
+            {
+                @Override
+                public boolean keyTyped(InputEvent event, char character)
+                {
+                    for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                    {
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.rValue.setText(property.rValue.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedObjects.size; i++)
+                    {
+                        if (map.selectedObjects.get(i).properties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedObjects.get(i).properties.contains(property, false))
+                            propertyField = map.selectedObjects.get(i).properties.get(map.selectedObjects.get(i).properties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.rValue.setText(property.rValue.getText());});
+                        }
+                    }
+                    super.keyTyped(event, character);
+                    for (int i = 0; i < textFieldActions.size; i++)
+                        textFieldActions.get(i).action();
+                    textFieldActions.clear();
+                    return false;
+                }
+            };
+            this.rValue.addListener(rClickListener);
+
+            TextField.TextFieldClickListener gClickListener = gValue.new TextFieldClickListener()
+            {
+                @Override
+                public boolean keyTyped(InputEvent event, char character)
+                {
+                    for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                    {
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.gValue.setText(property.gValue.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedObjects.size; i++)
+                    {
+                        if (map.selectedObjects.get(i).properties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedObjects.get(i).properties.contains(property, false))
+                            propertyField = map.selectedObjects.get(i).properties.get(map.selectedObjects.get(i).properties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.gValue.setText(property.gValue.getText());});
+                        }
+                    }
+                    super.keyTyped(event, character);
+                    for (int i = 0; i < textFieldActions.size; i++)
+                        textFieldActions.get(i).action();
+                    textFieldActions.clear();
+                    return false;
+                }
+            };
+            this.gValue.addListener(gClickListener);
+
+            TextField.TextFieldClickListener bClickListener = bValue.new TextFieldClickListener()
+            {
+                @Override
+                public boolean keyTyped(InputEvent event, char character)
+                {
+                    for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                    {
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.bValue.setText(property.bValue.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedObjects.size; i++)
+                    {
+                        if (map.selectedObjects.get(i).properties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedObjects.get(i).properties.contains(property, false))
+                            propertyField = map.selectedObjects.get(i).properties.get(map.selectedObjects.get(i).properties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.bValue.setText(property.bValue.getText());});
+                        }
+                    }
+                    super.keyTyped(event, character);
+                    for (int i = 0; i < textFieldActions.size; i++)
+                        textFieldActions.get(i).action();
+                    textFieldActions.clear();
+                    return false;
+                }
+            };
+            this.bValue.addListener(bClickListener);
+
+            TextField.TextFieldClickListener aClickListener = aValue.new TextFieldClickListener()
+            {
+                @Override
+                public boolean keyTyped(InputEvent event, char character)
+                {
+                    for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                    {
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.aValue.setText(property.aValue.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedObjects.size; i++)
+                    {
+                        if (map.selectedObjects.get(i).properties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedObjects.get(i).properties.contains(property, false))
+                            propertyField = map.selectedObjects.get(i).properties.get(map.selectedObjects.get(i).properties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.aValue.setText(property.aValue.getText());});
+                        }
+                    }
+                    super.keyTyped(event, character);
+                    for (int i = 0; i < textFieldActions.size; i++)
+                        textFieldActions.get(i).action();
+                    textFieldActions.clear();
+                    return false;
+                }
+            };
+            this.aValue.addListener(aClickListener);
+        }
+        if(rgbaDistanceRayAmount)
+        {
+            this.distanceValue.getListeners().clear();
+            this.rayAmountValue.getListeners().clear();
+
+            TextField.TextFieldClickListener distanceClickListener = distanceValue.new TextFieldClickListener()
+            {
+                @Override
+                public boolean keyTyped(InputEvent event, char character)
+                {
+                    for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                    {
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.distanceValue.setText(property.distanceValue.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedObjects.size; i++)
+                    {
+                        if (map.selectedObjects.get(i).properties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedObjects.get(i).properties.contains(property, false))
+                            propertyField = map.selectedObjects.get(i).properties.get(map.selectedObjects.get(i).properties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.distanceValue.setText(property.distanceValue.getText());});
+                        }
+                    }
+                    super.keyTyped(event, character);
+                    for (int i = 0; i < textFieldActions.size; i++)
+                        textFieldActions.get(i).action();
+                    textFieldActions.clear();
+                    return false;
+                }
+            };
+            this.distanceValue.addListener(distanceClickListener);
+
+            TextField.TextFieldClickListener rayAmountClickListener = rayAmountValue.new TextFieldClickListener()
+            {
+                @Override
+                public boolean keyTyped(InputEvent event, char character)
+                {
+                    for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                    {
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.rayAmountValue.setText(property.rayAmountValue.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedObjects.size; i++)
+                    {
+                        if (map.selectedObjects.get(i).properties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedObjects.get(i).properties.contains(property, false))
+                            propertyField = map.selectedObjects.get(i).properties.get(map.selectedObjects.get(i).properties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.rayAmountValue.setText(property.rayAmountValue.getText());});
+                        }
+                    }
+                    super.keyTyped(event, character);
+                    for (int i = 0; i < textFieldActions.size; i++)
+                        textFieldActions.get(i).action();
+                    textFieldActions.clear();
+                    return false;
+                }
+            };
+            this.rayAmountValue.addListener(rayAmountClickListener);
+        }
+        if(!rgba && !rgbaDistanceRayAmount)
+        {
+            this.value.getListeners().clear();
+
+            TextField.TextFieldClickListener valueClickListener = value.new TextFieldClickListener()
+            {
+                @Override
+                public boolean keyTyped(InputEvent event, char character)
+                {
+                    for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
+                    {
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.value.setText(property.value.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedObjects.size; i++)
+                    {
+                        if (map.selectedObjects.get(i).properties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedObjects.get(i).properties.contains(property, false))
+                            propertyField = map.selectedObjects.get(i).properties.get(map.selectedObjects.get(i).properties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.value.setText(property.value.getText());});
+                        }
+                    }
+                    super.keyTyped(event, character);
+                    for (int i = 0; i < textFieldActions.size; i++)
+                        textFieldActions.get(i).action();
+                    textFieldActions.clear();
+                    return false;
+                }
+            };
+            this.value.addListener(valueClickListener);
+        }
+    }
+
+    public void setRGBA(float r, float g, float b, float a)
+    {
+        if(rgba)
+        {
+            this.rValue.setText(Float.toString(r));
+            this.gValue.setText(Float.toString(g));
+            this.bValue.setText(Float.toString(b));
+            this.aValue.setText(Float.toString(a));
+        }
+    }
+
+    public void setRGBADR(float r, float g, float b, float a, float distance, int rayAmount)
+    {
+        if(rgbaDistanceRayAmount)
+        {
+            this.rValue.setText(Float.toString(r));
+            this.gValue.setText(Float.toString(g));
+            this.bValue.setText(Float.toString(b));
+            this.aValue.setText(Float.toString(a));
+            this.distanceValue.setText(Float.toString(distance));
+            this.rayAmountValue.setText(Float.toString(rayAmount));
         }
     }
 }

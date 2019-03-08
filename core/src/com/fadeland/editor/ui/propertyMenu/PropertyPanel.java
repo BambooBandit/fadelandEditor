@@ -200,9 +200,11 @@ public class PropertyPanel extends Group
             for (int i = 0; i < properties.size; i++)
                 this.table.add(properties.get(i)).padBottom(1).row();
         }
-        else if(map.tileMenu.selectedTiles.size > 1) // Only add common properties
+        else if(map.tileMenu.selectedTiles.size > 1) // Only add common properties and locked properties
         {
             TileTool firstTool = map.tileMenu.selectedTiles.first();
+            for(int i = 0; i < firstTool.lockedProperties.size; i ++)
+                this.table.add(firstTool.lockedProperties.get(i)).padBottom(1).row();
             for(int i = 0; i < firstTool.properties.size; i ++)
             {
                 boolean commonProperty = true;

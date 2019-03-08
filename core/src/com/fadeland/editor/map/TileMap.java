@@ -811,8 +811,20 @@ public class TileMap implements Screen
                     TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
                     for (int h = 0; h < toolData.lockedPropertyData.size(); h++)
                     {
-                        NonColorPropertyData propertyData = (NonColorPropertyData) toolData.lockedPropertyData.get(h);
-                        tileTool.getPropertyField(propertyData.property).value.setText(propertyData.value);
+                        PropertyData property = toolData.lockedPropertyData.get(h);
+                        if (property instanceof LightPropertyData)
+                        {
+                            LightPropertyData lightPropertyData = (LightPropertyData) property;
+                            tileTool.getLockedLightField().setRGBADR(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                        } else if (property instanceof ColorPropertyData)
+                        {
+                            ColorPropertyData colorPropertyData = (ColorPropertyData) property;
+                            tileTool.getLockedColorField().setRGBA(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                        } else
+                        {
+                            NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
+                            tileTool.getPropertyField(nonColorPropertyData.property).value.setText(nonColorPropertyData.value);
+                        }
                     }
                     for (int h = 0; h < toolData.propertyData.size(); h++)
                     {
