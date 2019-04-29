@@ -117,9 +117,12 @@ public class TileMenu extends Group
         // Add all the tiles to the tileTable as Images
         id = createTileSheet(SheetTools.TILES, skin, 0);
         id = createTileSheet(SheetTools.DESERTTILES, skin, id);
+        id = createTileSheet(SheetTools.CANYONTILES, skin, id);
 
         id = createSpriteSheet(SheetTools.MAP, skin, 0);
         id = createSpriteSheet(SheetTools.FLATMAP, skin, id);
+        id = createSpriteSheet(SheetTools.CANYONMAP, skin, id);
+        id = createSpriteSheet(SheetTools.CANYONBACKDROP, skin, id);
 
         this.stack.add(this.background);
         this.stack.add(this.tileScrollPane);

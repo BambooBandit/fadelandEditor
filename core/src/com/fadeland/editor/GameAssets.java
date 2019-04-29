@@ -41,6 +41,8 @@ public class GameAssets
             loadAssets();
             GameAssets.gameAssets.setGameAtlas("map", GameAssets.gameAssets.getAssets().get("map.atlas"));
             GameAssets.gameAssets.setGameAtlas("flatMap", GameAssets.gameAssets.getAssets().get("flatMap.atlas"));
+            GameAssets.gameAssets.setGameAtlas("canyonMap", GameAssets.gameAssets.getAssets().get("canyonMap.atlas"));
+            GameAssets.gameAssets.setGameAtlas("canyonBackdrop", GameAssets.gameAssets.getAssets().get("canyonBackdrop.atlas"));
         }
         return gameAssets;
     }
@@ -62,6 +64,8 @@ public class GameAssets
         uiSkin.load(Gdx.files.internal("ui/ui.json"));
         assets.load("map.atlas", TextureAtlas.class);
         assets.load("flatMap.atlas", TextureAtlas.class);
+        assets.load("canyonMap.atlas", TextureAtlas.class);
+        assets.load("canyonBackdrop.atlas", TextureAtlas.class);
         assets.finishLoading();
     }
 

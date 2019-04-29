@@ -50,7 +50,7 @@ public class LayerPropertyPanel extends Group
             @Override
             public boolean acceptChar(TextField textField, char c)
             {
-                return c == '.' || Character.isDigit(c);
+                return c == '.' || Character.isDigit(c) || c == '-';
             }
         });
 

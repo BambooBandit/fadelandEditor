@@ -32,7 +32,10 @@ public class TileMapData
         boolean map = false;
         boolean tiles = false;
         boolean flatMap = false;
+        boolean canyonMap = false;
+        boolean canyonBackdrop = false;
         boolean desertTiles = false;
+        boolean canyonTiles = false;
 
         this.layers = new ArrayList<>();
         for(int i = 0; i < tileMap.layers.size; i ++)
@@ -54,8 +57,14 @@ public class TileMapData
                     tiles = true;
                 else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.FLATMAP)
                     flatMap = true;
+                else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.CANYONMAP)
+                    canyonMap = true;
+                else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.CANYONBACKDROP)
+                    canyonBackdrop = true;
                 else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.DESERTTILES)
                     desertTiles = true;
+                else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.CANYONTILES)
+                    canyonTiles = true;
             }
         }
         if(map)
@@ -64,8 +73,14 @@ public class TileMapData
             this.sheets.add(new TileSheetData(tileMap, SheetTools.TILES, TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
         if(flatMap)
             this.sheets.add(new SpriteSheetData(tileMap, SheetTools.FLATMAP));
+        if(canyonMap)
+            this.sheets.add(new SpriteSheetData(tileMap, SheetTools.CANYONMAP));
+        if(canyonBackdrop)
+            this.sheets.add(new SpriteSheetData(tileMap, SheetTools.CANYONBACKDROP));
         if(desertTiles)
             this.sheets.add(new TileSheetData(tileMap, SheetTools.DESERTTILES, TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
+        if(canyonTiles)
+            this.sheets.add(new TileSheetData(tileMap, SheetTools.CANYONTILES, TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
 
         this.tileGroups = new ArrayList<>();
         for(int i = 0; i < tileMap.tileGroups.size; i ++)
