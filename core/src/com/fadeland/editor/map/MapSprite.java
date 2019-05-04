@@ -111,25 +111,26 @@ public class MapSprite extends Tile
 
         verts[0] = vertices[SpriteBatch.X2] + xSkewAmount + xOffset;
         verts[1] = vertices[SpriteBatch.Y2] + ySkewAmount + yOffset;
-        verts[2] = Color.toFloatBits(255, 255, 255, 255);
+        float colorFloatBits = sprite.getColor().toFloatBits();
+        verts[2] = colorFloatBits;
         verts[3] = u;
         verts[4] = v;
 
         verts[5] = vertices[SpriteBatch.X3] + xSkewAmount + xOffset;
         verts[6] = vertices[SpriteBatch.Y3] + ySkewAmount + yOffset ;
-        verts[7] = Color.toFloatBits(255, 255, 255, 255);
+        verts[7] = colorFloatBits;
         verts[8] = u2;
         verts[9] = v;
 
         verts[10] = vertices[SpriteBatch.X4] + xOffset;
         verts[11] = vertices[SpriteBatch.Y4] + yOffset;
-        verts[12] = Color.toFloatBits(255, 255, 255, 255);
+        verts[12] = colorFloatBits;
         verts[13] = u2;
         verts[14] = v2;
 
         verts[15] = vertices[SpriteBatch.X1] + xOffset;
         verts[16] = vertices[SpriteBatch.Y1] + yOffset;
-        verts[17] = Color.toFloatBits(255, 255, 255, 255);
+        verts[17] = colorFloatBits;
         verts[18] = u;
         verts[19] = v2;
 
@@ -250,6 +251,22 @@ public class MapSprite extends Tile
             }
         }
         this.z = z;
+    }
+
+    public void setColor(float r, float g, float b, float a)
+    {
+        this.sprite.setColor(r, g, b, a);
+        for(int i = 0; i < lockedProperties.size; i ++)
+        {
+            if(lockedProperties.get(i).rgba)
+            {
+                PropertyField colorProperty = lockedProperties.get(i);
+                colorProperty.rValue.setText(Float.toString(r));
+                colorProperty.gValue.setText(Float.toString(g));
+                colorProperty.bValue.setText(Float.toString(b));
+                colorProperty.aValue.setText(Float.toString(a));
+            }
+        }
     }
 
     public void setRotation(float degree)

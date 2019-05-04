@@ -151,7 +151,7 @@ public class FadelandEditor extends Game
 			return null;
 		if(tileMenu.selectedTiles.first().tool != TileMenuTools.SPRITE)
 			return  null;
-		if(fileMenu.toolPane.random.selected)
+		if(fileMenu.toolPane.random.selected && randomSpriteIndex < tileMenu.selectedTiles.size)
 			return tileMenu.selectedTiles.get(randomSpriteIndex);
 		return tileMenu.selectedTiles.first();
 	}

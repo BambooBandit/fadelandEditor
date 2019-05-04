@@ -509,7 +509,8 @@ public class TileMap implements Screen
         this.editor.shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
-        b2dr.render(this.world, camera.combined);
+        if(editor.fileMenu.toolPane.b2drender.selected)
+            b2dr.render(this.world, camera.combined);
 
         this.stage.act();
         this.stage.draw();
@@ -611,7 +612,7 @@ public class TileMap implements Screen
         Tile tileToPaint = getTile(x, y);
         Stack<Tile> s = Utils.floodFillQueue;
         s.push(tileToPaint);
-        if(editor.getTileTools().size == 0)
+        if(editor.getTileTools() == null || editor.getTileTools().size == 0)
             return;
         while(s.size() > 0)
         {
@@ -746,9 +747,10 @@ public class TileMap implements Screen
                         MapSprite mapSprite = input.newMapSprite(this, tileTool, layer,savedSpriteLayer.tiles.get(k).x + savedSpriteLayer.tiles.get(k).width / 2, savedSpriteLayer.tiles.get(k).y + savedSpriteLayer.tiles.get(k).height / 2);
                         Utils.setCenterOrigin(mapSprite.position.x, mapSprite.position.y);
                         mapSprite.setID(savedSpriteLayer.tiles.get(k).spriteID);
-                        mapSprite.rotate(savedSpriteLayer.tiles.get(k).rotation);
+                        mapSprite.setRotation(savedSpriteLayer.tiles.get(k).rotation);
                         mapSprite.setScale(savedSpriteLayer.tiles.get(k).scale);
                         mapSprite.setZ(savedSpriteLayer.tiles.get(k).z);
+                        mapSprite.setColor(savedSpriteLayer.tiles.get(k).r, savedSpriteLayer.tiles.get(k).g, savedSpriteLayer.tiles.get(k).b, savedSpriteLayer.tiles.get(k).a);
                         layer.tiles.add(mapSprite);
                     }
                 }

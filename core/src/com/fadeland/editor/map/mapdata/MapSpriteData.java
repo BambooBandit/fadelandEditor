@@ -5,6 +5,7 @@ import com.fadeland.editor.map.MapSprite;
 public class MapSpriteData
 {
     public float x, y, z;
+    public float r, g, b, a;
     public int id;
     public int spriteID; // Manually definable ID
     public String name;
@@ -22,5 +23,9 @@ public class MapSpriteData
         this.height = mapSprite.sprite.getHeight();
         this.rotation = mapSprite.sprite.getRotation();
         this.scale = mapSprite.sprite.getScaleX();
+        this.r = mapSprite.sprite.getColor().r;
+        this.g = mapSprite.sprite.getColor().g;
+        this.b = mapSprite.sprite.getColor().b;
+        this.a = mapSprite.sprite.getColor().a;
     }
 }

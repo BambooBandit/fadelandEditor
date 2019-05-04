@@ -1343,13 +1343,21 @@ public class MapInput implements InputProcessor
         };
         zField.value.addListener(zListener);
 
+        float randomSize = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minSizeValue, map.editor.fileMenu.toolPane.minMaxDialog.maxSizeValue);
+        float randomRotation = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minRotationValue, map.editor.fileMenu.toolPane.minMaxDialog.maxRotationValue);
+        float randomR = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minRValue, map.editor.fileMenu.toolPane.minMaxDialog.maxRValue);
+        float randomG = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minGValue, map.editor.fileMenu.toolPane.minMaxDialog.maxGValue);
+        float randomB = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minBValue, map.editor.fileMenu.toolPane.minMaxDialog.maxBValue);
+        float randomA = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minAValue, map.editor.fileMenu.toolPane.minMaxDialog.maxAValue);
+
+        PropertyField colorField = new PropertyField(GameAssets.getUISkin(), map.propertyMenu, false, randomR, randomG, randomB, randomA);
+
         mapSprite.lockedProperties.add(idField);
         mapSprite.lockedProperties.add(rotationField);
         mapSprite.lockedProperties.add(scaleField);
         mapSprite.lockedProperties.add(zField);
+        mapSprite.lockedProperties.add(colorField);
 
-        float randomSize = Utils.randomFloat(map.editor.fileMenu.toolPane.minSizeValue, map.editor.fileMenu.toolPane.maxSizeValue);
-        float randomRotation = Utils.randomFloat(map.editor.fileMenu.toolPane.minRotationValue, map.editor.fileMenu.toolPane.maxRotationValue);
         try
         {
             float z = Float.parseFloat(mapSprite.tool.getPropertyField("spawnZ").value.getText());
@@ -1357,6 +1365,7 @@ public class MapInput implements InputProcessor
         }catch(NumberFormatException e){}
         mapSprite.setScale(randomSize);
         mapSprite.setRotation(randomRotation);
+        mapSprite.setColor(randomR, randomG, randomB, randomA);
         return mapSprite;
     }
 
