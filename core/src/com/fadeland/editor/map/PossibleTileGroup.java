@@ -93,14 +93,13 @@ public class PossibleTileGroup
         int right = 0;
         int down = tileGroup.height;
 
-        PlaceTile placeTile = new PlaceTile(layer.map);
+        PlaceTile placeTile = new PlaceTile(layer.map, layer);
 
         for(int i = 0; i < tileGroup.boundGroup.size; i ++)
         {
             if(tileGroup.types.get(i) != null)
             {
                 Tile tile = layer.map.getTile(position.x + 1 + (right * tileSize), position.y + - tileSize + (down * tileSize));
-                placeTile.addTile(tile, tile.tool, tileGroup.boundGroup.get(i));
                 tile.setTool(tileGroup.boundGroup.get(i));
             }
             right ++;

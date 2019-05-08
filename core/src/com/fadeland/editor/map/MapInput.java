@@ -464,7 +464,7 @@ public class MapInput implements InputProcessor
                 Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
                 if(clickedTile != null)
                 {
-                    map.performAction(new PlaceTile(map));
+                    map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                     fill(coords.x, coords.y, clickedTile.tool);
                     map.findAllTilesToBeGrouped();
                 }
@@ -476,7 +476,8 @@ public class MapInput implements InputProcessor
                 TileTool randomTile = randomTile();
                 if(clickedTile != null && randomTile != null && editor.getFileTool().tool == Tools.BRUSH)
                 {
-                    map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, randomTile)); // TODO nullpointer
+                    PlaceTile placeTile = new PlaceTile(map, (TileLayer) map.selectedLayer);
+                    map.performAction(placeTile);
                     clickedTile.setTool(randomTile);
                 }
                 map.findAllTilesToBeGrouped();
@@ -525,7 +526,7 @@ public class MapInput implements InputProcessor
                     return false;
                 }
                 if(editor.getTileTools().size > 1 && editor.getFileTool().tool == Tools.BRUSH)
-                    map.performAction(new PlaceTile(map));
+                    map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                 Tile clickedTile = map.getTile(coords.x, coords.y - tileSize);
                 if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.SELECT)
                 {
@@ -545,19 +546,20 @@ public class MapInput implements InputProcessor
                     {
                         if (editor.getFileTool().tool == Tools.BRUSH)
                         {
-                            if(editor.getTileTools().size > 1)
+                            if(editor.getTileTools().size > 1 && !editor.fileMenu.toolPane.random.selected)
                             {
                                 PlaceTile placeTile = (PlaceTile) map.undo.pop();
-                                placeTile.addTile(clickedTile, clickedTile.tool, editor.getTileTools().get(i));
                                 map.undo.push(placeTile);
                             }
                             else
-                                map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, editor.getTileTools().get(i)));
+                            {
+                                map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
+                            }
                             clickedTile.setTool(editor.getTileTools().get(i));
                         }
                         else if (editor.getFileTool().tool == Tools.ERASER)
                         {
-                            map.performAction(new PlaceTile(map, clickedTile, clickedTile.tool, null));
+                            map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                             clickedTile.setTool(null);
                         }
                         map.findAllTilesToBeGrouped();
@@ -856,6 +858,7 @@ public class MapInput implements InputProcessor
             if (map.undo.peek() instanceof PlaceTile)
             {
                 PlaceTile placeTile = (PlaceTile) map.undo.pop();
+                placeTile.addNewTiles();
                 if (placeTile.changed())
                     map.undo.push(placeTile);
             }
@@ -1033,9 +1036,13 @@ public class MapInput implements InputProcessor
                 {
                     if(clickedTile.tool != randomTile)
                     {
-                        PlaceTile placeTile = (PlaceTile) map.undo.pop();
-                        placeTile.addTile(clickedTile, clickedTile.tool, randomTile);
-                        map.undo.push(placeTile);
+                        if(map.undo.peek() instanceof PlaceTile)
+                        {
+                            PlaceTile placeTile = (PlaceTile) map.undo.pop();
+                            map.undo.push(placeTile);
+                        }
+                        else
+                            map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                     }
                     clickedTile.setTool(randomTile);
                     map.findAllTilesToBeGrouped();
@@ -1056,9 +1063,10 @@ public class MapInput implements InputProcessor
                             if(clickedTile.tool != editor.getTileTools().get(i) && map.undo.size() > 0 && map.undo.peek() instanceof PlaceTile)
                             {
                                 PlaceTile placeTile = (PlaceTile) map.undo.pop();
-                                placeTile.addTile(clickedTile, clickedTile.tool, editor.getTileTools().get(i));
                                 map.undo.push(placeTile);
                             }
+                            else
+                                map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                             clickedTile.setTool(editor.getTileTools().get(i));
                         }
                         else if (editor.getFileTool().tool == Tools.ERASER)
@@ -1066,9 +1074,10 @@ public class MapInput implements InputProcessor
                             if(clickedTile.tool != null)
                             {
                                 PlaceTile placeTile = (PlaceTile) map.undo.pop();
-                                placeTile.addTile(clickedTile, clickedTile.tool, null);
                                 map.undo.push(placeTile);
                             }
+                            else
+                                map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                             clickedTile.setTool(null);
                         }
                         map.findAllTilesToBeGrouped();
@@ -1189,7 +1198,6 @@ public class MapInput implements InputProcessor
             {
                 tileToPaint.hasBeenPainted = true;
                 PlaceTile placeTile = (PlaceTile) map.undo.pop();
-                placeTile.addTile(tileToPaint, tileToPaint.tool, tile);
                 map.undo.push(placeTile);
                 tileToPaint.setTool(tile);
 
