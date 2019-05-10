@@ -80,27 +80,40 @@ public class TileGroup
         int x = 0;
         for(int i = 0; i < selectedTileTools.size; i ++)
         {
-            while((tileSheetWidth - selectedTileTools.get(i).x / tileSize) - lowestX > x)
+            while(x < (tileSheetWidth - selectedTileTools.get(i).x / tileSize) - lowestX)
             {
                 boundGroup.add(null);
                 types.add(null);
                 x ++;
             }
-
-            if((tileSheetWidth - selectedTileTools.get(i).x / tileSize) - lowestX == x)
+            if(x == (tileSheetWidth - selectedTileTools.get(i).x / tileSize) - lowestX)
             {
-                boundGroup.add(selectedTileTools.get(i));
 
                 int xOffset = selectedTileTools.first().x - selectedTileTools.get(i).x;
                 int yOffset = selectedTileTools.first().y - selectedTileTools.get(i).y;
                 Tile tile = map.getTile(clickedX + xOffset, clickedY + yOffset - tileSize);
                 if(tile.tool == null)
+                {
+                    boundGroup.add(null);
                     types.add(null);
+                }
                 else
+                {
+                    boundGroup.add(selectedTileTools.get(i));
                     types.add(tile.tool.getPropertyField("Type").value.getText());
+                }
+                x ++;
+            }
+            else
+            {
+                x ++;
+                boundGroup.add(null);
+                types.add(null);
+                i--;
             }
 
-            x ++;
+
+
             if(x >= width)
                 x = 0;
         }
@@ -140,5 +153,6 @@ public class TileGroup
                 x = 0;
             }
         }
+        System.out.println();
     }
 }
