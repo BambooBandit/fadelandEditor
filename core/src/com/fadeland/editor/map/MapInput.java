@@ -1057,7 +1057,6 @@ public class MapInput implements InputProcessor
                     Tile clickedTile = map.getTile(coords.x + xOffset, coords.y + yOffset - tileSize);
                     if (editor.getFileTool() != null && clickedTile != null)
                     {
-
                         if (editor.getFileTool().tool == Tools.BRUSH)
                         {
                             if(clickedTile.tool != editor.getTileTools().get(i) && map.undo.size() > 0 && map.undo.peek() instanceof PlaceTile)
@@ -1068,6 +1067,7 @@ public class MapInput implements InputProcessor
                             else
                                 map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                             clickedTile.setTool(editor.getTileTools().get(i));
+                            map.findAllTilesToBeGrouped();
                         }
                         else if (editor.getFileTool().tool == Tools.ERASER)
                         {
@@ -1079,8 +1079,8 @@ public class MapInput implements InputProcessor
                             else
                                 map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                             clickedTile.setTool(null);
+                            map.findAllTilesToBeGrouped();
                         }
-                        map.findAllTilesToBeGrouped();
                     }
                 }
             }
