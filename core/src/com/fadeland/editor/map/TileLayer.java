@@ -1,5 +1,6 @@
 package com.fadeland.editor.map;
 
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
@@ -42,8 +43,10 @@ public class TileLayer extends Layer
         {
             for (int i = 0; i < editor.getTileTools().size; i ++)
             {
+                editor.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
                 editor.getTileTools().get(i).previewSprites.get(0).setAlpha(.25f);
                 editor.getTileTools().get(i).previewSprites.get(0).draw(editor.batch);
+                editor.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
             }
         }
 
