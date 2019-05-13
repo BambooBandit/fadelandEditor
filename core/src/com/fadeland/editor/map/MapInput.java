@@ -37,6 +37,8 @@ public class MapInput implements InputProcessor
     private float oldXofDragLayer;
     private float oldYofDragLayer;
 
+    private Tile lastTile = null;
+
     private boolean draggingRotateBox = false;
     private boolean draggingMoveBox = false;
     private boolean draggingLayerMoveBox = false;
@@ -48,6 +50,7 @@ public class MapInput implements InputProcessor
     public int lastDragY;
 
     public boolean isDrawingObjectPolygon = false;
+    private Array<PossibleTileGroup> randomPossibleTileGroups;
 
     public MapInput(FadelandEditor editor, TileMap map)
     {
@@ -60,6 +63,7 @@ public class MapInput implements InputProcessor
 
         this.objectVertices = new FloatArray();
         this.objectVerticePosition = new Vector2();
+        this.randomPossibleTileGroups = new Array<>();
     }
 
     @Override
@@ -593,14 +597,19 @@ public class MapInput implements InputProcessor
                 else if (editor.getFileTool() != null && editor.getFileTool().tool == Tools.STAMP)
                 {
                     Array<PossibleTileGroup> possibleTileGroups = ((TileLayer) map.selectedLayer).possibleTileGroups;
+                    randomPossibleTileGroups.clear();
                     for(int i = 0; i < possibleTileGroups.size; i ++)
                     {
                         if(possibleTileGroups.get(i).clickedGroup(coords.x, coords.y))
-                        {
-                            possibleTileGroups.get(i).stamp();
-                            map.findAllTilesToBeGrouped();
-                            break;
-                        }
+                            randomPossibleTileGroups.add(possibleTileGroups.get(i));
+                    }
+
+                    if(randomPossibleTileGroups.size > 0)
+                    {
+                        int randomIndex = Utils.randomInt(0, randomPossibleTileGroups.size - 1);
+                        randomPossibleTileGroups.get(randomIndex).stamp();
+                        randomPossibleTileGroups.clear();
+                        map.findAllTilesToBeGrouped();
                     }
                 }
             }
@@ -928,6 +937,10 @@ public class MapInput implements InputProcessor
         editor.stage.unfocus(map.tileMenu.tileScrollPane);
         editor.stage.unfocus(map.tileMenu.spriteScrollPane);
         Vector3 coords = Utils.unproject(map.camera, screenX, screenY);
+        Tile currentTile = map.getTile(coords.x, coords.y);
+        if(lastTile != null && lastTile == currentTile)
+            return false;
+        lastTile = currentTile;
         if(editor.getFileTool() != null && editor.getFileTool().tool == Tools.BOXSELECT)
         {
             map.boxSelect.continueDrag(coords.x, coords.y);
