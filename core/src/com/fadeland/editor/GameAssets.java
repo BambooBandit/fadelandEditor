@@ -39,7 +39,7 @@ public class GameAssets
             uiSkin = new Skin();
             initFonts();
             loadAssets();
-            GameAssets.gameAssets.setGameAtlas("map", GameAssets.gameAssets.getAssets().get("map.atlas"));
+            GameAssets.gameAssets.setGameAtlas("map", GameAssets.gameAssets.getAssets().get("editorMap.atlas"));
             GameAssets.gameAssets.setGameAtlas("flatMap", GameAssets.gameAssets.getAssets().get("flatMap.atlas"));
             GameAssets.gameAssets.setGameAtlas("canyonMap", GameAssets.gameAssets.getAssets().get("canyonMap.atlas"));
             GameAssets.gameAssets.setGameAtlas("canyonBackdrop", GameAssets.gameAssets.getAssets().get("canyonBackdrop.atlas"));
@@ -62,7 +62,7 @@ public class GameAssets
         uiSkin.add("header-font", headerFont);
         uiSkin.add("small-font", smallFont);
         uiSkin.load(Gdx.files.internal("ui/ui.json"));
-        assets.load("map.atlas", TextureAtlas.class);
+        assets.load("editorMap.atlas", TextureAtlas.class);
         assets.load("flatMap.atlas", TextureAtlas.class);
         assets.load("canyonMap.atlas", TextureAtlas.class);
         assets.load("canyonBackdrop.atlas", TextureAtlas.class);

@@ -56,6 +56,8 @@ public class TileMap implements Screen
 
     public static int tileSize;
 
+    public static int tilePadSize;
+
     public float zoom = 1;
 
     public MapInput input;
@@ -104,6 +106,7 @@ public class TileMap implements Screen
         this.editor = editor;
         this.name = name;
         this.tileSize = 64;
+        this.tilePadSize = 1;
         init();
     }
 

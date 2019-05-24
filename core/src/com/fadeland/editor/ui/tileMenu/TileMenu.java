@@ -15,13 +15,13 @@ import com.fadeland.editor.map.TileMap;
 
 import java.util.Iterator;
 
+import static com.fadeland.editor.map.TileMap.tilePadSize;
 import static com.fadeland.editor.map.TileMap.tileSize;
 
 public class TileMenu extends Group
 {
     public static int tileSheetWidth;
     public static int tileSheetHeight;
-    public static int tilePadding = 2; // Bleeding area in pixels
     public static int toolHeight = 35;
 
     private FadelandEditor editor;
@@ -142,17 +142,19 @@ public class TileMenu extends Group
         tileTable.padTop(1);
         tileTable.add(new Label(sheetTool.name, skin)).width(tileSize);
         tileTable.row();
-        for(int y = 0; y < tileSheet.getHeight(); y += tileSize)
+        for(int y = tilePadSize; y < tileSheet.getHeight(); y += tileSize)
         {
-            for(int x = 0; x < tileSheet.getWidth(); x += tileSize)
+            for(int x = tilePadSize; x < tileSheet.getWidth(); x += tileSize)
             {
                 TextureRegion tileRegion = new TextureRegion(tileSheet, x, y, tileSize, tileSize);
 
                 TileTool tile = new TileTool(TileMenuTools.TILE, sheetTool, new Image(tileRegion), tileRegion, "", id, tileSheet.getWidth() - x - tileSize, y, toolPane, skin);
                 id ++;
                 tileTable.add(tile);
+                x += tilePadSize * 2;
             }
             tileTable.row();
+            y += tilePadSize * 2;
         }
         tileTable.row();
         tileTable.padBottom(500).row();

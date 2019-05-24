@@ -13,6 +13,7 @@ public class TileMapData
 {
     public String name;
     public int tileSize;
+    public int tilePadSize;
     public float r, g, b, a;
     public ArrayList<SheetData> sheets;
     public ArrayList<LayerData> layers;
@@ -23,6 +24,7 @@ public class TileMapData
     {
         this.name = tileMap.name;
         this.tileSize = tileMap.tileSize;
+        this.tilePadSize = tileMap.tilePadSize;
         this.r = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.rValue.getText());
         this.g = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.gValue.getText());
         this.b = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.bValue.getText());
