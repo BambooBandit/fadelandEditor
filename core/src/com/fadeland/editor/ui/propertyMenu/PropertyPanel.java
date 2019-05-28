@@ -84,7 +84,7 @@ public class PropertyPanel extends Group
                     this.map.selectedObjects.get(i).properties.add(new PropertyField("Property", "Value", this.skin, menu, true));
             }
         }
-        else
+        else if(map.tileMenu.selectedTiles.size > 0)
         {
             for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
             {
@@ -93,6 +93,13 @@ public class PropertyPanel extends Group
                 else
                     this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField("Property", "Value", this.skin, menu, true));
             }
+        }
+        else
+        {
+            if(light)
+                this.map.propertyMenu.mapPropertyPanel.properties.add(new PropertyField(this.skin, menu, true, 1, 1, 1, 1, 100, 25));
+            else
+                this.map.propertyMenu.mapPropertyPanel.properties.add(new PropertyField("Property", "Value", this.skin, menu, true));
         }
     }
 
@@ -107,10 +114,14 @@ public class PropertyPanel extends Group
             for (int i = 0; i < map.selectedObjects.size; i++)
                 this.map.selectedObjects.get(i).properties.add(new PropertyField(property, value, this.skin, menu, true));
         }
-        else
+        else if(map.tileMenu.selectedTiles.size > 0)
         {
             for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
                 this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField(property, value, this.skin, menu, true));
+        }
+        else
+        {
+            this.map.propertyMenu.mapPropertyPanel.properties.add(new PropertyField(property, value, this.skin, menu, true));
         }
     }
 
@@ -125,10 +136,14 @@ public class PropertyPanel extends Group
             for (int i = 0; i < map.selectedObjects.size; i++)
                 this.map.selectedObjects.get(i).properties.add(new PropertyField(this.skin, menu, true, r, g, b, a));
         }
-        else
+        else if(map.tileMenu.selectedTiles.size > 0)
         {
             for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
                 this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField(this.skin, menu, true, r, g, b, a));
+        }
+        else
+        {
+            this.map.propertyMenu.mapPropertyPanel.properties.add(new PropertyField(this.skin, menu, true, r, g, b, a));
         }
     }
 
@@ -143,11 +158,13 @@ public class PropertyPanel extends Group
             for (int i = 0; i < map.selectedObjects.size; i++)
                 this.map.selectedObjects.get(i).properties.add(new PropertyField(this.skin, menu, true, r, g, b, a, distance, rayAmount));
         }
-        else
+        else if(map.tileMenu.selectedTiles.size > 0)
         {
             for (int i = 0; i < map.tileMenu.selectedTiles.size; i++)
                 this.map.tileMenu.selectedTiles.get(i).properties.add(new PropertyField(this.skin, menu, true, r, g, b, a, distance, rayAmount));
         }
+        else
+            this.map.propertyMenu.mapPropertyPanel.properties.add(new PropertyField(this.skin, menu, true, r, g, b, a, distance, rayAmount));
     }
 
     /** Remove all properties with the property value of the string.
@@ -187,6 +204,7 @@ public class PropertyPanel extends Group
             Array<PropertyField> properties = map.selectedObjects.get(i).properties;
             properties.removeValue(propertyField, false);
         }
+        map.propertyMenu.mapPropertyPanel.properties.removeValue(propertyField, false);
     }
 
     /** Rebuilds the table to remove gaps when removing properties. */
@@ -242,6 +260,13 @@ public class PropertyPanel extends Group
                 }
                 if(commonProperty)
                     this.table.add(mapObject.properties.get(i)).padBottom(1).row();
+            }
+        }
+        else
+        {
+            for(int i = 0; i < map.propertyMenu.mapPropertyPanel.properties.size; i ++)
+            {
+                this.table.add(map.propertyMenu.mapPropertyPanel.properties.get(i)).padBottom(1).row();
             }
         }
         setSize(getWidth(), getHeight()); // Resize to fit the fields

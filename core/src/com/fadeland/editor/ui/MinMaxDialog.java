@@ -151,8 +151,6 @@ public class MinMaxDialog extends Dialog
                 try
                 {
                     minSizeValue = Float.parseFloat(minSizeTextfield.getText());
-                    if(minSizeValue > 1)
-                        minSizeValue = 1;
                 }
                 catch(NumberFormatException e)
                 {
@@ -171,8 +169,6 @@ public class MinMaxDialog extends Dialog
                 try
                 {
                     maxSizeValue = Float.parseFloat(maxSizeTextfield.getText());
-                    if(maxSizeValue > 1)
-                        maxSizeValue = 1;
                 }
                 catch(NumberFormatException e)
                 {

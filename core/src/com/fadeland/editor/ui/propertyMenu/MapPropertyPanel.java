@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 
@@ -18,9 +19,13 @@ public class MapPropertyPanel extends Group
     private Stack stack;
     public Table table; // Holds all the text fields
 
-    public PropertyField mapRGBAProperty;
+    public Array<PropertyField> lockedProperties;
+    public Array<PropertyField> properties;
 
     public TextButton apply;
+
+    public RemoveablePropertyPanel removeablePropertyPanel;
+
 
     public MapPropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
     {
@@ -32,7 +37,12 @@ public class MapPropertyPanel extends Group
         this.table = new Table();
         this.table.left().top();
 
-        this.mapRGBAProperty = new PropertyField(skin, menu, false, 0, 0, 0, 1);
+        this.removeablePropertyPanel = new RemoveablePropertyPanel(skin, menu, editor);
+
+        this.lockedProperties = new Array<>();
+        PropertyField mapRGBAProperty = new PropertyField(skin, menu, false, 0, 0, 0, 1);
+        this.lockedProperties.add(mapRGBAProperty);
+        this.properties = new Array<>();
 
         this.apply = new TextButton("Apply", skin);
         this.apply.addListener(new ClickListener()
@@ -40,11 +50,12 @@ public class MapPropertyPanel extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                PropertyField mapRGBAProperty = getLockedColorField();
                 menu.map.rayHandler.setAmbientLight(Float.parseFloat(mapRGBAProperty.rValue.getText()), Float.parseFloat(mapRGBAProperty.gValue.getText()), Float.parseFloat(mapRGBAProperty.bValue.getText()), Float.parseFloat(mapRGBAProperty.aValue.getText()));
             }
         });
 
-        this.table.add(this.mapRGBAProperty).padBottom(1).row();
+        this.table.add(mapRGBAProperty).padBottom(1).row();
         this.table.add(this.apply).padBottom(1).row();
 
         this.stack.add(this.background);
@@ -72,5 +83,29 @@ public class MapPropertyPanel extends Group
             super.setSize(0, 0);
         else
             super.setSize(width, newHeight);
+    }
+
+    public PropertyField getLockedColorField()
+    {
+        for(int i = 0; i < this.lockedProperties.size; i ++)
+            if(this.lockedProperties.get(i).rgba)
+                return this.lockedProperties.get(i);
+        return null;
+    }
+
+    public PropertyField getPropertyField(String propertyName)
+    {
+        for(int i = 0; i < this.lockedProperties.size; i ++)
+        {
+            if(this.lockedProperties.get(i).getProperty() != null && this.lockedProperties.get(i).getProperty().equals(propertyName))
+                return this.lockedProperties.get(i);
+        }
+
+        for(int i = 0; i < this.properties.size; i ++)
+        {
+            if(this.properties.get(i).getProperty() != null && this.properties.get(i).getProperty().equals(propertyName))
+                return this.properties.get(i);
+        }
+        return null;
     }
 }

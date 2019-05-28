@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
 
-public class TilePropertyPanel extends Group
+public class RemoveablePropertyPanel extends Group
 {
     public static int textFieldHeight = 35;
 
@@ -20,7 +20,7 @@ public class TilePropertyPanel extends Group
     public Table table; // Holds all the text fields
 
 
-    public TilePropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
+    public RemoveablePropertyPanel(Skin skin, PropertyMenu menu, FadelandEditor fadelandEditor)
     {
         this.editor = fadelandEditor;
         this.menu = menu;

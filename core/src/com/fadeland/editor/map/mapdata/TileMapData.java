@@ -4,6 +4,7 @@ import com.fadeland.editor.map.ObjectLayer;
 import com.fadeland.editor.map.SpriteLayer;
 import com.fadeland.editor.map.TileLayer;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.SheetTools;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
 
@@ -14,10 +15,12 @@ public class TileMapData
     public String name;
     public int tileSize;
     public int tilePadSize;
-    public float r, g, b, a;
+//    public float r, g, b, a;
     public ArrayList<SheetData> sheets;
     public ArrayList<LayerData> layers;
     public ArrayList<TileGroupData> tileGroups;
+    public ArrayList<PropertyData> mapLockedProperties;
+    public ArrayList<PropertyData> mapProperties;
 
     public TileMapData(){}
     public TileMapData(TileMap tileMap)
@@ -25,10 +28,28 @@ public class TileMapData
         this.name = tileMap.name;
         this.tileSize = tileMap.tileSize;
         this.tilePadSize = tileMap.tilePadSize;
-        this.r = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.rValue.getText());
-        this.g = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.gValue.getText());
-        this.b = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.bValue.getText());
-        this.a = Float.parseFloat(tileMap.propertyMenu.mapPropertyPanel.mapRGBAProperty.aValue.getText());
+        this.mapLockedProperties = new ArrayList<>();
+        this.mapProperties = new ArrayList<>();
+        for(int i = 0; i < tileMap.propertyMenu.mapPropertyPanel.lockedProperties.size; i ++)
+        {
+            PropertyField property = tileMap.propertyMenu.mapPropertyPanel.lockedProperties.get(i);
+            if(property.rgba)
+                mapLockedProperties.add(new ColorPropertyData(property));
+            else if(property.rgbaDistanceRayAmount)
+                mapLockedProperties.add(new LightPropertyData(property));
+            else
+                mapLockedProperties.add(new NonColorPropertyData(property));
+        }
+        for(int i = 0; i < tileMap.propertyMenu.mapPropertyPanel.properties.size; i ++)
+        {
+            PropertyField property = tileMap.propertyMenu.mapPropertyPanel.properties.get(i);
+            if(property.rgba)
+                mapProperties.add(new ColorPropertyData(property));
+            else if(property.rgbaDistanceRayAmount)
+                mapProperties.add(new LightPropertyData(property));
+            else
+                mapProperties.add(new NonColorPropertyData(property));
+        }
         this.sheets = new ArrayList<>(4);
 
         boolean map = false;

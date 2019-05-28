@@ -7,7 +7,12 @@ import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.fadeland.editor.map.Tile;
+import com.fadeland.editor.map.mapdata.ColorPropertyData;
+import com.fadeland.editor.map.mapdata.LightPropertyData;
+import com.fadeland.editor.map.mapdata.NonColorPropertyData;
+import com.fadeland.editor.map.mapdata.PropertyData;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class Utils
@@ -116,5 +121,49 @@ public class Utils
     public static boolean coordInRect(float x, float y, float rectX, float rectY, int rectWidth, int rectHeight)
     {
         return x >= rectX && x <= rectX + rectWidth && y >= rectY && y <= rectY + rectHeight;
+    }
+
+    public static LightPropertyData getLockedLightField(ArrayList<PropertyData> lockedProperties)
+    {
+        for(int i = 0; i < lockedProperties.size(); i ++)
+        {
+            if(lockedProperties.get(i) instanceof LightPropertyData)
+            {
+                LightPropertyData lightPropertyData = (LightPropertyData) lockedProperties.get(i);
+                return lightPropertyData;
+            }
+        }
+        return null;
+    }
+
+    public static ColorPropertyData getLockedColorField(ArrayList<PropertyData> lockedProperties)
+    {
+        for(int i = 0; i < lockedProperties.size(); i ++)
+        {
+            if(lockedProperties.get(i) instanceof ColorPropertyData)
+            {
+                ColorPropertyData colorPropertyData = (ColorPropertyData) lockedProperties.get(i);
+                return colorPropertyData;
+            }
+        }
+        return null;
+    }
+
+    public static PropertyData getPropertyField(String propertyName, ArrayList<PropertyData>... propertyArrays)
+    {
+        for(int k = 0; k < propertyArrays.length; k++)
+        {
+            ArrayList<PropertyData> properties = propertyArrays[k];
+            for (int i = 0; i < properties.size(); i++)
+            {
+                if(properties.get(i) instanceof NonColorPropertyData)
+                {
+                    NonColorPropertyData nonColorProperty = (NonColorPropertyData) properties.get(i);
+                    if (nonColorProperty.property != null && nonColorProperty.property.equals(propertyName))
+                        return nonColorProperty;
+                }
+            }
+        }
+        return null;
     }
 }

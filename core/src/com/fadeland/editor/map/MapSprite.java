@@ -372,7 +372,7 @@ public class MapSprite extends Tile
     public void setScale(float scale)
     {
         // TODO do undo
-        if(scale > 1 || scale <= 0)
+        if(scale <= 0)
             return;
         this.scale = scale;
         this.sprite.setScale(scale);

@@ -470,7 +470,6 @@ public class MapInput implements InputProcessor
                 {
                     map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                     fill(coords.x, coords.y, clickedTile.tool);
-                    map.findAllTilesToBeGrouped();
                 }
             }
             else if(editor.getTileTools().size > 1 && editor.getTileTools().first() instanceof TileTool && editor.getFileTool() != null && editor.fileMenu.toolPane.random.selected)
@@ -484,7 +483,6 @@ public class MapInput implements InputProcessor
                     map.performAction(placeTile);
                     clickedTile.setTool(randomTile);
                 }
-                map.findAllTilesToBeGrouped();
             }
             else
             {
@@ -566,7 +564,6 @@ public class MapInput implements InputProcessor
                             map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                             clickedTile.setTool(null);
                         }
-                        map.findAllTilesToBeGrouped();
                     }
                 }
                 if (editor.getTileTools() != null && editor.getTileTools().size > 1 && editor.getFileTool().tool == Tools.BIND)
@@ -576,7 +573,6 @@ public class MapInput implements InputProcessor
                         TileGroup tileGroup = new TileGroup(coords.x, coords.y, editor.getTileTools(), map);
                         map.performAction(new AddOrRemoveTileGroup(map, map.tileGroups, tileGroup, true));
                         map.tileGroups.add(tileGroup);
-                        map.findAllTilesToBeGrouped();
                     }
                     else if(button == Input.Buttons.RIGHT) // unbind
                     {
@@ -588,7 +584,6 @@ public class MapInput implements InputProcessor
                                 for(int k = 0; k < possibleTileGroups.get(i).tileGroups.size; k ++)
                                     map.performAction(new AddOrRemoveTileGroup(map, map.tileGroups, possibleTileGroups.get(i).tileGroups.get(k), false));
                                 map.tileGroups.removeAll(possibleTileGroups.get(i).tileGroups, true);
-                                map.findAllTilesToBeGrouped();
                                 break;
                             }
                         }
@@ -609,7 +604,6 @@ public class MapInput implements InputProcessor
                         int randomIndex = Utils.randomInt(0, randomPossibleTileGroups.size - 1);
                         randomPossibleTileGroups.get(randomIndex).stamp();
                         randomPossibleTileGroups.clear();
-                        map.findAllTilesToBeGrouped();
                     }
                 }
             }
@@ -872,6 +866,7 @@ public class MapInput implements InputProcessor
                     map.undo.push(placeTile);
             }
         }
+        map.findAllTilesToBeGrouped();
         this.draggingRotateBox = false;
         this.draggingMoveBox = false;
         this.draggingLayerMoveBox = false;
@@ -1058,7 +1053,6 @@ public class MapInput implements InputProcessor
                             map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                     }
                     clickedTile.setTool(randomTile);
-                    map.findAllTilesToBeGrouped();
                 }
             }
             else
@@ -1080,7 +1074,6 @@ public class MapInput implements InputProcessor
                             else
                                 map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                             clickedTile.setTool(editor.getTileTools().get(i));
-                            map.findAllTilesToBeGrouped();
                         }
                         else if (editor.getFileTool().tool == Tools.ERASER)
                         {
@@ -1092,7 +1085,6 @@ public class MapInput implements InputProcessor
                             else
                                 map.performAction(new PlaceTile(map, (TileLayer) map.selectedLayer));
                             clickedTile.setTool(null);
-                            map.findAllTilesToBeGrouped();
                         }
                     }
                 }
@@ -1330,7 +1322,7 @@ public class MapInput implements InputProcessor
                     if (keycode == Input.Keys.ENTER)
                     {
                         float scaleAmount = Float.parseFloat(scaleField.value.getText());
-                        if(scaleAmount <= 1 && scaleAmount > 0)
+                        if(scaleAmount > 0)
                         {
                             for (int i = 0; i < map.selectedSprites.size; i++)
                                 map.selectedSprites.get(i).setScale(scaleAmount);

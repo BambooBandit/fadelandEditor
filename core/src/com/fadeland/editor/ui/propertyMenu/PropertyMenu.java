@@ -19,8 +19,8 @@ public class PropertyMenu extends Group
 
     public MapPropertyPanel mapPropertyPanel;
     public LayerPropertyPanel layerPropertyPanel;
-    public TilePropertyPanel tilePropertyPanel;
-    public SpritePropertyPanel spritePropertyPanel;
+    public RemoveablePropertyPanel tilePropertyPanel;
+    public RemoveablePropertyPanel spritePropertyPanel;
     private PropertyPanel propertyPanel; // Custom properties
     private PropertyToolPane toolPane;
 
@@ -40,10 +40,11 @@ public class PropertyMenu extends Group
         this.stack = new Stack();
         this.background = new Image(GameAssets.getUIAtlas().createPatch("load-background"));
         this.mapPropertyPanel = new MapPropertyPanel(skin, this, editor);
+        this.mapPropertyPanel.removeablePropertyPanel.setVisible(false);
         this.layerPropertyPanel = new LayerPropertyPanel(skin, this, editor);
         this.layerPropertyPanel.setVisible(false);
-        this.tilePropertyPanel = new TilePropertyPanel(skin, this, editor);
-        this.spritePropertyPanel = new SpritePropertyPanel(skin, this, editor);
+        this.tilePropertyPanel = new RemoveablePropertyPanel(skin, this, editor);
+        this.spritePropertyPanel = new RemoveablePropertyPanel(skin, this, editor);
         this.spritePropertyPanel.setVisible(false);
         this.propertyPanel = new PropertyPanel(skin, this, editor, map);
         this.toolPane = new PropertyToolPane(editor, this, skin);
@@ -54,6 +55,7 @@ public class PropertyMenu extends Group
         this.propertyTable.add(this.layerPropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.spritePropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.tilePropertyPanel).padBottom(5).row();
+        this.propertyTable.add(this.mapPropertyPanel.removeablePropertyPanel).padBottom(5).row();
         this.propertyTable.add(this.propertyPanel);
 
         setTileProperties();
@@ -75,6 +77,7 @@ public class PropertyMenu extends Group
         this.tilePropertyPanel.setSize(width, toolHeight);
         this.layerPropertyPanel.setSize(width, toolHeight);
         this.spritePropertyPanel.setSize(width, toolHeight);
+        this.mapPropertyPanel.removeablePropertyPanel.setSize(width, toolHeight);
         float propertyPanelStackHeight = mapPropertyPanel.getHeight();
 
         if(this.layerPropertyPanel.isVisible())
@@ -92,6 +95,11 @@ public class PropertyMenu extends Group
         else
             this.spritePropertyPanel.setSize(width, 0);
 
+        if(this.mapPropertyPanel.removeablePropertyPanel.isVisible())
+            propertyPanelStackHeight += this.mapPropertyPanel.removeablePropertyPanel.getHeight();
+        else
+            this.mapPropertyPanel.removeablePropertyPanel.setSize(width, 0);
+
         this.propertyPanel.setSize(width, height - toolHeight - 5 - 5 - 5 - propertyPanelStackHeight);
         this.propertyPanel.setPosition(0, toolHeight);
         this.propertyTable.invalidateHierarchy();
@@ -108,42 +116,26 @@ public class PropertyMenu extends Group
 
     public void newProperty(boolean light)
     {
-        if(map.tileMenu.selectedTiles.size > 0 || map.selectedObjects.size > 0)
-        {
-            this.propertyPanel.newProperty(light);
-
-            rebuild();
-        }
+        this.propertyPanel.newProperty(light);
+        rebuild();
     }
 
     public void newProperty(String property, String value)
     {
-        if(map.tileMenu.selectedTiles.size > 0 || map.selectedObjects.size > 0)
-        {
-            this.propertyPanel.newProperty(property, value);
-
-            rebuild();
-        }
+        this.propertyPanel.newProperty(property, value);
+        rebuild();
     }
 
     public void newProperty(float r, float g, float b, float a)
     {
-        if(map.tileMenu.selectedTiles.size > 0 || map.selectedObjects.size > 0)
-        {
-            this.propertyPanel.newProperty(r, g, b, a);
-
-            rebuild();
-        }
+        this.propertyPanel.newProperty(r, g, b, a);
+        rebuild();
     }
 
     public void newProperty(float r, float g, float b, float a, float distance, int rayAmount)
     {
-        if(map.tileMenu.selectedTiles.size > 0 || map.selectedObjects.size > 0)
-        {
-            this.propertyPanel.newProperty(r, g, b, a, distance, rayAmount);
-
-            rebuild();
-        }
+        this.propertyPanel.newProperty(r, g, b, a, distance, rayAmount);
+        rebuild();
     }
 
     private void setTileProperties()
@@ -219,6 +211,7 @@ public class PropertyMenu extends Group
     {
         this.tilePropertyPanel.table.clearChildren();
         this.spritePropertyPanel.table.clearChildren();
+        this.mapPropertyPanel.removeablePropertyPanel.table.clearChildren();
         if(map.selectedLayer != null)
         {
             this.layerPropertyPanel.setVisible(true);
@@ -252,6 +245,14 @@ public class PropertyMenu extends Group
                 this.spritePropertyPanel.table.add(spriteProperties.get(i)).padBottom(1).row();
             this.spritePropertyPanel.setVisible(true);
         }
+        if(map.selectedSprites.size == 0 && map.tileMenu.selectedTiles.size == 0)
+        {
+            for(int i = 0; i < mapPropertyPanel.properties.size; i ++)
+            {
+                this.mapPropertyPanel.removeablePropertyPanel.table.add(mapPropertyPanel.properties.get(i));
+            }
+            this.mapPropertyPanel.removeablePropertyPanel.setVisible(true);
+        }
         if(this.layerPropertyPanel.isVisible())
             this.layerPropertyPanel.setSize(getWidth(), toolHeight);
         else
@@ -264,6 +265,10 @@ public class PropertyMenu extends Group
             this.spritePropertyPanel.setSize(getWidth(), toolHeight);
         else
             this.spritePropertyPanel.setSize(getWidth(), 0);
+        if(this.mapPropertyPanel.removeablePropertyPanel.isVisible())
+            this.mapPropertyPanel.removeablePropertyPanel.setSize(getWidth(), toolHeight);
+        else
+            this.mapPropertyPanel.removeablePropertyPanel.setSize(getWidth(), 0);
 
         this.propertyPanel.rebuild();
         this.propertyTable.invalidateHierarchy();

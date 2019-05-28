@@ -25,6 +25,7 @@ import com.fadeland.editor.map.mapdata.*;
 import com.fadeland.editor.ui.fileMenu.Tools;
 import com.fadeland.editor.ui.layerMenu.LayerMenu;
 import com.fadeland.editor.ui.layerMenu.LayerTypes;
+import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.propertyMenu.PropertyMenu;
 import com.fadeland.editor.ui.propertyMenu.PropertyToolPane;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
@@ -696,11 +697,37 @@ public class TileMap implements Screen
 
     private void setMapPropertiesAndObjects(TileMapData tileMapData)
     {
-        propertyMenu.mapPropertyPanel.mapRGBAProperty.rValue.setText(Float.toString(tileMapData.r));
-        propertyMenu.mapPropertyPanel.mapRGBAProperty.gValue.setText(Float.toString(tileMapData.g));
-        propertyMenu.mapPropertyPanel.mapRGBAProperty.bValue.setText(Float.toString(tileMapData.b));
-        propertyMenu.mapPropertyPanel.mapRGBAProperty.aValue.setText(Float.toString(tileMapData.a));
-        rayHandler.setAmbientLight(tileMapData.r, tileMapData.g, tileMapData.b, tileMapData.a);
+        PropertyField mapRGBAProperty = propertyMenu.mapPropertyPanel.getLockedColorField();
+        ColorPropertyData savedMapRGBAProperty = Utils.getLockedColorField(tileMapData.mapLockedProperties);
+        mapRGBAProperty.rValue.setText(Float.toString(savedMapRGBAProperty.r));
+        mapRGBAProperty.gValue.setText(Float.toString(savedMapRGBAProperty.g));
+        mapRGBAProperty.bValue.setText(Float.toString(savedMapRGBAProperty.b));
+        mapRGBAProperty.aValue.setText(Float.toString(savedMapRGBAProperty.a));
+        rayHandler.setAmbientLight(savedMapRGBAProperty.r, savedMapRGBAProperty.g, savedMapRGBAProperty.b, savedMapRGBAProperty.a);
+
+        System.out.println(tileMapData.mapProperties.size());
+        for(int i = 0; i < tileMapData.mapProperties.size(); i ++)
+        {
+            PropertyData property = tileMapData.mapProperties.get(i);
+            if(property instanceof LightPropertyData)
+            {
+                System.out.println(1);
+                LightPropertyData lightPropertyData = (LightPropertyData) property;
+                propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+            }
+            else if(property instanceof ColorPropertyData)
+            {
+                System.out.println(2);
+                ColorPropertyData colorPropertyData = (ColorPropertyData) property;
+                propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+            }
+            else
+            {
+                System.out.println(3);
+                NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
+                propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+            }
+        }
         for(int i = 0; i < tileMapData.tileGroups.size(); i ++)
         {
             TileGroupData tileGroupData = tileMapData.tileGroups.get(i);
