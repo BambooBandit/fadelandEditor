@@ -249,7 +249,7 @@ public class PropertyMenu extends Group
         {
             for(int i = 0; i < mapPropertyPanel.properties.size; i ++)
             {
-                this.mapPropertyPanel.removeablePropertyPanel.table.add(mapPropertyPanel.properties.get(i));
+                this.mapPropertyPanel.removeablePropertyPanel.table.add(mapPropertyPanel.properties.get(i)).padBottom(1).row();
             }
             this.mapPropertyPanel.removeablePropertyPanel.setVisible(true);
         }

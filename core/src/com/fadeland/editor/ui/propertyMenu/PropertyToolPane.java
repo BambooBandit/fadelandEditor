@@ -115,8 +115,25 @@ public class PropertyToolPane extends Group
             }
         }
 
+        if(map.editor.fileMenu.toolPane.perspective.selected)
+            updatePerspective(map);
         updateLightsAndBlocked(map);
         map.searchForBlockedTiles();
+    }
+
+    public static void updatePerspective(TileMap map)
+    {
+        for(int i = 0; i < map.layers.size; i++)
+        {
+            Layer layer = map.layers.get(i);
+            if(!(layer instanceof SpriteLayer))
+                continue;
+            for(int k = 0; k < layer.tiles.size; k ++)
+            {
+                MapSprite mapSprite = (MapSprite) layer.tiles.get(k);
+                mapSprite.updatePerspectiveScale();
+            }
+        }
     }
 
     public static void updateLightsAndBlocked(TileMap map)

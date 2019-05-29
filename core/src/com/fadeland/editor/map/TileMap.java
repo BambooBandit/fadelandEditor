@@ -57,7 +57,7 @@ public class TileMap implements Screen
 
     public static int tileSize;
 
-    public static int tilePadSize;
+    public static int tilePadSize = 1;
 
     public float zoom = 1;
 
@@ -705,25 +705,21 @@ public class TileMap implements Screen
         mapRGBAProperty.aValue.setText(Float.toString(savedMapRGBAProperty.a));
         rayHandler.setAmbientLight(savedMapRGBAProperty.r, savedMapRGBAProperty.g, savedMapRGBAProperty.b, savedMapRGBAProperty.a);
 
-        System.out.println(tileMapData.mapProperties.size());
         for(int i = 0; i < tileMapData.mapProperties.size(); i ++)
         {
             PropertyData property = tileMapData.mapProperties.get(i);
             if(property instanceof LightPropertyData)
             {
-                System.out.println(1);
                 LightPropertyData lightPropertyData = (LightPropertyData) property;
                 propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
             }
             else if(property instanceof ColorPropertyData)
             {
-                System.out.println(2);
                 ColorPropertyData colorPropertyData = (ColorPropertyData) property;
                 propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
             }
             else
             {
-                System.out.println(3);
                 NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) property;
                 propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
             }

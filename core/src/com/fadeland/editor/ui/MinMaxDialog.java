@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.fadeland.editor.Utils;
 
 public class MinMaxDialog extends Dialog
 {
@@ -41,18 +42,26 @@ public class MinMaxDialog extends Dialog
     private TextButton reset;
     private TextButton close;
 
-    public float minSizeValue = 1;
-    public float maxSizeValue = 1;
-    public float minRotationValue = 0;
-    public float maxRotationValue = 0;
-    public float minRValue = 1;
-    public float maxRValue = 1;
-    public float minGValue = 1;
-    public float maxGValue = 1;
-    public float minBValue = 1;
-    public float maxBValue = 1;
-    public float minAValue = 1;
-    public float maxAValue = 1;
+    private float minSizeValue = 1;
+    private float maxSizeValue = 1;
+    private float minRotationValue = 0;
+    private float maxRotationValue = 0;
+    private float minRValue = 1;
+    private float maxRValue = 1;
+    private float minGValue = 1;
+    private float maxGValue = 1;
+    private float minBValue = 1;
+    private float maxBValue = 1;
+    private float minAValue = 1;
+    private float maxAValue = 1;
+    
+    // Set after every click so everything uses the same random value.
+    public float randomSizeValue;
+    public float randomRotationValue;
+    public float randomRValue;
+    public float randomGValue;
+    public float randomBValue;
+    public float randomAValue;
 
     public MinMaxDialog(Stage stage, Skin skin)
     {
@@ -358,6 +367,16 @@ public class MinMaxDialog extends Dialog
                 return false;
             }
         });
+    }
+    
+    public void generateRandomValues()
+    {
+        this.randomSizeValue = Utils.randomFloat(this.minSizeValue, this.maxSizeValue);
+        this.randomRotationValue = Utils.randomFloat(this.minRotationValue, this.maxRotationValue);
+        this.randomRValue = Utils.randomFloat(this.minRValue, this.maxRValue);
+        this.randomGValue = Utils.randomFloat(this.minGValue, this.maxGValue);
+        this.randomBValue = Utils.randomFloat(this.minBValue, this.maxBValue);
+        this.randomAValue = Utils.randomFloat(this.minAValue, this.maxAValue);
     }
 
     public void reset()

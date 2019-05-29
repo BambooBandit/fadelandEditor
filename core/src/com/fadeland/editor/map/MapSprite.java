@@ -12,9 +12,11 @@ import com.fadeland.editor.Utils;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.TileTool;
 
+import static com.fadeland.editor.map.TileMap.tileSize;
+
 public class MapSprite extends Tile
 {
-    public float rotation, scale;
+    public float rotation, scale, perspectiveScale;
     public EditorPolygon polygon;
     public RotationBox rotationBox;
     public MoveBox moveBox;
@@ -406,5 +408,49 @@ public class MapSprite extends Tile
     public void unselect()
     {
         this.selected = false;
+    }
+
+    public void updatePerspectiveScale()
+    {
+        float perspectiveMinScale = Float.parseFloat(map.propertyMenu.mapPropertyPanel.getPropertyField("perspectiveMinScale").value.getText());
+        float perspectiveMaxScale = Float.parseFloat(map.propertyMenu.mapPropertyPanel.getPropertyField("perspectiveMaxScale").value.getText());
+        float mapHeight = layer.height * tileSize;
+        float positionY = position.y;
+
+        float coeff = positionY / mapHeight;
+
+        float delta = perspectiveMinScale - perspectiveMaxScale;
+
+        this.perspectiveScale = perspectiveMaxScale + coeff * delta;
+
+
+
+        float totalScale = scale + perspectiveScale;
+
+        if(totalScale <= 0)
+            return;
+
+        this.sprite.setScale(totalScale);
+        this.polygon.setScale(totalScale, totalScale);
+        if(this.tool.topSprites != null)
+        {
+            for(int i = 0; i < this.tool.topSprites.size; i ++)
+                this.tool.topSprites.get(i).setScale(totalScale);
+        }
+        for(int i = 0; i < drawableAttachedMapObjects.size; i ++)
+        {
+            if(drawableAttachedMapObjects.get(i).polygon != null)
+                drawableAttachedMapObjects.get(i).polygon.setScale(totalScale, totalScale);
+            drawableAttachedMapObjects.get(i).updateLightsAndBodies();
+        }
+//
+//        for(int i = 0; i < lockedProperties.size; i ++)
+//        {
+//            if(lockedProperties.get(i).getProperty().equals("Scale"))
+//            {
+//                lockedProperties.get(i).value.setText(Float.toString(scale));
+//                break;
+//            }
+//        }
     }
 }

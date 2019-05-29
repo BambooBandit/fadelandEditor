@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -180,6 +181,18 @@ public class FadelandEditor extends Game
 			{
 				randomSpriteIndex = i;
 				break;
+			}
+		}
+		fileMenu.toolPane.minMaxDialog.generateRandomValues();
+		if(getSpriteTool() != null)
+		{
+			TileTool spriteTool = getSpriteTool();
+			Vector3 coords = Utils.unproject(((TileMap)getScreen()).camera, Gdx.input.getX(), Gdx.input.getY());
+			for (int i = 0; i < getSpriteTool().previewSprites.size; i++)
+			{
+				float randomScale = fileMenu.toolPane.minMaxDialog.randomSizeValue;
+				spriteTool.previewSprites.get(i).setScale(randomScale, randomScale);
+				spriteTool.previewSprites.get(i).setPosition(coords.x - spriteTool.previewSprites.get(i).getWidth() / 2, coords.y - spriteTool.previewSprites.get(i).getHeight() / 2);
 			}
 		}
 	}

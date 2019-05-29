@@ -15,7 +15,6 @@ public class TileMapData
     public String name;
     public int tileSize;
     public int tilePadSize;
-//    public float r, g, b, a;
     public ArrayList<SheetData> sheets;
     public ArrayList<LayerData> layers;
     public ArrayList<TileGroupData> tileGroups;

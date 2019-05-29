@@ -144,7 +144,6 @@ public class MapInput implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
-        editor.shuffleRandomSpriteTool();
         lastDragX = screenX;
         lastDragY = screenY;
         map.stage.unfocusAll();
@@ -871,6 +870,8 @@ public class MapInput implements InputProcessor
         this.draggingMoveBox = false;
         this.draggingLayerMoveBox = false;
         this.draggingScaleBox = false;
+        map.editor.fileMenu.toolPane.minMaxDialog.generateRandomValues();
+        editor.shuffleRandomSpriteTool();
         return false;
     }
 
@@ -1116,7 +1117,11 @@ public class MapInput implements InputProcessor
             if (editor.getFileTool() != null && editor.getFileTool().tool == Tools.BRUSH)
             {
                 for(int i = 0; i < editor.getSpriteTool().previewSprites.size; i ++)
+                {
+                    float randomScale = map.editor.fileMenu.toolPane.minMaxDialog.randomSizeValue;
+                    editor.getSpriteTool().previewSprites.get(i).setScale(randomScale, randomScale);
                     editor.getSpriteTool().previewSprites.get(i).setPosition(coords.x - editor.getSpriteTool().previewSprites.get(i).getWidth() / 2, coords.y - editor.getSpriteTool().previewSprites.get(i).getHeight() / 2);
+                }
             }
         }
         if(editor.getFileTool() != null && map.selectedObjects.size == 1 && editor.getFileTool().tool == Tools.OBJECTVERTICESELECT)
@@ -1356,12 +1361,12 @@ public class MapInput implements InputProcessor
         };
         zField.value.addListener(zListener);
 
-        float randomSize = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minSizeValue, map.editor.fileMenu.toolPane.minMaxDialog.maxSizeValue);
-        float randomRotation = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minRotationValue, map.editor.fileMenu.toolPane.minMaxDialog.maxRotationValue);
-        float randomR = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minRValue, map.editor.fileMenu.toolPane.minMaxDialog.maxRValue);
-        float randomG = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minGValue, map.editor.fileMenu.toolPane.minMaxDialog.maxGValue);
-        float randomB = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minBValue, map.editor.fileMenu.toolPane.minMaxDialog.maxBValue);
-        float randomA = Utils.randomFloat(map.editor.fileMenu.toolPane.minMaxDialog.minAValue, map.editor.fileMenu.toolPane.minMaxDialog.maxAValue);
+        float randomSize = map.editor.fileMenu.toolPane.minMaxDialog.randomSizeValue;
+        float randomRotation = map.editor.fileMenu.toolPane.minMaxDialog.randomRotationValue;
+        float randomR = map.editor.fileMenu.toolPane.minMaxDialog.randomRValue;
+        float randomG = map.editor.fileMenu.toolPane.minMaxDialog.randomGValue;
+        float randomB = map.editor.fileMenu.toolPane.minMaxDialog.randomBValue;
+        float randomA = map.editor.fileMenu.toolPane.minMaxDialog.randomAValue;
 
         PropertyField colorField = new PropertyField(GameAssets.getUISkin(), map.propertyMenu, false, randomR, randomG, randomB, randomA);
 
@@ -1378,6 +1383,7 @@ public class MapInput implements InputProcessor
         }catch(NumberFormatException e){}
         mapSprite.setScale(randomSize);
         mapSprite.setRotation(randomRotation);
+        mapSprite.setPosition(x - (mapSprite.sprite.getWidth() / 2), y - mapSprite.sprite.getHeight() / 2);
         mapSprite.setColor(randomR, randomG, randomB, randomA);
         return mapSprite;
     }
