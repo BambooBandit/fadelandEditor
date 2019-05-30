@@ -6,7 +6,6 @@ import com.fadeland.editor.map.TileLayer;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.propertyMenu.PropertyField;
 import com.fadeland.editor.ui.tileMenu.SheetTools;
-import com.fadeland.editor.ui.tileMenu.TileMenu;
 
 import java.util.ArrayList;
 
@@ -92,7 +91,7 @@ public class TileMapData
         if(map)
             this.sheets.add(new SpriteSheetData(tileMap, SheetTools.MAP));
         if(tiles)
-            this.sheets.add(new TileSheetData(tileMap, SheetTools.TILES, TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
+            this.sheets.add(new TileSheetData(tileMap, SheetTools.TILES, SheetTools.TILES.tileSheetWidth, SheetTools.TILES.tileSheetHeight));
         if(flatMap)
             this.sheets.add(new SpriteSheetData(tileMap, SheetTools.FLATMAP));
         if(canyonMap)
@@ -100,9 +99,9 @@ public class TileMapData
         if(canyonBackdrop)
             this.sheets.add(new SpriteSheetData(tileMap, SheetTools.CANYONBACKDROP));
         if(desertTiles)
-            this.sheets.add(new TileSheetData(tileMap, SheetTools.DESERTTILES, TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
+            this.sheets.add(new TileSheetData(tileMap, SheetTools.DESERTTILES, SheetTools.DESERTTILES.tileSheetWidth, SheetTools.DESERTTILES.tileSheetHeight));
         if(canyonTiles)
-            this.sheets.add(new TileSheetData(tileMap, SheetTools.CANYONTILES, TileMenu.tileSheetWidth, TileMenu.tileSheetHeight));
+            this.sheets.add(new TileSheetData(tileMap, SheetTools.CANYONTILES, SheetTools.CANYONTILES.tileSheetWidth, SheetTools.CANYONTILES.tileSheetHeight));
 
         this.tileGroups = new ArrayList<>();
         for(int i = 0; i < tileMap.tileGroups.size; i ++)

@@ -6,8 +6,6 @@ import com.fadeland.editor.ui.tileMenu.TileTool;
 import java.util.ArrayList;
 
 import static com.fadeland.editor.map.TileMap.tileSize;
-import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSheetHeight;
-import static com.fadeland.editor.ui.tileMenu.TileMenu.tileSheetWidth;
 
 public class TileGroup
 {
@@ -57,6 +55,8 @@ public class TileGroup
         this.map = map;
 
         // Find lowest and highest X to determine width
+        int tileSheetWidth = selectedTileTools.first().sheetTool.tileSheetWidth;
+        int tileSheetHeight = selectedTileTools.first().sheetTool.tileSheetHeight;
         int lowestX = tileSheetWidth - selectedTileTools.first().x / tileSize;
         int highestX = tileSheetWidth - selectedTileTools.first().x / tileSize;
         int lowestY = tileSheetHeight - selectedTileTools.first().y / tileSize;

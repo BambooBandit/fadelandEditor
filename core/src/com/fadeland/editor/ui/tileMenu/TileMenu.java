@@ -20,8 +20,6 @@ import static com.fadeland.editor.map.TileMap.tileSize;
 
 public class TileMenu extends Group
 {
-    public static int tileSheetWidth;
-    public static int tileSheetHeight;
     public static int toolHeight = 35;
 
     private FadelandEditor editor;
@@ -136,8 +134,8 @@ public class TileMenu extends Group
     private int createTileSheet(SheetTools sheetTool, Skin skin, int id)
     {
         Texture tileSheet = new Texture(sheetTool.name + ".png");
-        tileSheetWidth = tileSheet.getWidth();
-        tileSheetHeight = tileSheet.getHeight();
+        sheetTool.tileSheetWidth = tileSheet.getWidth();
+        sheetTool.tileSheetHeight = tileSheet.getHeight();
         tileTable.padLeft(1);
         tileTable.padTop(1);
         tileTable.add(new Label(sheetTool.name, skin)).width(tileSize);
