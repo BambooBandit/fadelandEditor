@@ -43,6 +43,7 @@ public class GameAssets
             GameAssets.gameAssets.setGameAtlas("flatMap", GameAssets.gameAssets.getAssets().get("flatMap.atlas"));
             GameAssets.gameAssets.setGameAtlas("canyonMap", GameAssets.gameAssets.getAssets().get("canyonMap.atlas"));
             GameAssets.gameAssets.setGameAtlas("canyonBackdrop", GameAssets.gameAssets.getAssets().get("canyonBackdrop.atlas"));
+            GameAssets.gameAssets.setGameAtlas("mesaMap", GameAssets.gameAssets.getAssets().get("mesaMap.atlas"));
         }
         return gameAssets;
     }
@@ -66,6 +67,7 @@ public class GameAssets
         assets.load("flatMap.atlas", TextureAtlas.class);
         assets.load("canyonMap.atlas", TextureAtlas.class);
         assets.load("canyonBackdrop.atlas", TextureAtlas.class);
+        assets.load("mesaMap.atlas", TextureAtlas.class);
         assets.finishLoading();
     }
 

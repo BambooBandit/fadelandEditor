@@ -57,6 +57,7 @@ public class TileMapData
         boolean canyonBackdrop = false;
         boolean desertTiles = false;
         boolean canyonTiles = false;
+        boolean mesaMap = false;
 
         this.layers = new ArrayList<>();
         for(int i = 0; i < tileMap.layers.size; i ++)
@@ -86,6 +87,8 @@ public class TileMapData
                     desertTiles = true;
                 else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.CANYONTILES)
                     canyonTiles = true;
+                else if(tileMap.layers.get(i).tiles.get(k).tool.sheetTool == SheetTools.MESAMAP)
+                    mesaMap = true;
             }
         }
         if(map)
@@ -102,6 +105,8 @@ public class TileMapData
             this.sheets.add(new TileSheetData(tileMap, SheetTools.DESERTTILES, SheetTools.DESERTTILES.tileSheetWidth, SheetTools.DESERTTILES.tileSheetHeight));
         if(canyonTiles)
             this.sheets.add(new TileSheetData(tileMap, SheetTools.CANYONTILES, SheetTools.CANYONTILES.tileSheetWidth, SheetTools.CANYONTILES.tileSheetHeight));
+        if(mesaMap)
+            this.sheets.add(new SpriteSheetData(tileMap, SheetTools.MESAMAP));
 
         this.tileGroups = new ArrayList<>();
         for(int i = 0; i < tileMap.tileGroups.size; i ++)

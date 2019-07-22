@@ -121,6 +121,7 @@ public class TileMenu extends Group
         id = createSpriteSheet(SheetTools.FLATMAP, skin, id);
         id = createSpriteSheet(SheetTools.CANYONMAP, skin, id);
         id = createSpriteSheet(SheetTools.CANYONBACKDROP, skin, id);
+        id = createSpriteSheet(SheetTools.MESAMAP, skin, id);
 
         this.stack.add(this.background);
         this.stack.add(this.tileScrollPane);
@@ -226,7 +227,7 @@ public class TileMenu extends Group
         return null;
     }
 
-    public TileTool getSpriteTool(TileMenuTools tileMenuTools, String name)
+    public TileTool getSpriteTool(TileMenuTools tileMenuTools, String name, int id)
     {
         if(tileMenuTools == TileMenuTools.SPRITE)
         {
@@ -235,7 +236,7 @@ public class TileMenu extends Group
                 if(spriteTable.getChildren().get(i) instanceof TileTool)
                 {
                     TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
-                    if (tileTool.name.equals(name))
+                    if (tileTool.name.equals(name) && id == tileTool.id)
                         return tileTool;
                 }
             }

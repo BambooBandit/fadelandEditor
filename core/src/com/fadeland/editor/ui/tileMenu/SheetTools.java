@@ -2,7 +2,7 @@ package com.fadeland.editor.ui.tileMenu;
 
 public enum SheetTools
 {
-    MAP("map"), TILES("tiles"), FLATMAP("flatMap"), DESERTTILES("desertTiles"), CANYONMAP("canyonMap"), CANYONBACKDROP("canyonBackdrop"), CANYONTILES("canyonTiles");
+    MAP("map"), TILES("tiles"), FLATMAP("flatMap"), DESERTTILES("desertTiles"), CANYONMAP("canyonMap"), CANYONBACKDROP("canyonBackdrop"), CANYONTILES("canyonTiles"), MESAMAP("mesaMap");
 
     public String name;
     public int tileSheetWidth;
