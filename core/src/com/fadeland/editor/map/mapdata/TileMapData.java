@@ -21,7 +21,7 @@ public class TileMapData
     public ArrayList<PropertyData> mapProperties;
 
     public TileMapData(){}
-    public TileMapData(TileMap tileMap)
+    public TileMapData(TileMap tileMap, boolean settingFLMDefaults)
     {
         this.name = tileMap.name;
         this.tileSize = tileMap.tileSize;
@@ -111,6 +111,14 @@ public class TileMapData
         this.tileGroups = new ArrayList<>();
         for(int i = 0; i < tileMap.tileGroups.size; i ++)
             this.tileGroups.add(new TileGroupData(tileMap.tileGroups.get(i)));
+
+
+        // Remove all the map data such as layers and tiles since they are not default information
+        if(settingFLMDefaults)
+        {
+            this.name = "defaultFLM.flm";
+            this.layers.clear();
+        }
     }
 }
 

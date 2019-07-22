@@ -10,8 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.fadeland.editor.FadelandEditor;
+import com.fadeland.editor.GameAssets;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.map.mapdata.*;
+import com.fadeland.editor.ui.AreYouSureDialog;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -35,6 +37,7 @@ public class FileMenu extends Group
     private TextButton openButton;
     private TextButton saveButton;
     private TextButton saveAsButton;
+    private TextButton setFLMDefaultsButton;
     private TextButton undoButton;
     private TextButton redoButton;
 
@@ -48,6 +51,7 @@ public class FileMenu extends Group
         this.openButton = new TextButton("Open", skin);
         this.saveButton = new TextButton("Save", skin);
         this.saveAsButton = new TextButton("Save As", skin);
+        this.setFLMDefaultsButton = new TextButton("Set FLM Defaults", skin);
         this.undoButton = new TextButton("Undo", skin);
         this.redoButton = new TextButton("Redo", skin);
 
@@ -56,6 +60,7 @@ public class FileMenu extends Group
         this.openButton.getLabel().setColor(Color.BLACK);
         this.saveButton.getLabel().setColor(Color.BLACK);
         this.saveAsButton.getLabel().setColor(Color.BLACK);
+        this.setFLMDefaultsButton.getLabel().setColor(Color.BLACK);
         this.undoButton.getLabel().setColor(Color.BLACK);
         this.redoButton.getLabel().setColor(Color.BLACK);
 
@@ -65,9 +70,39 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                TileMap newMap = new TileMap(editor, "untitled " + untitledCount++);
-                editor.addToMaps(newMap);
-                mapTabPane.lookAtMap(newMap);
+                new AreYouSureDialog("Create a new map with FLM default settings/properties?", editor.stage, "", GameAssets.getUISkin())
+                {
+                    TileMap newMap;
+                    @Override
+                    public void yes()
+                    {
+                        try
+                        {
+                            File file = new File("defaultFLM.flm");
+                            String content = null;
+                            content = new Scanner(file).useDelimiter("\\Z").next();
+                            Json json = createJson();
+                            TileMapData tileMapData = json.fromJson(TileMapData.class, content);
+                            TileMap newMap = new TileMap(editor, tileMapData);
+                            newMap.file = file;
+                            editor.addToMaps(newMap);
+                            mapTabPane.lookAtMap(newMap);
+                        }
+                        catch (FileNotFoundException e)
+                        {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void no()
+                    {
+                        newMap = new TileMap(editor, "untitled " + untitledCount++);
+                        editor.addToMaps(newMap);
+                        mapTabPane.lookAtMap(newMap);
+                    }
+                };
             }
         });
         this.openButton.addListener(new ClickListener()
@@ -141,6 +176,30 @@ public class FileMenu extends Group
                     saveAs((TileMap) editor.getScreen(), false, false);
             }
         });
+        this.setFLMDefaultsButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                if(editor.getScreen() != null)
+                {
+                    TileMap map = (TileMap) editor.getScreen();
+                    new AreYouSureDialog("Override and save new FLM default properties?", editor.stage, "", GameAssets.getUISkin())
+                    {
+                        @Override
+                        public void yes()
+                        {
+                            fadelandEditor.fileMenu.setFLMDefaults(map);
+                        }
+
+                        @Override
+                        public void no()
+                        {
+                        }
+                    };
+                }
+            }
+        });
         this.undoButton.addListener(new ClickListener()
         {
             @Override
@@ -164,6 +223,7 @@ public class FileMenu extends Group
         this.buttonTable.add(this.openButton);
         this.buttonTable.add(this.saveButton);
         this.buttonTable.add(this.saveAsButton);
+        this.buttonTable.add(this.setFLMDefaultsButton);
         this.buttonTable.add(this.undoButton);
         this.buttonTable.add(this.redoButton);
 
@@ -185,7 +245,7 @@ public class FileMenu extends Group
             saveAs(tileMap, removeMapAfterSaving, closeApplicationAfterSaving);
             return;
         }
-        TileMapData tileMapData = new TileMapData(tileMap);
+        TileMapData tileMapData = new TileMapData(tileMap, false);
 
         Json json = createJson();
 
@@ -209,6 +269,32 @@ public class FileMenu extends Group
                 editor.fileMenu.mapTabPane.removeMap(tileMap);
             if(closeApplicationAfterSaving)
                 Gdx.app.exit();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void setFLMDefaults(TileMap tileMap)
+    {
+        TileMapData tileMapData = new TileMapData(tileMap, true);
+
+        Json json = createJson();
+
+        File file = new File("defaultFLM.flm");
+        try
+        {
+            //Create the file
+            if (file.createNewFile())
+                System.out.println("File is created!");
+            else
+                System.out.println("File already exists.");
+
+            //Write Content
+            FileWriter writer = new FileWriter(file);
+            writer.write(json.prettyPrint(tileMapData));
+            writer.close();
         }
         catch (IOException e)
         {
@@ -246,7 +332,7 @@ public class FileMenu extends Group
                     Gdx.app.postRunnable(() ->
                     {
                         map.setName(chooser.getSelectedFile().getName());
-                        TileMapData tileMapData = new TileMapData(map);
+                        TileMapData tileMapData = new TileMapData(map, false);
                         Json json = createJson();
 
                         File file = chooser.getSelectedFile();
@@ -288,6 +374,7 @@ public class FileMenu extends Group
         this.buttonTable.getCell(this.openButton).size(buttonWidth, buttonHeight);
         this.buttonTable.getCell(this.saveButton).size(buttonWidth, buttonHeight);
         this.buttonTable.getCell(this.saveAsButton).size(buttonWidth, buttonHeight);
+        this.buttonTable.getCell(this.setFLMDefaultsButton).size(buttonWidth, buttonHeight);
         this.buttonTable.getCell(this.undoButton).size(buttonWidth, buttonHeight);
         this.buttonTable.getCell(this.redoButton).size(buttonWidth, buttonHeight);
         this.buttonTable.invalidateHierarchy();
