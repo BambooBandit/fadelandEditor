@@ -412,6 +412,8 @@ public class MapSprite extends Tile
 
     public void updatePerspectiveScale()
     {
+        if(map.propertyMenu.mapPropertyPanel.getPropertyField("perspectiveMinScale") == null || map.propertyMenu.mapPropertyPanel.getPropertyField("perspectiveMaxScale") == null)
+            return;
         float perspectiveMinScale = Float.parseFloat(map.propertyMenu.mapPropertyPanel.getPropertyField("perspectiveMinScale").value.getText());
         float perspectiveMaxScale = Float.parseFloat(map.propertyMenu.mapPropertyPanel.getPropertyField("perspectiveMaxScale").value.getText());
         float mapHeight = layer.height * tileSize;
