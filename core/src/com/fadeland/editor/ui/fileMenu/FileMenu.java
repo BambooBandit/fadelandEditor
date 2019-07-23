@@ -37,6 +37,7 @@ public class FileMenu extends Group
     private TextButton openButton;
     private TextButton saveButton;
     private TextButton saveAsButton;
+    private TextButton saveFLMDefaultsButton;
     private TextButton setFLMDefaultsButton;
     private TextButton undoButton;
     private TextButton redoButton;
@@ -51,6 +52,7 @@ public class FileMenu extends Group
         this.openButton = new TextButton("Open", skin);
         this.saveButton = new TextButton("Save", skin);
         this.saveAsButton = new TextButton("Save As", skin);
+        this.saveFLMDefaultsButton = new TextButton("Save FLM Defaults", skin);
         this.setFLMDefaultsButton = new TextButton("Set FLM Defaults", skin);
         this.undoButton = new TextButton("Undo", skin);
         this.redoButton = new TextButton("Redo", skin);
@@ -60,6 +62,7 @@ public class FileMenu extends Group
         this.openButton.getLabel().setColor(Color.BLACK);
         this.saveButton.getLabel().setColor(Color.BLACK);
         this.saveAsButton.getLabel().setColor(Color.BLACK);
+        this.saveFLMDefaultsButton.getLabel().setColor(Color.BLACK);
         this.setFLMDefaultsButton.getLabel().setColor(Color.BLACK);
         this.undoButton.getLabel().setColor(Color.BLACK);
         this.redoButton.getLabel().setColor(Color.BLACK);
@@ -176,7 +179,7 @@ public class FileMenu extends Group
                     saveAs((TileMap) editor.getScreen(), false, false);
             }
         });
-        this.setFLMDefaultsButton.addListener(new ClickListener()
+        this.saveFLMDefaultsButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
@@ -185,6 +188,30 @@ public class FileMenu extends Group
                 {
                     TileMap map = (TileMap) editor.getScreen();
                     new AreYouSureDialog("Override and save new FLM default properties?", editor.stage, "", GameAssets.getUISkin())
+                    {
+                        @Override
+                        public void yes()
+                        {
+                            fadelandEditor.fileMenu.saveFLMDefaults(map);
+                        }
+
+                        @Override
+                        public void no()
+                        {
+                        }
+                    };
+                }
+            }
+        });
+        this.setFLMDefaultsButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                if(editor.getScreen() != null)
+                {
+                    TileMap map = (TileMap) editor.getScreen();
+                    new AreYouSureDialog("Override and set FLM properties to default for this map?", editor.stage, "", GameAssets.getUISkin())
                     {
                         @Override
                         public void yes()
@@ -223,6 +250,7 @@ public class FileMenu extends Group
         this.buttonTable.add(this.openButton);
         this.buttonTable.add(this.saveButton);
         this.buttonTable.add(this.saveAsButton);
+        this.buttonTable.add(this.saveFLMDefaultsButton);
         this.buttonTable.add(this.setFLMDefaultsButton);
         this.buttonTable.add(this.undoButton);
         this.buttonTable.add(this.redoButton);
@@ -276,7 +304,7 @@ public class FileMenu extends Group
         }
     }
 
-    public void setFLMDefaults(TileMap tileMap)
+    public void saveFLMDefaults(TileMap tileMap)
     {
         TileMapData tileMapData = new TileMapData(tileMap, true);
 
@@ -297,6 +325,23 @@ public class FileMenu extends Group
             writer.close();
         }
         catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void setFLMDefaults(TileMap tileMap)
+    {
+        try
+        {
+            File file = new File("defaultFLM.flm");
+            String content = null;
+            content = new Scanner(file).useDelimiter("\\Z").next();
+            Json json = createJson();
+            TileMapData tileMapData = json.fromJson(TileMapData.class, content);
+            tileMap.setMapPropertiesAndObjects(tileMapData, true);
+        }
+        catch (FileNotFoundException e)
         {
             e.printStackTrace();
         }
@@ -374,6 +419,7 @@ public class FileMenu extends Group
         this.buttonTable.getCell(this.openButton).size(buttonWidth, buttonHeight);
         this.buttonTable.getCell(this.saveButton).size(buttonWidth, buttonHeight);
         this.buttonTable.getCell(this.saveAsButton).size(buttonWidth, buttonHeight);
+        this.buttonTable.getCell(this.saveFLMDefaultsButton).size(buttonWidth, buttonHeight);
         this.buttonTable.getCell(this.setFLMDefaultsButton).size(buttonWidth, buttonHeight);
         this.buttonTable.getCell(this.undoButton).size(buttonWidth, buttonHeight);
         this.buttonTable.getCell(this.redoButton).size(buttonWidth, buttonHeight);

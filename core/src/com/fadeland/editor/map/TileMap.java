@@ -98,7 +98,7 @@ public class TileMap implements Screen
         this.tileSize = tileMapData.tileSize;
         init();
         tileSize = tileMapData.tileSize; // TODO make this build the tiles. Currently doesn't
-        setMapPropertiesAndObjects(tileMapData);
+        setMapPropertiesAndObjects(tileMapData, false);
         this.apply = true;
     }
 
@@ -695,7 +695,7 @@ public class TileMap implements Screen
         this.undo.push(action);
     }
 
-    private void setMapPropertiesAndObjects(TileMapData tileMapData)
+    public void setMapPropertiesAndObjects(TileMapData tileMapData, boolean setDefaultsOnly)
     {
         PropertyField mapRGBAProperty = propertyMenu.mapPropertyPanel.getLockedColorField();
         ColorPropertyData savedMapRGBAProperty = Utils.getLockedColorField(tileMapData.mapLockedProperties);
@@ -726,101 +726,100 @@ public class TileMap implements Screen
         }
         for(int i = 0; i < tileMapData.tileGroups.size(); i ++)
         {
+            tileGroups.clear();
             TileGroupData tileGroupData = tileMapData.tileGroups.get(i);
             TileGroup tileGroup = new TileGroup(tileGroupData.width, tileGroupData.height, tileGroupData.boundGroupIds, tileGroupData.types, this);
             tileGroups.add(tileGroup);
         }
-        for(int i = tileMapData.layers.size() - 1; i >= 0; i --)
+        if(!setDefaultsOnly)
         {
-            Layer layer;
-            LayerTypes layerTypes = null;
-            LayerData savedLayer = tileMapData.layers.get(i);
-
-            if(savedLayer instanceof TileLayerData)
-                layerTypes = LayerTypes.TILE;
-            else if(savedLayer instanceof MapSpriteLayerData)
-                layerTypes = LayerTypes.SPRITE;
-            else if(savedLayer instanceof MapObjectLayerData)
-                layerTypes = LayerTypes.OBJECT;
-
-            if(layerTypes != null)
+            for (int i = tileMapData.layers.size() - 1; i >= 0; i--)
             {
-                layer = layerMenu.newLayer(layerTypes);
-                layer.layerField.layerName.setText(tileMapData.layers.get(i).name);
-                layer.setZ(tileMapData.layers.get(i).z);
-                layer.setPosition(tileMapData.layers.get(i).x, tileMapData.layers.get(i).y);
-                layer.resize(savedLayer.width, savedLayer.height, false, false);
+                Layer layer;
+                LayerTypes layerTypes = null;
+                LayerData savedLayer = tileMapData.layers.get(i);
 
-                if(layerTypes == LayerTypes.TILE)
+                if (savedLayer instanceof TileLayerData)
+                    layerTypes = LayerTypes.TILE;
+                else if (savedLayer instanceof MapSpriteLayerData)
+                    layerTypes = LayerTypes.SPRITE;
+                else if (savedLayer instanceof MapObjectLayerData)
+                    layerTypes = LayerTypes.OBJECT;
+
+                if (layerTypes != null)
                 {
-                    TileLayerData savedTileLayer = (TileLayerData) savedLayer;
-                    for(int k = 0; k < savedTileLayer.tiles.size(); k ++)
+                    layer = layerMenu.newLayer(layerTypes);
+                    layer.layerField.layerName.setText(tileMapData.layers.get(i).name);
+                    layer.setZ(tileMapData.layers.get(i).z);
+                    layer.setPosition(tileMapData.layers.get(i).x, tileMapData.layers.get(i).y);
+                    layer.resize(savedLayer.width, savedLayer.height, false, false);
+
+                    if (layerTypes == LayerTypes.TILE)
                     {
-                        int id = savedTileLayer.tiles.get(k).id;
-                        TileTool tileTool = tileMenu.getTileTool(TileMenuTools.TILE, id);
-                        layer.tiles.get(k).setTool(tileTool);
-                        layer.tiles.get(k).hasBlockedObjectOnTop = savedTileLayer.tiles.get(k).blockedByObject;
-                    }
-                }
-                else if(layerTypes == LayerTypes.SPRITE)
-                {
-                    MapSpriteLayerData savedSpriteLayer = (MapSpriteLayerData) savedLayer;
-                    for(int k = 0; k < savedSpriteLayer.tiles.size(); k ++)
-                    {
-                        int id = savedSpriteLayer.tiles.get(k).id;
-                        String name = savedSpriteLayer.tiles.get(k).name;
-                        TileTool tileTool = tileMenu.getSpriteTool(TileMenuTools.SPRITE, name, id);
-                        MapSprite mapSprite = input.newMapSprite(this, tileTool, layer,savedSpriteLayer.tiles.get(k).x + savedSpriteLayer.tiles.get(k).width / 2, savedSpriteLayer.tiles.get(k).y + savedSpriteLayer.tiles.get(k).height / 2);
-                        Utils.setCenterOrigin(mapSprite.position.x, mapSprite.position.y);
-                        mapSprite.setID(savedSpriteLayer.tiles.get(k).spriteID);
-                        mapSprite.setRotation(savedSpriteLayer.tiles.get(k).rotation);
-                        mapSprite.setScale(savedSpriteLayer.tiles.get(k).scale);
-                        mapSprite.setZ(savedSpriteLayer.tiles.get(k).z);
-                        mapSprite.setColor(savedSpriteLayer.tiles.get(k).r, savedSpriteLayer.tiles.get(k).g, savedSpriteLayer.tiles.get(k).b, savedSpriteLayer.tiles.get(k).a);
-                        layer.tiles.add(mapSprite);
-                    }
-                }
-                else if(layerTypes == LayerTypes.OBJECT)
-                {
-                    MapObjectLayerData savedObjectLayer = (MapObjectLayerData) savedLayer;
-                    for(int k = 0; k < savedObjectLayer.tiles.size(); k ++)
-                    {
-                        MapObject mapObject = null;
-                        if(savedObjectLayer.tiles.get(k) instanceof MapPolygonData)
+                        TileLayerData savedTileLayer = (TileLayerData) savedLayer;
+                        for (int k = 0; k < savedTileLayer.tiles.size(); k++)
                         {
-                            MapPolygonData mapPolygonData = (MapPolygonData) savedObjectLayer.tiles.get(k);
-                            mapObject = new MapObject(this, layer, mapPolygonData.vertices, mapPolygonData.x, mapPolygonData.y);
+                            int id = savedTileLayer.tiles.get(k).id;
+                            TileTool tileTool = tileMenu.getTileTool(TileMenuTools.TILE, id);
+                            layer.tiles.get(k).setTool(tileTool);
+                            layer.tiles.get(k).hasBlockedObjectOnTop = savedTileLayer.tiles.get(k).blockedByObject;
                         }
-                        else if(savedObjectLayer.tiles.get(k) instanceof MapPointData)
+                    } else if (layerTypes == LayerTypes.SPRITE)
+                    {
+                        MapSpriteLayerData savedSpriteLayer = (MapSpriteLayerData) savedLayer;
+                        for (int k = 0; k < savedSpriteLayer.tiles.size(); k++)
                         {
-                            MapPointData mapPointData = (MapPointData) savedObjectLayer.tiles.get(k);
-                            mapObject = new MapObject(this, layer, mapPointData.x, mapPointData.y);
+                            int id = savedSpriteLayer.tiles.get(k).id;
+                            String name = savedSpriteLayer.tiles.get(k).name;
+                            TileTool tileTool = tileMenu.getSpriteTool(TileMenuTools.SPRITE, name, id);
+                            MapSprite mapSprite = input.newMapSprite(this, tileTool, layer, savedSpriteLayer.tiles.get(k).x + savedSpriteLayer.tiles.get(k).width / 2, savedSpriteLayer.tiles.get(k).y + savedSpriteLayer.tiles.get(k).height / 2);
+                            Utils.setCenterOrigin(mapSprite.position.x, mapSprite.position.y);
+                            mapSprite.setID(savedSpriteLayer.tiles.get(k).spriteID);
+                            mapSprite.setRotation(savedSpriteLayer.tiles.get(k).rotation);
+                            mapSprite.setScale(savedSpriteLayer.tiles.get(k).scale);
+                            mapSprite.setZ(savedSpriteLayer.tiles.get(k).z);
+                            mapSprite.setColor(savedSpriteLayer.tiles.get(k).r, savedSpriteLayer.tiles.get(k).g, savedSpriteLayer.tiles.get(k).b, savedSpriteLayer.tiles.get(k).a);
+                            layer.tiles.add(mapSprite);
                         }
-                        if(mapObject != null)
+                    } else if (layerTypes == LayerTypes.OBJECT)
+                    {
+                        MapObjectLayerData savedObjectLayer = (MapObjectLayerData) savedLayer;
+                        for (int k = 0; k < savedObjectLayer.tiles.size(); k++)
                         {
-                            for(int s = 0; s < savedObjectLayer.tiles.get(k).propertyData.size(); s ++)
+                            MapObject mapObject = null;
+                            if (savedObjectLayer.tiles.get(k) instanceof MapPolygonData)
                             {
-                                selectedObjects.clear();
-                                selectedObjects.add(mapObject);
-                                PropertyData propertyData = savedObjectLayer.tiles.get(k).propertyData.get(s);
-                                if(propertyData instanceof LightPropertyData)
-                                {
-                                    LightPropertyData lightPropertyData = (LightPropertyData) propertyData;
-                                    propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
-                                }
-                                else if(propertyData instanceof ColorPropertyData)
-                                {
-                                    ColorPropertyData colorPropertyData = (ColorPropertyData) propertyData;
-                                    propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
-                                }
-                                else
-                                {
-                                    NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) propertyData;
-                                    propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
-                                }
-                                selectedObjects.clear();
+                                MapPolygonData mapPolygonData = (MapPolygonData) savedObjectLayer.tiles.get(k);
+                                mapObject = new MapObject(this, layer, mapPolygonData.vertices, mapPolygonData.x, mapPolygonData.y);
+                            } else if (savedObjectLayer.tiles.get(k) instanceof MapPointData)
+                            {
+                                MapPointData mapPointData = (MapPointData) savedObjectLayer.tiles.get(k);
+                                mapObject = new MapObject(this, layer, mapPointData.x, mapPointData.y);
                             }
-                            layer.tiles.add(mapObject);
+                            if (mapObject != null)
+                            {
+                                for (int s = 0; s < savedObjectLayer.tiles.get(k).propertyData.size(); s++)
+                                {
+                                    selectedObjects.clear();
+                                    selectedObjects.add(mapObject);
+                                    PropertyData propertyData = savedObjectLayer.tiles.get(k).propertyData.get(s);
+                                    if (propertyData instanceof LightPropertyData)
+                                    {
+                                        LightPropertyData lightPropertyData = (LightPropertyData) propertyData;
+                                        propertyMenu.newProperty(lightPropertyData.r, lightPropertyData.g, lightPropertyData.b, lightPropertyData.a, lightPropertyData.distance, lightPropertyData.rayAmount);
+                                    } else if (propertyData instanceof ColorPropertyData)
+                                    {
+                                        ColorPropertyData colorPropertyData = (ColorPropertyData) propertyData;
+                                        propertyMenu.newProperty(colorPropertyData.r, colorPropertyData.g, colorPropertyData.b, colorPropertyData.a);
+                                    } else
+                                    {
+                                        NonColorPropertyData nonColorPropertyData = (NonColorPropertyData) propertyData;
+                                        propertyMenu.newProperty(nonColorPropertyData.property, nonColorPropertyData.value);
+                                    }
+                                    selectedObjects.clear();
+                                }
+                                layer.tiles.add(mapObject);
+                            }
                         }
                     }
                 }
@@ -837,6 +836,7 @@ public class TileMap implements Screen
                 {
                     ToolData toolData = tileTools.get(k);
                     TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
+                    tileTool.mapObjects.clear();
                     for (int h = 0; h < toolData.lockedPropertyData.size(); h++)
                     {
                         PropertyData property = toolData.lockedPropertyData.get(h);
@@ -921,6 +921,7 @@ public class TileMap implements Screen
                 {
                     ToolData toolData = spriteTools.get(k);
                     TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
+                    tileTool.mapObjects.clear();
                     for(int h = 0; h < toolData.lockedPropertyData.size(); h ++)
                     {
                         NonColorPropertyData property = (NonColorPropertyData) toolData.lockedPropertyData.get(h);

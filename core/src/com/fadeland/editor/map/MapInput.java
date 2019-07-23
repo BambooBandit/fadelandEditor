@@ -863,9 +863,9 @@ public class MapInput implements InputProcessor
                 placeTile.addNewTiles();
                 if (placeTile.changed())
                     map.undo.push(placeTile);
+                map.findAllTilesToBeGrouped();
             }
         }
-        map.findAllTilesToBeGrouped();
         this.draggingRotateBox = false;
         this.draggingMoveBox = false;
         this.draggingLayerMoveBox = false;
