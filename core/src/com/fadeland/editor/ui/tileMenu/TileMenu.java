@@ -271,7 +271,7 @@ public class TileMenu extends Group
                 if(spriteTable.getChildren().get(i) instanceof TileTool)
                 {
                     TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
-                    if (tileTool.name.equals(name))
+                    if (tileTool.name.equals(name) && id == tileTool.id)
                         return tileTool;
                 }
             }
