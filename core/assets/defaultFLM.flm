@@ -1,0 +1,2413 @@
+{
+name: defaultFLM.flm
+tileSize: 64
+tilePadSize: 1
+sheets: [
+	{
+		class: spriteSheetData
+		name: map
+		tools: [
+			{
+				name: 0longGrass0001
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: animated
+						value: Value
+					}
+					{
+						class: nonColorPropertyData
+						property: fps
+						value: 2
+					}
+					{
+						class: nonColorPropertyData
+						property: pingpong
+						value: Value
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPointData
+						x: 3554.4536
+						y: 1243.013
+						xOffset: 18.333252
+						yOffset: 16.666687
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: wind
+								value: 0.35
+							}
+							{
+								class: nonColorPropertyData
+								property: fpsWind
+								value: Value
+							}
+							{
+								class: nonColorPropertyData
+								property: skewWind
+								value: Value
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 1
+				name: 0pumpkin
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 1359.5936
+						y: 5596.7417
+						xOffset: 12.572388
+						yOffset: 9.438171
+						width: 53
+						height: 56
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 8.799988, -7.700012, 28.699951, -8.5, 38.5, -2.9000244, 37.900024, 7, 25.099976, 12.399963, 7.0999756, 10.399963, 1.5999756, 6.5 ]
+					}
+				]
+			}
+			{
+				id: 2
+				name: 0tree0
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: top
+						value: 0tree1
+					}
+					{
+						class: nonColorPropertyData
+						property: fade1
+						value: "true"
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 1435.46
+						y: 6267.848
+						xOffset: 324.35175
+						yOffset: 84.82678
+						width: 960
+						height: 1408
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 31.333313, 46.666626, 66.66669, 64, 47.99994, 13.333313 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1478.7932
+						y: 6259.1816
+						xOffset: 367.68506
+						yOffset: 76.160095
+						width: 960
+						height: 1408
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 1.333374, 20.666626, 20.666626, 70, 106.66669, 93.33331, 226.66669, 78.666626, 257.33337, 52.666626 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1540.1265
+						y: 6273.1816
+						xOffset: 429.01837
+						yOffset: 90.160095
+						width: 960
+						height: 1408
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 45.333374, -43.333313, 115.333374, -43.333313, 102.00006, 22.666687 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1618.7932
+						y: 6231.848
+						xOffset: 507.68506
+						yOffset: 48.826782
+						width: 960
+						height: 1408
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ -0.666687, -2.666687, 39.333374, -35.333374, 44, -15.333374, 35.333374, -0.666687 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1641.46
+						y: 6289.848
+						xOffset: 530.35175
+						yOffset: 106.82678
+						width: 960
+						height: 1408
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ -6.666687, 4.666626, 104, -44.666687, 73.333374, -1.333374, 56.666687, 16.666626 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1440.345
+						y: 6269.118
+						xOffset: 329.23682
+						yOffset: 86.096436
+						width: 960
+						height: 1408
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSort
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 210, -70, 304, -24, 296, 46 ]
+					}
+					{
+						class: mapPointData
+						x: 1606.8157
+						y: 6282.9727
+						xOffset: 495.70752
+						yOffset: 99.95117
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: shadowWidth
+								value: 7.5
+							}
+							{
+								class: nonColorPropertyData
+								property: shadowHeight
+								value: 5.5
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 3
+				name: 0tree1
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: []
+			}
+			{
+				id: 4
+				name: 0tree4
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: top
+						value: 4tree1
+					}
+					{
+						class: nonColorPropertyData
+						property: fade1
+						value: "true"
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 1606.4011
+						y: 5982.393
+						xOffset: 121.1279
+						yOffset: 109.71658
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -9.333313, 16, 4.0000305, 56.666626, 32.66667, 89.33331, 120.66666, 93.99994, 187.33328, 81.33331, 179.99997, 18, 146.66666, -32 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1664.0676
+						y: 5971.3926
+						xOffset: 178.79439
+						yOffset: 98.71643
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 43.33333, -67.99994, 85.33333, -18.666626 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1754.7343
+						y: 5950.726
+						xOffset: 269.46103
+						yOffset: 78.049805
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 109.99997, -7.333374, 54.666687, 45.333313, 29.333344, 51.333313 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1787.4009
+						y: 6018.726
+						xOffset: 302.1277
+						yOffset: 146.04974
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 47.99997, 22, 67.02527, 42.68878, 6, 46.666687 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1617.4009
+						y: 6047.3926
+						xOffset: 132.12773
+						yOffset: 174.71643
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -13.999985, 20, 16.000015, 18 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1597.4009
+						y: 5999.3926
+						xOffset: 112.12774
+						yOffset: 126.71643
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -52.666656, -5.333313, -104.66666, 0, -79.33331, 18.666687, 12.666687, 36.666687 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1657.4009
+						y: 5975.3926
+						xOffset: 172.12772
+						yOffset: 102.71643
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -45.333313, -37.99994, -103.99997, -61.333252, -93.99997, -33.333313, -50.666626, 8.666687 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1490.9694
+						y: 5999.6606
+						xOffset: 5.6961365
+						yOffset: 126.98459
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSort
+								value: Value
+							}
+						]
+						vertices: [ 2.2677155, -0.71520996, 60.200012, -87.43341, 214.63443, -96.548584, 407.0571, -48.279297, 419.05698, 90.38733 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1636.981
+						y: 6071.2896
+						xOffset: 151.7078
+						yOffset: 198.6131
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 169.13342, 194.93341, 250.8334, 107.50006, 151.93341, -4.299988 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1886.3811
+						y: 6174.4893
+						xOffset: 401.1079
+						yOffset: 301.8131
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 47.30005, 17.200012, 184.90009, 126.13342, 200.66675, 154.80005, -78.833374, 91.7334 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1675.681
+						y: 6118.5894
+						xOffset: 190.40782
+						yOffset: 245.91309
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ -1.6670837, -5.034485, 30.399597, 106.765625, 78.0663, 132.33228, 84.99963, 95.49896 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1701.481
+						y: 6221.7896
+						xOffset: 216.20782
+						yOffset: 349.11316
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 3.6323853, 2.8083496, -47.30002, 131.8667, -34.399994, 156.23334, 48.699097, 24.908325 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1652.7477
+						y: 6355.0894
+						xOffset: 167.47449
+						yOffset: 482.41315
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 1.6656952, -2.2249146, -75.90101, 56.275085, -33.00099, 74.47516, 7.732376, 10.341736 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1942.2811
+						y: 6299.1895
+						xOffset: 457.00793
+						yOffset: 426.51312
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 65.93335, 80.26672, 219.29999, 65.93341, 180.60004, 27.233398 ]
+					}
+					{
+						class: mapPolygonData
+						x: 2119.5144
+						y: 6325.7227
+						xOffset: 634.2412
+						yOffset: 453.04633
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ -5.366699, 2.2999878, 86.6333, -60.56671, 123.43335, -58.266663, 19.93335, 16.8667 ]
+					}
+					{
+						class: mapPolygonData
+						x: 2007.4811
+						y: 6379.3228
+						xOffset: 522.2079
+						yOffset: 506.64642
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -155.10004, 18.700012, -196.90002, -10.999939, -118.80002, -68.19995, -56.100006, -68.19995 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1811.8477
+						y: 6367.9893
+						xOffset: 326.57452
+						yOffset: 495.31317
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -32.966675, 1.4333496, -237.93338, 220.73346, -235.06671, 311.0335, 64.50003, 45.86664 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1857.7144
+						y: 6432.4893
+						xOffset: 372.44122
+						yOffset: 559.81323
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 60.200012, 120.400024, 83.13339, 100.333374, 18.633331, -21.5 ]
+					}
+					{
+						class: mapPolygonData
+						x: 2003.9144
+						y: 6380.8896
+						xOffset: 518.64124
+						yOffset: 508.2132
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 34.400024, 68.79999, 229.33337, 117.53339, 83.13342, -7.166687 ]
+					}
+					{
+						class: mapPolygonData
+						x: 2035.4478
+						y: 6451.123
+						xOffset: 550.1746
+						yOffset: 578.44653
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -107.50003, 87.43335, -184.90009, 206.40002, -20.06668, 150.50012, 61.6333, 11.466675 ]
+					}
+					{
+						class: mapPolygonData
+						x: 2038.3145
+						y: 6562.923
+						xOffset: 553.04126
+						yOffset: 690.2466
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 22.93335, 114.66675, -34.400024, 166.26672, -93.16669, 127.56665 ]
+					}
+					{
+						class: mapPolygonData
+						x: 2075.581
+						y: 6495.556
+						xOffset: 590.3079
+						yOffset: 622.8799
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ -8.599976, 17.200073, 111.80011, 197.80005, 170.56671, 182.03345, 47.30005, -28.666626, 18.633362, -32.966675 ]
+					}
+					{
+						class: mapPointData
+						x: 1704.0212
+						y: 5984.232
+						xOffset: 218.74805
+						yOffset: 111.55554
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: shadowWidth
+								value: 10.2
+							}
+							{
+								class: nonColorPropertyData
+								property: shadowHeight
+								value: 6.25
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 5
+				name: 0tree5
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: top
+						value: 5tree1
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 756.14813
+						y: 6196.3
+						xOffset: 12.373413
+						yOffset: 53.944336
+						width: 192
+						height: 320
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 165, 3.666626, 144.33325, 24, 101, 40.666626, 61.666626, 39 ]
+					}
+					{
+						class: mapPolygonData
+						x: 809.4814
+						y: 6197.9663
+						xOffset: 65.706665
+						yOffset: 55.610962
+						width: 192
+						height: 320
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 10, -20.333252, 24.666748, -16.666626, 31.333374, 0.33337402 ]
+					}
+					{
+						class: mapPolygonData
+						x: 846.81476
+						y: 6198.3
+						xOffset: 103.04004
+						yOffset: 55.944336
+						width: 192
+						height: 320
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 41.666626, -17.666626, 30.666626, 2 ]
+					}
+					{
+						class: mapPolygonData
+						x: 799.5203
+						y: 6222.7544
+						xOffset: 55.745605
+						yOffset: 80.39899
+						width: 192
+						height: 320
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -46.666748, 197.33331, 24, 160, 70.666626, 8 ]
+					}
+					{
+						class: mapPolygonData
+						x: 756.6121
+						y: 6197.731
+						xOffset: 12.837402
+						yOffset: 55.37561
+						width: 192
+						height: 320
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSort
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 60, -20, 130.66663, -20, 161.33325, -1.333313 ]
+					}
+					{
+						class: mapPointData
+						x: 839.17194
+						y: 6211.8076
+						xOffset: 95.39722
+						yOffset: 69.45239
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: shadowWidth
+								value: 4
+							}
+							{
+								class: nonColorPropertyData
+								property: shadowHeight
+								value: 3
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 6
+				name: 0tree6
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: top
+						value: 6tree1
+					}
+					{
+						class: nonColorPropertyData
+						property: fade1
+						value: "true"
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 3988.422
+						y: 2336.7888
+						xOffset: 149.33804
+						yOffset: 43.663513
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 213.99994, 123, 244.99994, 39, 127.99997, 17 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4271.422
+						y: 2397.7888
+						xOffset: 392.20468
+						yOffset: 84.59711
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 40.99997, -15, 79.99997, 86, -29, 81 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4290.422
+						y: 2359.7888
+						xOffset: 432.57187
+						yOffset: 73.83148
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 8.0000305, -46.99994, 90.99997, 15, 79.99997, 81, 39.00003, 97 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4358.422
+						y: 2381.7888
+						xOffset: 519.33795
+						yOffset: 91.72992
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 121, -40.99994, 103, -7, -8.999939, 64 ]
+					}
+					{
+						class: mapPolygonData
+						x: 3986.832
+						y: 2317.873
+						xOffset: 151.11484
+						yOffset: 46.081665
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSort
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 291.66663, -20, 486.66663, 5, 369.99997, 48.333374, 238.33328, 46.666626 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4316.2153
+						y: 2458.0728
+						xOffset: 477.13156
+						yOffset: 164.94751
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -10.000038, 93.33325, -128.33331, 116.666626, -141.66663, -15 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4302.8823
+						y: 2549.7393
+						xOffset: 463.79822
+						yOffset: 256.61414
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 41.666664, 91.666626, 36.66661, 130, -83.33331, 145, -115, 21.666626 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4332.8823
+						y: 2679.7393
+						xOffset: 493.79816
+						yOffset: 386.61414
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -8.333328, 98.333374, -184.99994, 118.333374, -191.66656, 98.333374, -108.33325, 18.333374 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4141.216
+						y: 2776.406
+						xOffset: 302.1316
+						yOffset: 483.28076
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -46.666656, -35, -156.66669, 30, -285, 150, -178.33334, 168.33337, 59.999954, 133.33337 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4324.549
+						y: 2774.7393
+						xOffset: 485.4648
+						yOffset: 481.61414
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 260.00006, 163.33337, 153.33339, 186.66663, 5.000046, 63.333252 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4329.549
+						y: 2838.0728
+						xOffset: 490.46487
+						yOffset: 544.9474
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -133.33331, 73.333374, -184.99994, -41.666626, -6.666687, -61.666626 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4247.8823
+						y: 2876.406
+						xOffset: 408.7982
+						yOffset: 583.28076
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -121.666626, 233.33337, -101.66661, 245, -8.333328, 168.33337, 91.66666, 43.333374, 78.333405, -40 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4126.2153
+						y: 3104.7393
+						xOffset: 287.13156
+						yOffset: 811.61414
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -141.66666, 30, -43.333313, 61.666626, 16.666672, 15 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4246.2153
+						y: 3033.0728
+						xOffset: 407.13156
+						yOffset: 739.9475
+						width: 768
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 278.33325, 128.33325, 348.3333, 99.99988, 86.666595, -118.333374 ]
+					}
+					{
+						class: mapPointData
+						x: 4275.457
+						y: 2370.035
+						xOffset: 436.37305
+						yOffset: 76.90967
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: shadowWidth
+								value: 12
+							}
+							{
+								class: nonColorPropertyData
+								property: shadowHeight
+								value: 4
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 7
+				name: 1flower0001
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: animated
+						value: Value
+					}
+					{
+						class: nonColorPropertyData
+						property: fps
+						value: 2
+					}
+					{
+						class: nonColorPropertyData
+						property: pingpong
+						value: Value
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPointData
+						x: 1930.4617
+						y: 4482.3228
+						xOffset: 25.9151
+						yOffset: 29.553772
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: wind
+								value: 0.5
+							}
+							{
+								class: nonColorPropertyData
+								property: fpsWind
+								value: Value
+							}
+							{
+								class: nonColorPropertyData
+								property: skewWind
+								value: Value
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 8
+				name: 1house0
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: top
+						value: 1house1
+					}
+					{
+						class: nonColorPropertyData
+						property: fade1
+						value: "true"
+					}
+					{
+						class: nonColorPropertyData
+						property: fade2
+						value: "true"
+					}
+					{
+						class: nonColorPropertyData
+						property: fade3
+						value: "true"
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 3891.5786
+						y: 2598.291
+						xOffset: 451.7616
+						yOffset: 55.73181
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 13, -13.866699, 39.866577, -14.733337, 56.7666, 0.8666382, 46.799927, 17.333313, 10.833252, 16.466675 ]
+					}
+					{
+						class: mapPolygonData
+						x: 3993.8813
+						y: 3400.2002
+						xOffset: 554.0642
+						yOffset: 857.64124
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -427.1333, -421.40002, -470.2384, -430.98468, -470.1333, -412.80005, -2.0717773, 58.382202 ]
+					}
+					{
+						class: mapPolygonData
+						x: 3520.8813
+						y: 2968.767
+						xOffset: 81.06421
+						yOffset: 426.2079
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 209.2666, -219.30005, 206.40002, -166.2666, 44.43335, 11.466675 ]
+					}
+					{
+						class: mapPolygonData
+						x: 3724.4146
+						y: 2803.9336
+						xOffset: 284.59753
+						yOffset: 261.37457
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 127.56665, 123.26666, 130.43335, 75.966675, 5.7332764, -54.466736 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4109.9814
+						y: 2753.767
+						xOffset: 670.1643
+						yOffset: 211.20792
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -124.70007, 129, -121.833374, 173.43335, -108.93347, 174.8667, 1.4332275, 71.666626 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4109.076
+						y: 2753.7825
+						xOffset: 669.25916
+						yOffset: 211.2233
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 455.79993, 460.1, 454.36682, 508.83328, 1.4333496, 73.099976 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4348.443
+						y: 3403.0825
+						xOffset: 908.62585
+						yOffset: 860.5233
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 2.8666992, 44.433228, 11.466675, 55.900024, 215.00012, -141.90002, 179.16663, -177.73334 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4357.043
+						y: 3456.1157
+						xOffset: 917.2258
+						yOffset: 913.55664
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -368.3667, 2.8666992, -362.6333, -55.900024, -7.166626, -54.466675 ]
+					}
+					{
+						class: mapPolygonData
+						x: 3728.8052
+						y: 2751.9653
+						xOffset: 288.9879
+						yOffset: 209.40625
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSort
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 124.69995, 127.56671, 256.56677, 130.43335, 379.83337, 1.4333496 ]
+					}
+					{
+						class: mapPolygonData
+						x: 3516.6716
+						y: 2971.2654
+						xOffset: 76.85449
+						yOffset: 428.7063
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSort
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 0, -220.7334, 215, -219.30005 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4107.7383
+						y: 2757.5903
+						xOffset: 667.9209
+						yOffset: 215.03128
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSort
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 455.8003, 454.36685, 458.66675, -2.8666992 ]
+					}
+					{
+						class: mapPolygonData
+						x: 3851.5698
+						y: 2928.0002
+						xOffset: 411.75256
+						yOffset: 385.44116
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -0.032470703, 1041.3226, -369.89917, 571.6891, -323.6333, 43.799988, -124.099976, -143.56671 ]
+					}
+					{
+						class: mapPolygonData
+						x: 3849.5854
+						y: 2926.5566
+						xOffset: 409.7682
+						yOffset: 383.99756
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 150.86682, 0, 471.59998, 1514.7336, 0.39990234, 1043.5336 ]
+					}
+					{
+						class: mapPolygonData
+						x: 3992.5852
+						y: 2928.4902
+						xOffset: 552.76807
+						yOffset: 385.9311
+						width: 1216
+						height: 1920
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 120.900024, -127.099976, 570.3999, 328.59998, 613.28564, 836.43256, 328.31787, 1511.8479 ]
+					}
+				]
+			}
+			{
+				id: 9
+				name: 1house1
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: []
+			}
+			{
+				id: 10
+				name: 1house2
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: []
+			}
+			{
+				id: 11
+				name: 1house3
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: []
+			}
+			{
+				id: 12
+				name: 1pumpkin
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 1591.7042
+						y: 6174.7744
+						xOffset: 3.3729248
+						yOffset: 17.226746
+						width: 63
+						height: 63
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 21.333313, -13, 51.666626, -9.333313, 60.666626, 7, 28, 14 ]
+					}
+					{
+						class: mapPointData
+						x: 1619.9062
+						y: 6177.5166
+						xOffset: 31.57489
+						yOffset: 19.968689
+						propertyData: [
+							{
+								class: lightPropertyData
+								r: 1
+								g: 0.7
+								b: 0.5
+								a: 0.65
+								distance: 300
+								rayAmount: 25
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 13
+				name: 1tree0
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: []
+			}
+			{
+				id: 14
+				name: 1tree1
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: []
+			}
+			{
+				id: 15
+				name: 2flower0001
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: animated
+						value: Value
+					}
+					{
+						class: nonColorPropertyData
+						property: fps
+						value: 2
+					}
+					{
+						class: nonColorPropertyData
+						property: pingpong
+						value: Value
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPointData
+						x: 3094.8098
+						y: 986.63257
+						xOffset: 27.500244
+						yOffset: 22.666687
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: wind
+								value: 0.6
+							}
+							{
+								class: nonColorPropertyData
+								property: skewWind
+								value: Value
+							}
+							{
+								class: nonColorPropertyData
+								property: fpsWind
+								value: Value
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 16
+				name: 2longGrass0001
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: animated
+						value: Value
+					}
+					{
+						class: nonColorPropertyData
+						property: fps
+						value: 2
+					}
+					{
+						class: nonColorPropertyData
+						property: pingpong
+						value: Value
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPointData
+						x: 3271.628
+						y: 1807.6375
+						xOffset: 15
+						yOffset: 14
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: wind
+								value: 0.3
+							}
+							{
+								class: nonColorPropertyData
+								property: fpsWind
+								value: Value
+							}
+							{
+								class: nonColorPropertyData
+								property: skewWind
+								value: Value
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 17
+				name: 2pumpkin
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 1459.8612
+						y: 6344.0225
+						xOffset: 4.539673
+						yOffset: 6.626709
+						width: 59
+						height: 63
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 18.333374, -4.666687, 43, -4, 49.666626, 2.666626, 45.666626, 11.999939, 18.666626, 13.999939, 1.666626, 9.666626 ]
+					}
+					{
+						class: mapPointData
+						x: 1483.9299
+						y: 6355.9307
+						xOffset: 28.608337
+						yOffset: 18.5354
+						propertyData: [
+							{
+								class: lightPropertyData
+								r: 0.8
+								g: 0.5
+								b: 0.2
+								a: 0.62
+								distance: 250
+								rayAmount: 25
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 18
+				name: 2tree0
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: fade1
+						value: "true"
+					}
+					{
+						class: nonColorPropertyData
+						property: top
+						value: 2tree1
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 1426.5326
+						y: 381.49548
+						xOffset: 207.23145
+						yOffset: 18.292831
+						width: 448
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 17.333374, 14.666687, 35.333313, 1.333313, 20, -4.6666565 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1268.8372
+						y: 587.0765
+						xOffset: 49.53607
+						yOffset: 223.87384
+						width: 448
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: boundingBody
+								value: Value
+							}
+							{
+								class: nonColorPropertyData
+								property: Property
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 164.99994, -26.666656, 348.33325, 25, 281.66656, 441.66663, 151.66669, 639.99994, 29.999939, 363.33325 ]
+					}
+					{
+						class: mapPolygonData
+						x: 1428.8372
+						y: 385.40985
+						xOffset: 209.53607
+						yOffset: 22.207214
+						width: 448
+						height: 896
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: boundingBody
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 1.666626, 178.33328, 19.999939, 178.33328, 26.666626, 3.3332825 ]
+					}
+				]
+			}
+			{
+				id: 19
+				name: 2tree1
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: []
+			}
+			{
+				id: 20
+				name: 3pumpkin
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 1448.5276
+						y: 6370.589
+						xOffset: 8.372864
+						yOffset: 9.693176
+						width: 40
+						height: 40
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 18.666687, -1, 27, 4.666687, 23.333374, 9, 10.666687, 9.666626, 0.666687, 5 ]
+					}
+					{
+						class: mapPointData
+						x: 1466.0298
+						y: 6376.7305
+						xOffset: 25.874939
+						yOffset: 15.835205
+						propertyData: [
+							{
+								class: lightPropertyData
+								r: 0.7
+								g: 0.4
+								b: 0.25
+								a: 0.58
+								distance: 200
+								rayAmount: 25
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 21
+				name: 4pumpkin
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 1554.2043
+						y: 6197.841
+						xOffset: 8.039612
+						yOffset: 17.626465
+						width: 64
+						height: 61
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 7.333313, -6, 29, -5, 34.666626, 0, 32, 7, 20, 8.333313, 4.666687, 5.666687 ]
+					}
+				]
+			}
+			{
+				id: 22
+				name: 4tree1
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: []
+			}
+			{
+				id: 23
+				name: 5tree1
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: []
+			}
+			{
+				id: 24
+				name: 6tree1
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: []
+			}
+			{
+				id: 25
+				name: bush0001
+				type: sprite
+				propertyData: [
+					{
+						class: nonColorPropertyData
+						property: animated
+						value: Value
+					}
+					{
+						class: nonColorPropertyData
+						property: fps
+						value: 3
+					}
+					{
+						class: nonColorPropertyData
+						property: pingpong
+						value: Value
+					}
+				]
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 649.20624
+						y: 4633.827
+						xOffset: 49.68225
+						yOffset: 41.892395
+						width: 250
+						height: 167
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 78.10004, -14.299988, 144.10004, 2.2000122, 140.79999, 18.700012, 77, 27.5, 0, 15.399994 ]
+					}
+					{
+						class: mapPolygonData
+						x: 638.006
+						y: 4638.2603
+						xOffset: 38.481995
+						yOffset: 46.325745
+						width: 250
+						height: 167
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: wind
+								value: Value
+							}
+							{
+								class: nonColorPropertyData
+								property: fpsWind
+								value: Value
+							}
+							{
+								class: nonColorPropertyData
+								property: skewWind
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 55, 79.20001, 130.90002, 75.900024, 173.80005, 30.800018, 159.5, 0, 88, -19.799988 ]
+					}
+					{
+						class: mapPointData
+						x: 719.4786
+						y: 4639.5474
+						xOffset: 119.95459
+						yOffset: 47.612793
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: shadowWidth
+								value: 4.5
+							}
+							{
+								class: nonColorPropertyData
+								property: shadowHeight
+								value: 1.85
+							}
+						]
+					}
+				]
+			}
+			{
+				id: 26
+				name: communalChest
+				type: sprite
+				propertyData: []
+				lockedPropertyData: [
+					{
+						class: nonColorPropertyData
+						property: Probability
+						value: 1.0
+					}
+					{
+						class: nonColorPropertyData
+						property: Type
+						value: ""
+					}
+					{
+						class: nonColorPropertyData
+						property: spawnZ
+						value: ""
+					}
+				]
+				attachedObjects: [
+					{
+						class: mapPolygonData
+						x: 4341.435
+						y: 2277.892
+						xOffset: 27.111816
+						yOffset: 41.534668
+						width: 200
+						height: 200
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: storageChest
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 57.333008, -32.666504, 150.6665, 19.333496, 150.46582, 115.1001, 103.33301, 146, 0.099121094, 90.83325 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4337.914
+						y: 2284.2776
+						xOffset: 23.59082
+						yOffset: 47.920166
+						width: 200
+						height: 200
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: blocked
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 61.600098, -36.30005, 158.3999, 18.699951, 92.3999, 57.19995 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4339.9146
+						y: 2288.4778
+						xOffset: 25.591309
+						yOffset: 52.12036
+						width: 200
+						height: 200
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSortBack
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, -1.1000977, 88, 105.6001, 147.3999, 156.1997, 115.5, 157.2998, 16.5 ]
+					}
+					{
+						class: mapPolygonData
+						x: 4337.7144
+						y: 2288.5776
+						xOffset: 23.391113
+						yOffset: 52.220215
+						width: 200
+						height: 200
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: collisionSort
+								value: Value
+							}
+						]
+						vertices: [ 0, 0, 1.1000977, -42.899902, 160.6001, -44, 159.5, 17.600098 ]
+					}
+					{
+						class: mapPointData
+						x: 4413.457
+						y: 2307.035
+						xOffset: 99.13379
+						yOffset: 70.67749
+						propertyData: [
+							{
+								class: nonColorPropertyData
+								property: shadowWidth
+								value: 4
+							}
+							{
+								class: nonColorPropertyData
+								property: shadowHeight
+								value: 3
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+]
+layers: [
+	{
+		class: mapSpriteLayerData
+		name: spriteLayer
+		width: 5
+		height: 5
+		tiles: [
+			{
+				x: 47
+				y: 19
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+				id: 5
+				name: 0tree5
+				width: 192
+				height: 320
+				scale: 1
+			}
+		]
+	}
+]
+tileGroups: []
+mapLockedProperties: [
+	{
+		class: colorPropertyData
+		a: 1
+	}
+]
+mapProperties: []
+}
