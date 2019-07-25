@@ -86,6 +86,7 @@ public class FileMenu extends Group
                             content = new Scanner(file).useDelimiter("\\Z").next();
                             Json json = createJson();
                             TileMapData tileMapData = json.fromJson(TileMapData.class, content);
+                            tileMapData.layers.clear();
                             TileMap newMap = new TileMap(editor, tileMapData);
                             newMap.file = file;
                             editor.addToMaps(newMap);

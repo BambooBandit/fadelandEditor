@@ -123,6 +123,11 @@ public class Utils
         return x >= rectX && x <= rectX + rectWidth && y >= rectY && y <= rectY + rectHeight;
     }
 
+    public static float getDistance(float x1, float x2, float y1, float y2)
+    {
+        return (float) Math.hypot(x1-x2, y1-y2);
+    }
+
     public static LightPropertyData getLockedLightField(ArrayList<PropertyData> lockedProperties)
     {
         for(int i = 0; i < lockedProperties.size(); i ++)
