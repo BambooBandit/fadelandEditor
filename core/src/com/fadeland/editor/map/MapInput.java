@@ -228,6 +228,96 @@ public class MapInput implements InputProcessor
                 (map.selectedLayer instanceof ObjectLayer || map.selectedSprites.size == 1 || map.selectedTile != null))
         {
             isDrawingObjectPolygon = true;
+
+            // Magnet. Snap the new polygon vertice to the mouses nearest vertice
+            if(Gdx.input.isKeyPressed(Input.Keys.M))
+            {
+                float units = 15;
+                float smallestDistance = units;
+                float smallestDistanceX = 0;
+                float smallestDistanceY = 0;
+                for(int i = 0; i < map.layers.size; i ++)
+                {
+                    Layer layer = map.layers.get(i);
+                    if(layer instanceof ObjectLayer)
+                    {
+                        ObjectLayer objectLayer = (ObjectLayer) layer;
+                        for(int k = 0; k < objectLayer.tiles.size; k ++)
+                        {
+                            MapObject object = (MapObject) objectLayer.tiles.get(k);
+                            float[] vertices = object.polygon.getTransformedVertices();
+                            for(int s = 0; s < vertices.length; s += 2)
+                            {
+                                float verticeX = vertices[s];
+                                float verticeY = vertices[s + 1];
+                                float distance = Utils.getDistance(verticeX, coords.x, verticeY, coords.y);
+                                if(distance < smallestDistance)
+                                {
+                                    smallestDistance = distance;
+                                    smallestDistanceX = verticeX;
+                                    smallestDistanceY = verticeY;
+                                }
+                            }
+                        }
+                    }
+                    else if(layer instanceof TileLayer)
+                    {
+                        TileLayer tileLayer = (TileLayer) layer;
+                        for(int k = 0; k < tileLayer.tiles.size; k ++)
+                        {
+                            Tile tile = tileLayer.tiles.get(k);
+                            for(int q = 0; q < tile.drawableAttachedMapObjects.size; q++)
+                            {
+                                AttachedMapObject object = tile.drawableAttachedMapObjects.get(q);
+                                float[] vertices = object.polygon.getTransformedVertices();
+                                for (int s = 0; s < vertices.length; s += 2)
+                                {
+                                    float verticeX = vertices[s];
+                                    float verticeY = vertices[s + 1];
+                                    float distance = Utils.getDistance(verticeX, coords.x, verticeY, coords.y);
+                                    if (distance < smallestDistance)
+                                    {
+                                        smallestDistance = distance;
+                                        smallestDistanceX = verticeX;
+                                        smallestDistanceY = verticeY;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(layer instanceof SpriteLayer)
+                    {
+                        SpriteLayer spriteLayer = (SpriteLayer) layer;
+                        for(int k = 0; k < spriteLayer.tiles.size; k ++)
+                        {
+                            MapSprite mapSprite = (MapSprite) spriteLayer.tiles.get(k);
+                            for(int q = 0; q < mapSprite.drawableAttachedMapObjects.size; q++)
+                            {
+                                AttachedMapObject object = mapSprite.drawableAttachedMapObjects.get(q);
+                                float[] vertices = object.polygon.getTransformedVertices();
+                                for (int s = 0; s < vertices.length; s += 2)
+                                {
+                                    float verticeX = vertices[s];
+                                    float verticeY = vertices[s + 1];
+                                    float distance = Utils.getDistance(verticeX, coords.x, verticeY, coords.y);
+                                    if (distance < smallestDistance)
+                                    {
+                                        smallestDistance = distance;
+                                        smallestDistanceX = verticeX;
+                                        smallestDistanceY = verticeY;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if(smallestDistance != units)
+                {
+                    coords.x = smallestDistanceX;
+                    coords.y = smallestDistanceY;
+                }
+            }
+
             if(this.objectVertices.size == 0)
                 objectVerticePosition.set(coords.x, coords.y);
             this.objectVertices.add(coords.x - objectVerticePosition.x);
