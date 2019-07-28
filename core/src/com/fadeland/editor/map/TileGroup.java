@@ -30,7 +30,7 @@ public class TileGroup
                 boundGroup.add(null);
             else
             {
-                TileTool tileTool = map.tileMenu.getTileTool("tile", boundGroupIds.get(i), null);
+                TileTool tileTool = map.tileMenu.getTileTool("tile", boundGroupIds.get(i), null, null);
                 boundGroup.add(tileTool);
             }
         }

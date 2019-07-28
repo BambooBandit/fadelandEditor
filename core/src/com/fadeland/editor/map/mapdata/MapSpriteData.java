@@ -9,6 +9,7 @@ public class MapSpriteData
     public int id;
     public int spriteID; // Manually definable ID
     public String name;
+    public String sheetName;
     public float width, height, rotation, scale;
     public MapSpriteData(){}
     public MapSpriteData(MapSprite mapSprite)
@@ -19,6 +20,7 @@ public class MapSpriteData
         this.id = mapSprite.tool.id;
         this.spriteID = mapSprite.id;
         this.name = mapSprite.tool.name;
+        this.sheetName = mapSprite.tool.sheetTool.name;
         this.width = mapSprite.sprite.getWidth();
         this.height = mapSprite.sprite.getHeight();
         this.rotation = mapSprite.sprite.getRotation();

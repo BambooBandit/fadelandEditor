@@ -227,7 +227,7 @@ public class TileMenu extends Group
         return null;
     }
 
-    public TileTool getSpriteTool(TileMenuTools tileMenuTools, String name, int id)
+    public TileTool getSpriteTool(TileMenuTools tileMenuTools, String name, String sheetName)
     {
         if(tileMenuTools == TileMenuTools.SPRITE)
         {
@@ -236,7 +236,7 @@ public class TileMenu extends Group
                 if(spriteTable.getChildren().get(i) instanceof TileTool)
                 {
                     TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
-                    if (tileTool.name.equals(name) && id == tileTool.id)
+                    if (tileTool.name.equals(name) && tileTool.sheetTool.name.equals(sheetName))
                         return tileTool;
                 }
             }
@@ -244,7 +244,7 @@ public class TileMenu extends Group
         return null;
     }
 
-    public TileTool getTileTool(String type, int id, String name)
+    public TileTool getTileTool(String type, int id, String spriteName, String sheetName)
     {
         TileMenuTools tileMenuTools = null;
         if(type.equals("tile"))
@@ -271,7 +271,7 @@ public class TileMenu extends Group
                 if(spriteTable.getChildren().get(i) instanceof TileTool)
                 {
                     TileTool tileTool = (TileTool) spriteTable.getChildren().get(i);
-                    if (tileTool.name.equals(name) && id == tileTool.id)
+                    if (tileTool.name.equals(spriteName) && tileTool.sheetTool.name.equals(sheetName))
                         return tileTool;
                 }
             }

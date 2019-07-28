@@ -769,9 +769,8 @@ public class TileMap implements Screen
                         MapSpriteLayerData savedSpriteLayer = (MapSpriteLayerData) savedLayer;
                         for (int k = 0; k < savedSpriteLayer.tiles.size(); k++)
                         {
-                            int id = savedSpriteLayer.tiles.get(k).id;
                             String name = savedSpriteLayer.tiles.get(k).name;
-                            TileTool tileTool = tileMenu.getSpriteTool(TileMenuTools.SPRITE, name, id);
+                            TileTool tileTool = tileMenu.getSpriteTool(TileMenuTools.SPRITE, name, savedSpriteLayer.tiles.get(k).sheetName);
                             MapSprite mapSprite = input.newMapSprite(this, tileTool, layer, savedSpriteLayer.tiles.get(k).x + savedSpriteLayer.tiles.get(k).width / 2, savedSpriteLayer.tiles.get(k).y + savedSpriteLayer.tiles.get(k).height / 2);
                             Utils.setCenterOrigin(mapSprite.position.x, mapSprite.position.y);
                             mapSprite.setID(savedSpriteLayer.tiles.get(k).spriteID);
@@ -835,7 +834,7 @@ public class TileMap implements Screen
                 for (int k = 0; k < tileTools.size(); k++)
                 {
                     ToolData toolData = tileTools.get(k);
-                    TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
+                    TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name, tileSheetData.name);
                     tileTool.mapObjects.clear();
                     for (int h = 0; h < toolData.lockedPropertyData.size(); h++)
                     {
@@ -920,7 +919,7 @@ public class TileMap implements Screen
                 for(int k = 0; k < spriteTools.size(); k ++)
                 {
                     ToolData toolData = spriteTools.get(k);
-                    TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name);
+                    TileTool tileTool = tileMenu.getTileTool(toolData.type, toolData.id, toolData.name, spriteSheetData.name);
                     tileTool.mapObjects.clear();
                     for(int h = 0; h < toolData.lockedPropertyData.size(); h ++)
                     {
