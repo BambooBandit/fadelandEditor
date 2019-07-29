@@ -182,6 +182,7 @@ public class TileMap implements Screen
         this.editor.shapeRenderer.setAutoShapeType(true);
         this.editor.shapeRenderer.setColor(Color.BLACK);
 
+        boolean rayhandlerRendered = false;
         this.editor.batch.begin();
         for(int i = 0; i < this.layers.size; i ++)
         {
@@ -190,11 +191,24 @@ public class TileMap implements Screen
                 if (this.layers.get(i).layerField.visibleImg.isVisible())
                     this.layers.get(i).draw();
             }
+            if(this.layers.get(i) instanceof ObjectLayer && this.layers.get(i).layerField.layerName.getText().equals("rayhandler"))
+            {
+                rayhandlerRendered = true;
+                this.editor.batch.end();
+                this.rayHandler.setCombinedMatrix(camera);
+                this.rayHandler.updateAndRender();
+                this.editor.batch.begin();
+            }
         }
-        this.editor.batch.end();
-        this.rayHandler.setCombinedMatrix(camera);
-        this.rayHandler.updateAndRender();
-        this.editor.batch.begin();
+
+        if(!rayhandlerRendered)
+        {
+            this.editor.batch.end();
+            this.rayHandler.setCombinedMatrix(camera);
+            this.rayHandler.updateAndRender();
+            this.editor.batch.begin();
+        }
+
         for(int i = 0; i < this.selectedSprites.size; i ++)
         {
             this.selectedSprites.get(i).drawRotationBox();
