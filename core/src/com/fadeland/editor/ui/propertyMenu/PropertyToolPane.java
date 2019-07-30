@@ -115,6 +115,27 @@ public class PropertyToolPane extends Group
             }
         }
 
+        // Set sprite color
+        for(int i = 0; i < map.layers.size; i ++)
+        {
+            if(map.layers.get(i) instanceof SpriteLayer)
+            {
+                SpriteLayer spriteLayer = (SpriteLayer) map.layers.get(i);
+                for(int k = 0; k < spriteLayer.tiles.size; k ++)
+                {
+                    MapSprite mapSprite = (MapSprite) spriteLayer.tiles.get(k);
+                    for(int s = 0; s < mapSprite.lockedProperties.size; s++)
+                    {
+                        if(mapSprite.lockedProperties.get(s).rgba)
+                        {
+                            PropertyField colorProperty = mapSprite.lockedProperties.get(s);
+                            mapSprite.setColor(colorProperty.getR(), colorProperty.getG(), colorProperty.getB(), colorProperty.getA());
+                        }
+                    }
+                }
+            }
+        }
+
         if(map.editor.fileMenu.toolPane.perspective.selected)
             updatePerspective(map);
         updateLightsAndBlocked(map);
