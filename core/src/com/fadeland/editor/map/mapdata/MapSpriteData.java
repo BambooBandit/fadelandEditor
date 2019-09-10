@@ -11,6 +11,7 @@ public class MapSpriteData
     public String name;
     public String sheetName;
     public float width, height, rotation, scale;
+    public int layerOverrideIndex; // The index of the layer that has been overridden to always draw behind this sprite. It is also counting from 1 rather than 0 for JSON purposes.
     public MapSpriteData(){}
     public MapSpriteData(MapSprite mapSprite)
     {
@@ -29,5 +30,9 @@ public class MapSpriteData
         this.g = mapSprite.sprite.getColor().g;
         this.b = mapSprite.sprite.getColor().b;
         this.a = mapSprite.sprite.getColor().a;
+        if(mapSprite.layerOverride != null)
+            this.layerOverrideIndex = mapSprite.layer.map.layers.indexOf(mapSprite.layerOverride, true) + 1;
+        else
+            this.layerOverrideIndex = 0;
     }
 }

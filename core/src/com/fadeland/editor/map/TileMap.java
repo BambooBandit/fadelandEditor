@@ -188,7 +188,7 @@ public class TileMap implements Screen
         {
             if(!(this.layers.get(i) instanceof ObjectLayer))
             {
-                if (this.layers.get(i).layerField.visibleImg.isVisible())
+                if (this.layers.get(i).layerField.visibleImg.isVisible() && this.layers.get(i).overrideSprite == null)
                     this.layers.get(i).draw();
             }
             if(this.layers.get(i) instanceof ObjectLayer && this.layers.get(i).layerField.layerName.getText().equals("rayhandler"))
@@ -250,7 +250,7 @@ public class TileMap implements Screen
             this.layers.get(i).setCameraZoomToThisLayer();
             if(this.layers.get(i) instanceof ObjectLayer)
             {
-                if (this.layers.get(i).layerField.visibleImg.isVisible())
+                if (this.layers.get(i).layerField.visibleImg.isVisible() && this.layers.get(i).overrideSprite == null)
                     this.layers.get(i).draw();
             }
             else if(this.layers.get(i).layerField.attachedVisibleImg.isVisible())
@@ -792,6 +792,7 @@ public class TileMap implements Screen
                             mapSprite.setScale(savedSpriteLayer.tiles.get(k).scale);
                             mapSprite.setZ(savedSpriteLayer.tiles.get(k).z);
                             mapSprite.setColor(savedSpriteLayer.tiles.get(k).r, savedSpriteLayer.tiles.get(k).g, savedSpriteLayer.tiles.get(k).b, savedSpriteLayer.tiles.get(k).a);
+                            mapSprite.layerOverrideIndex = savedSpriteLayer.tiles.get(k).layerOverrideIndex;
                             layer.tiles.add(mapSprite);
                         }
                     } else if (layerTypes == LayerTypes.OBJECT)
@@ -1011,6 +1012,23 @@ public class TileMap implements Screen
         findAllTilesToBeGrouped();
         undo.clear();
         redo.clear();
+
+        // re-override the layers
+        for(int i = 0; i < layers.size; i ++)
+        {
+            Layer layer = layers.get(i);
+            if(!(layer instanceof SpriteLayer))
+                continue;
+            for(int k = 0; k < layer.tiles.size; k ++)
+            {
+                MapSprite mapSprite = (MapSprite) layer.tiles.get(k);
+                if(mapSprite.layerOverrideIndex > 0)
+                {
+                    mapSprite.layerOverride = layers.get(mapSprite.layerOverrideIndex - 1);
+                    mapSprite.layerOverride.overrideSprite = mapSprite;
+                }
+            }
+        }
     }
 
     public void setName(String name)

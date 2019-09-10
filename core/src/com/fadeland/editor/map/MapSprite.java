@@ -26,6 +26,9 @@ public class MapSprite extends Tile
     public float z;
     public int id;
 
+    public int layerOverrideIndex; // Only used to keep the reloading simple. When the MapSprite is made, store the index of the override layer here and use it later to set the bottom variable once all layers are created. 0 means no override. Index starts at 1.
+    public Layer layerOverride; // If this is not null, before drawing this sprite, draw that whole layer.
+
     float[] verts;
 
     public MapSprite(TileMap map, TileTool tool, float x, float y)
@@ -74,6 +77,9 @@ public class MapSprite extends Tile
 
     public void draw()
     {
+        if(layerOverride != null)
+            layerOverride.draw();
+
         float lowestYOffset = -1;
         float tinyHeight = -1;
         if(sprite instanceof TextureAtlas.AtlasSprite)

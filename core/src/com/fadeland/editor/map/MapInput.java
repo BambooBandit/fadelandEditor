@@ -245,6 +245,8 @@ public class MapInput implements InputProcessor
                         for(int k = 0; k < objectLayer.tiles.size; k ++)
                         {
                             MapObject object = (MapObject) objectLayer.tiles.get(k);
+                            if(object.isPoint)
+                                continue;
                             float[] vertices = object.polygon.getTransformedVertices();
                             for(int s = 0; s < vertices.length; s += 2)
                             {
@@ -1067,6 +1069,8 @@ public class MapInput implements InputProcessor
                             for(int k = 0; k < objectLayer.tiles.size; k ++)
                             {
                                 MapObject object = (MapObject) objectLayer.tiles.get(k);
+                                if(object.isPoint)
+                                    continue;
                                 float[] vertices = object.polygon.getTransformedVertices();
                                 for(int s = 0; s < vertices.length; s += 2)
                                 {

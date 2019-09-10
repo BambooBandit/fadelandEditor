@@ -23,6 +23,8 @@ public abstract class Layer
     public float x, y;
     public MoveBox moveBox;
 
+    public MapSprite overrideSprite; // If null, render layer in the order its in. If not, when pressing layer ^ override or something, set this to equal the top sprite of the sprite layer beneath this layer. This will always be drawn before that sprite. Keep going down to do it to even lower layers.
+
     public Layer(FadelandEditor editor, TileMap map, LayerTypes type, LayerField layerField)
     {
         this.width = 5;

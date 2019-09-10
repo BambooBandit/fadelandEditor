@@ -6,7 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fadeland.editor.FadelandEditor;
 import com.fadeland.editor.GameAssets;
+import com.fadeland.editor.map.Layer;
 import com.fadeland.editor.map.MapSprite;
+import com.fadeland.editor.map.SpriteLayer;
 import com.fadeland.editor.map.TileMap;
 import com.fadeland.editor.ui.MinMaxDialog;
 import com.fadeland.editor.undoredo.BringSpriteUpOrDown;
@@ -45,6 +47,9 @@ public class ToolPane extends Group
     private TextButton bringDown;
     private TextButton bringTop;
     private TextButton bringBottom;
+    private TextButton layerDownOverride;
+    private TextButton layerUpOverride;
+    private TextButton layerOverrideReset;
 
     public MinMaxDialog minMaxDialog;
     private TextButton minMaxButton;
@@ -78,6 +83,9 @@ public class ToolPane extends Group
         this.bringDown = new TextButton("v", skin);
         this.bringTop = new TextButton("^^", skin);
         this.bringBottom = new TextButton("vv", skin);
+        this.layerDownOverride = new TextButton("Layer Override v", skin);
+        this.layerUpOverride = new TextButton("Layer Override ^", skin);
+        this.layerOverrideReset= new TextButton("Layer Override Reset", skin);
 
         this.minMaxDialog = new MinMaxDialog(editor.stage, skin);
         this.minMaxButton = new TextButton("Min Max Settings", skin);
@@ -108,6 +116,9 @@ public class ToolPane extends Group
         this.toolTable.add(this.bringDown).padRight(1);
         this.toolTable.add(this.bringTop).padRight(1);
         this.toolTable.add(this.bringBottom).padRight(5);
+        this.toolTable.add(this.layerDownOverride).padRight(1);
+        this.toolTable.add(this.layerUpOverride).padRight(1);
+        this.toolTable.add(this.layerOverrideReset).padRight(5);
         this.toolTable.add(this.minMaxButton).padRight(5);
         this.toolTable.add(this.fps).padRight(1);
 
@@ -151,6 +162,9 @@ public class ToolPane extends Group
         this.toolTable.getCell(this.bringDown).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.bringTop).size(toolHeight, toolHeight);
         this.toolTable.getCell(this.bringBottom).size(toolHeight, toolHeight);
+        this.toolTable.getCell(this.layerDownOverride).size(toolHeight * 4.75f, toolHeight);
+        this.toolTable.getCell(this.layerUpOverride).size(toolHeight * 4.75f, toolHeight);
+        this.toolTable.getCell(this.layerOverrideReset).size(toolHeight * 4.75f, toolHeight);
         this.toolTable.getCell(this.minMaxButton).size(toolHeight * 4, toolHeight);
         this.toolTable.getCell(this.fps).size(toolHeight, toolHeight);
         this.toolTable.invalidateHierarchy();
@@ -259,6 +273,119 @@ public class ToolPane extends Group
                 map.selectedLayer.tiles.insert(0, selectedSprite);
                 bringSpriteUpOrDown.addNew();
                 map.performAction(bringSpriteUpOrDown);
+            }
+        });
+
+        this.layerDownOverride.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TileMap map = ((TileMap)editor.getScreen());
+                if(map == null || map.selectedLayer == null)
+                    return;
+                if(map.selectedLayer.overrideSprite == null)
+                {
+                    int layerIndex = map.layers.indexOf(map.selectedLayer, true);
+                    if(layerIndex == 0)
+                        return;
+                    for(int i = layerIndex - 1; i > 0; i--)
+                    {
+                        Layer layer = map.layers.get(i);
+                        if(layer instanceof SpriteLayer)
+                        {
+                            MapSprite mapSprite = (MapSprite) layer.tiles.get(layer.tiles.size - 1);
+                            map.selectedLayer.overrideSprite = mapSprite;
+                            mapSprite.layerOverride = map.selectedLayer;
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    int layerIndex = map.layers.indexOf(map.selectedLayer.overrideSprite.layer, true);
+                    int spriteIndex = map.selectedLayer.overrideSprite.layer.tiles.indexOf(map.selectedLayer.overrideSprite, true);
+                    spriteIndex --;
+                    if(spriteIndex < 0)
+                    {
+                        while(layerIndex - 1 > 0)
+                        {
+                            layerIndex--;
+                            if(map.layers.get(layerIndex) instanceof SpriteLayer)
+                                break;
+                        }
+                        if(layerIndex < 0 || !(map.layers.get(layerIndex) instanceof SpriteLayer))
+                            return;
+                        spriteIndex = map.layers.get(layerIndex).tiles.size - 1;
+                    }
+                    map.selectedLayer.overrideSprite.layerOverride = null;
+                    map.selectedLayer.overrideSprite = (MapSprite) map.layers.get(layerIndex).tiles.get(spriteIndex);
+                    map.selectedLayer.overrideSprite.layerOverride = map.selectedLayer;
+                }
+            }
+        });
+
+        this.layerUpOverride.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TileMap map = ((TileMap)editor.getScreen());
+                if(map == null || map.selectedLayer == null)
+                    return;
+                if(map.selectedLayer.overrideSprite == null)
+                {
+                    int layerIndex = map.layers.indexOf(map.selectedLayer, true);
+                    if(layerIndex == map.layers.size - 1)
+                        return;
+                    for(int i = layerIndex + 1; i < map.layers.size; i++)
+                    {
+                        Layer layer = map.layers.get(i);
+                        if(layer instanceof SpriteLayer)
+                        {
+                            MapSprite mapSprite = (MapSprite) layer.tiles.get(layer.tiles.size - 1);
+                            map.selectedLayer.overrideSprite = mapSprite;
+                            mapSprite.layerOverride = map.selectedLayer;
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    int layerIndex = map.layers.indexOf(map.selectedLayer.overrideSprite.layer, true);
+                    int spriteIndex = map.selectedLayer.overrideSprite.layer.tiles.indexOf(map.selectedLayer.overrideSprite, true);
+                    spriteIndex ++;
+                    if(spriteIndex >= map.selectedLayer.overrideSprite.layer.tiles.size)
+                    {
+                        while(layerIndex + 1 < map.layers.size - 1)
+                        {
+                            layerIndex++;
+                            if(map.layers.get(layerIndex) instanceof SpriteLayer)
+                                break;
+                        }
+                        if(layerIndex >= map.layers.size || !(map.layers.get(layerIndex) instanceof SpriteLayer))
+                            return;
+                        spriteIndex = 0;
+                    }
+                    map.selectedLayer.overrideSprite.layerOverride = null;
+                    map.selectedLayer.overrideSprite = (MapSprite) map.layers.get(layerIndex).tiles.get(spriteIndex);
+                    map.selectedLayer.overrideSprite.layerOverride = map.selectedLayer;
+                }
+            }
+        });
+        this.layerOverrideReset.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TileMap map = ((TileMap)editor.getScreen());
+                if(map == null || map.selectedLayer == null)
+                    return;
+                if(map.selectedLayer.overrideSprite != null)
+                {
+                    map.selectedLayer.overrideSprite.layerOverride = null;
+                    map.selectedLayer.overrideSprite = null;
+                }
             }
         });
 
