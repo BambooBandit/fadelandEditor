@@ -365,6 +365,7 @@ public class MapObject extends Tile
             fixtureDef.filter.maskBits = PhysicsBits.LIGHT_PHYSICS;
             this.body = this.map.world.createBody(bodyDef).createFixture(fixtureDef).getBody();
             this.body.setTransform(this.position, 0);
+            this.body.setUserData(this.layer);
             map.bodies.add(this.body);
             shape.dispose();
         }

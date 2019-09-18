@@ -1039,6 +1039,8 @@ public class TileMap implements Screen
 
     public void searchForBlockedTiles()
     {
+        setLayerFloors();
+
         for(int i = 0; i < layers.size; i ++)
         {
             if(!(layers.get(i) instanceof TileLayer))
@@ -1053,10 +1055,17 @@ public class TileMap implements Screen
                 float centerX = tile.position.x + tileSize / 2;
                 float centerY = tile.position.y + tileSize / 2;
 
+                body:
                 for(int b = 0; b < bodies.size; b++)
                 {
                     if(bodies.get(b).getFixtureList() != null)
                     {
+                        Object userData = bodies.get(b).getUserData();
+                        if(userData instanceof MapSprite && ((MapSprite)userData).layer.floor != tile.layer.floor)
+                            continue body;
+                        else if(userData instanceof Layer && ((Layer)userData).floor != tile.layer.floor)
+                            continue body;
+
                         if ((bodies.get(b).getFixtureList().first().testPoint(centerX, centerY) ||
                                 bodies.get(b).getFixtureList().first().testPoint(centerX - tileSize / 4, centerY) ||
                                 bodies.get(b).getFixtureList().first().testPoint(centerX + tileSize / 4, centerY) ||
@@ -1153,7 +1162,7 @@ public class TileMap implements Screen
                 // Search all object layers
                 for(int s = 0; s < layers.size; s ++)
                 {
-                    if(!(layers.get(s) instanceof ObjectLayer))
+                    if(!(layers.get(s) instanceof ObjectLayer) || layers.get(s).floor != tile.layer.floor)
                         continue;
                     for(int d = 0; d < layers.get(s).tiles.size; d++)
                     {
@@ -1320,5 +1329,21 @@ public class TileMap implements Screen
                 }
             }
         }
+    }
+
+    public void setLayerFloors()
+    {
+        byte floor = 0;
+        for(int i = 0; i < layers.size; i ++)
+        {
+            String name = layers.get(i).layerField.layerName.getText();
+            if(name.length() >= 7 && name.startsWith("floor"))
+            {
+                byte newFloor = Byte.parseByte(name.substring(6));
+                floor = newFloor;
+            }
+            layers.get(i).floor = floor;
+        }
+
     }
 }
