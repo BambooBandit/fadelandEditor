@@ -1286,7 +1286,7 @@ public class TileMap implements Screen
         {
             Layer layer = layers.get(i);
             if (layer instanceof ObjectLayer)
-                return;
+                continue;
             for (int w = 0; w < layer.tiles.size; w++)
             {
                 Tile tile = layer.tiles.get(w);
