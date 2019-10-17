@@ -756,6 +756,20 @@ public class PropertyField extends Group
                             {finalPropertyField.rValue.setText(property.rValue.getText());});
                         }
                     }
+                    for (int i = 0; i < map.selectedSprites.size; i ++)
+                    {
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.selectedSprites.get(i).lockedProperties.get(map.selectedSprites.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.rValue.setText(property.rValue.getText());});
+                        }
+                    }
                     for (int i = 0; i < map.selectedObjects.size; i++)
                     {
                         if (map.selectedObjects.get(i).properties.contains(property, true))
@@ -791,6 +805,20 @@ public class PropertyField extends Group
                         PropertyField propertyField = null;
                         if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
                             propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.gValue.setText(property.gValue.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedSprites.size; i ++)
+                    {
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.selectedSprites.get(i).lockedProperties.get(map.selectedSprites.get(i).lockedProperties.indexOf(property, false));
                         if (propertyField != null)
                         {
                             final PropertyField finalPropertyField = propertyField;
@@ -840,6 +868,20 @@ public class PropertyField extends Group
                             {finalPropertyField.bValue.setText(property.bValue.getText());});
                         }
                     }
+                    for (int i = 0; i < map.selectedSprites.size; i ++)
+                    {
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.selectedSprites.get(i).lockedProperties.get(map.selectedSprites.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.bValue.setText(property.bValue.getText());});
+                        }
+                    }
                     for (int i = 0; i < map.selectedObjects.size; i++)
                     {
                         if (map.selectedObjects.get(i).properties.contains(property, true))
@@ -875,6 +917,20 @@ public class PropertyField extends Group
                         PropertyField propertyField = null;
                         if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
                             propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.aValue.setText(property.aValue.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedSprites.size; i ++)
+                    {
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.selectedSprites.get(i).lockedProperties.get(map.selectedSprites.get(i).lockedProperties.indexOf(property, false));
                         if (propertyField != null)
                         {
                             final PropertyField finalPropertyField = propertyField;
@@ -929,6 +985,20 @@ public class PropertyField extends Group
                             {finalPropertyField.distanceValue.setText(property.distanceValue.getText());});
                         }
                     }
+                    for (int i = 0; i < map.selectedSprites.size; i ++)
+                    {
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.selectedSprites.get(i).lockedProperties.get(map.selectedSprites.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.distanceValue.setText(property.distanceValue.getText());});
+                        }
+                    }
                     for (int i = 0; i < map.selectedObjects.size; i++)
                     {
                         if (map.selectedObjects.get(i).properties.contains(property, true))
@@ -964,6 +1034,20 @@ public class PropertyField extends Group
                         PropertyField propertyField = null;
                         if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
                             propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.rayAmountValue.setText(property.rayAmountValue.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedSprites.size; i ++)
+                    {
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.selectedSprites.get(i).lockedProperties.get(map.selectedSprites.get(i).lockedProperties.indexOf(property, false));
                         if (propertyField != null)
                         {
                             final PropertyField finalPropertyField = propertyField;
@@ -1010,6 +1094,20 @@ public class PropertyField extends Group
                         PropertyField propertyField = null;
                         if (map.tileMenu.selectedTiles.get(i).lockedProperties.contains(property, false))
                             propertyField = map.tileMenu.selectedTiles.get(i).lockedProperties.get(map.tileMenu.selectedTiles.get(i).lockedProperties.indexOf(property, false));
+                        if (propertyField != null)
+                        {
+                            final PropertyField finalPropertyField = propertyField;
+                            textFieldActions.add(() ->
+                            {finalPropertyField.value.setText(property.value.getText());});
+                        }
+                    }
+                    for (int i = 0; i < map.selectedSprites.size; i ++)
+                    {
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, true))
+                            continue;
+                        PropertyField propertyField = null;
+                        if (map.selectedSprites.get(i).lockedProperties.contains(property, false))
+                            propertyField = map.selectedSprites.get(i).lockedProperties.get(map.selectedSprites.get(i).lockedProperties.indexOf(property, false));
                         if (propertyField != null)
                         {
                             final PropertyField finalPropertyField = propertyField;
