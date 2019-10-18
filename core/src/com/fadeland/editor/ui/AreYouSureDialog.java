@@ -15,7 +15,7 @@ public class AreYouSureDialog extends Dialog
     private TextButton no;
     private TextButton cancel;
 
-    public AreYouSureDialog(String action, Stage stage, String title, Skin skin)
+    public AreYouSureDialog(String action, Stage stage, String title, Skin skin, boolean hasCancelButton)
     {
         super(title, skin);
 
@@ -37,15 +37,24 @@ public class AreYouSureDialog extends Dialog
             remove();
         }});
 
-        this.cancel = new TextButton("Cancel", skin);
-        this.cancel.addListener(new ClickListener() {@Override public void clicked(InputEvent event, float x, float y) {
-            remove();
-        }});
+        if(hasCancelButton)
+        {
+            this.cancel = new TextButton("Cancel", skin);
+            this.cancel.addListener(new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    remove();
+                }
+            });
+        }
 
         this.getContentTable().add(areYouSureLabel).row();
         this.yesNoTable.add(yes);
         this.yesNoTable.add(no);
-        this.yesNoTable.add(cancel);
+        if(hasCancelButton)
+            this.yesNoTable.add(cancel);
         this.getContentTable().add(yesNoTable);
 
         setSize(getPrefWidth(), getPrefHeight());

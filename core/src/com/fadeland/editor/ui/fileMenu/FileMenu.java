@@ -73,7 +73,7 @@ public class FileMenu extends Group
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                new AreYouSureDialog("Create a new map with FLM default settings/properties?", editor.stage, "", GameAssets.getUISkin())
+                new AreYouSureDialog("Create a new map with FLM default settings/properties?", editor.stage, "", GameAssets.getUISkin(), true)
                 {
                     TileMap newMap;
                     @Override
@@ -188,7 +188,7 @@ public class FileMenu extends Group
                 if(editor.getScreen() != null)
                 {
                     TileMap map = (TileMap) editor.getScreen();
-                    new AreYouSureDialog("Override and save new FLM default properties?", editor.stage, "", GameAssets.getUISkin())
+                    new AreYouSureDialog("Override and save new FLM default properties?", editor.stage, "", GameAssets.getUISkin(), true)
                     {
                         @Override
                         public void yes()
@@ -212,7 +212,7 @@ public class FileMenu extends Group
                 if(editor.getScreen() != null)
                 {
                     TileMap map = (TileMap) editor.getScreen();
-                    new AreYouSureDialog("Override and set FLM properties to default for this map?", editor.stage, "", GameAssets.getUISkin())
+                    new AreYouSureDialog("Override and set FLM properties to default for this map?", editor.stage, "", GameAssets.getUISkin(), true)
                     {
                         @Override
                         public void yes()

@@ -25,7 +25,7 @@ public class DesktopLauncher {
 					final int finalI = i;
 					if(fadelandEditor.maps.get(finalI).changed)
 					{
-						new AreYouSureDialog("Save before closing " + fadelandEditor.maps.get(finalI).name + "?", fadelandEditor.maps.get(finalI).editor.stage, "", GameAssets.getUISkin())
+						new AreYouSureDialog("Save before closing " + fadelandEditor.maps.get(finalI).name + "?", fadelandEditor.maps.get(finalI).editor.stage, "", GameAssets.getUISkin(), true)
 						{
 							@Override
 							public void yes()

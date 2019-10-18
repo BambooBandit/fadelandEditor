@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.fadeland.editor.map.TileMap;
+import com.fadeland.editor.ui.AreYouSureDialog;
 import com.fadeland.editor.ui.fileMenu.FileMenu;
 import com.fadeland.editor.ui.fileMenu.Tool;
 import com.fadeland.editor.ui.tileMenu.TileMenu;
@@ -64,23 +65,54 @@ public class FadelandEditor extends Game
 	@Override
 	public void render ()
 	{
-		fileMenu.toolPane.fps.setText(Gdx.graphics.getFramesPerSecond());
-		if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
-			undo();
-		else if(Gdx.input.isKeyJustPressed(Input.Keys.R) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
-			redo();
+		try{
+			fileMenu.toolPane.fps.setText(Gdx.graphics.getFramesPerSecond());
+			if(Gdx.input.isKeyJustPressed(Input.Keys.Z) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+				undo();
+			else if(Gdx.input.isKeyJustPressed(Input.Keys.R) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+				redo();
 
-		if(activeMap == null)
-		{
-			// The map clears the screen, but no map is active so manually clear the screen here
-			Gdx.gl.glClearColor(0, 0, 0, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			if(activeMap == null)
+			{
+				// The map clears the screen, but no map is active so manually clear the screen here
+				Gdx.gl.glClearColor(0, 0, 0, 1);
+				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			}
+			else // Render the active map
+				super.render();
+
+			stage.act();
+			stage.draw();
+		} catch(Exception e){
+			crashRecovery();
 		}
-		else // Render the active map
-			super.render();
+	}
 
-		stage.act();
-        stage.draw();
+	public void crashRecovery()
+	{
+		if(maps.size == 0)
+			Gdx.app.exit();
+		for(int i = 0; i < maps.size; i ++)
+		{
+			final int finalI = i;
+			new AreYouSureDialog("Editor crashed. Save before closing " + maps.get(finalI).name + "?", maps.get(finalI).editor.stage, "", GameAssets.getUISkin(), false)
+			{
+				@Override
+				public void yes()
+				{
+					boolean closeApplicationAfterSaving = (maps.size == 1);
+					fileMenu.saveAs(maps.get(finalI), true, closeApplicationAfterSaving);
+				}
+
+				@Override
+				public void no()
+				{
+					fileMenu.mapTabPane.removeMap(maps.get(finalI));
+					if (maps.size == 0)
+						Gdx.app.exit();
+				}
+			};
+		}
 	}
 
 	@Override
